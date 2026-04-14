@@ -110,5 +110,8 @@ Route::middleware('check.admin.cookie')->group(function () {
         Route::get('{material}/edit', [MaterialManagementController::class, 'edit'])->name('materials.edit');
         Route::post('{material}/update', [MaterialManagementController::class, 'update'])->name('materials.update');
         Route::post('/upload-temp', [MaterialManagementController::class, 'uploadTemp'])->name('materials.uploadTemp');
+
+        Route::get('/index2', [MaterialManagementController::class, 'index2'])->name('materials.index2');
+        Route::get('{material}/edit2', [MaterialManagementController::class, 'edit2'])->name('materials.edit2');
     });
 });

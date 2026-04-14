@@ -10,15 +10,22 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage as StorageFacade;
 
-class MaterialManagementController extends Controller
-{
+class MaterialManagementController extends Controller {
+    
+    public function index2() {
+        return view('materials.index2');
+    }
+
+    public function edit2(Material $material) {
+        return view('materials.edit2')->with('material', $material);
+    }
+
     /**
      * Muestra la vista principal de materiales.
      *
      * @return \Illuminate\View\View
      */
-    public function index()
-    {
+    public function index() {
         return view('materials.index');
     }
 
@@ -27,8 +34,7 @@ class MaterialManagementController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function createForm()
-    {
+    public function createForm() {
         return view('materials.create');
     }
 
@@ -37,8 +43,7 @@ class MaterialManagementController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function materialsData()
-    {
+    public function materialsData() {
         return response()->json(Material::orderBy('material_id')->get());
     }
 
@@ -48,8 +53,7 @@ class MaterialManagementController extends Controller
      * @param Material $material
      * @return \Illuminate\View\View
      */
-    public function edit(Material $material)
-    {
+    public function edit(Material $material) {
         return view('materials.edit')->with('material', $material);
     }
 
@@ -60,8 +64,7 @@ class MaterialManagementController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function storeBatch(Request $request)
-    {
+    public function storeBatch(Request $request) {
         // Valida que la cookie 'materialsAddBasket' esté presente en el request.
         $validated = $request->validate([
             'materialsAddBasket' => 'required'
@@ -155,8 +158,7 @@ class MaterialManagementController extends Controller
      * @param Material $material           Instancia del material recién creado o existente.
      * @param array $materialData          Datos de entrada con la información de almacenamiento, incluyendo ubicación y unidades.
      */
-    private function storeMaterialInStorage(Material $material, array $materialData)
-    {
+    private function storeMaterialInStorage(Material $material, array $materialData) {
         // Determina en qué almacenes (CAE, odontology o ambos) se debe registrar el material.
         switch ($materialData['storage']) {
             case 'CAE':
@@ -196,8 +198,7 @@ class MaterialManagementController extends Controller
      * @param \App\Models\Material $material   Instancia del Material.
      * @return \Illuminate\Http\RedirectResponse   Redirección con mensaje de estado (éxito, advertencia o error).
      */
-    public function destroy(Material $material)
-    {
+    public function destroy(Material $material) {
         try {
             // Verifica si el material aún existe en la base de datos mediante su ID.
             if (!Material::find($material->material_id)) {
@@ -231,8 +232,7 @@ class MaterialManagementController extends Controller
      * @param Request $request      Petición HTTP con los datos a validar y actualizar.
      * @return \Illuminate\Http\RedirectResponse   Redirección con mensaje de éxito o error.
      */
-    public function update(Material $material, Request $request)
-    {
+    public function update(Material $material, Request $request) {
         $validated = $request->validate([
             'name'        => 'required|string|max:60',
             'description' => 'required|string|max:100',
@@ -293,8 +293,7 @@ class MaterialManagementController extends Controller
      * @param Request $request  Petición HTTP que contiene la imagen enviada desde un formulario o cliente.
      * @return \Illuminate\Http\JsonResponse  Respuesta en formato JSON con la ruta temporal de la imagen.
      */
-    public function uploadTemp(Request $request)
-    {
+    public function uploadTemp(Request $request) {
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:4096'
         ]);

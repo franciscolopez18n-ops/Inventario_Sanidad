@@ -87,6 +87,13 @@
                                     <span class="link-text">Gestionar almacenamiento</span>
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('materials.index2') }}"
+                                class="{{ request()->routeIs('materials.index2') ? 'active' : '' }}">
+                                    <i class="fa-solid fa-box-archive"></i>
+                                    <span class="link-text">Gestionar material [Prueba]</span>
+                                </a>
+                            </li>
                         </ul>
                     </li>
 
