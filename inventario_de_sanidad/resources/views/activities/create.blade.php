@@ -19,7 +19,7 @@
                     <label for="title"></label>
                     <textarea name="title" placeholder="Título descriptivo de la actividad..." id="title" rows="4" cols="50" maxlength="100" required></textarea>
                     @error('title')
-                        <div class="alert-error-uspas">{{ $message }}</div>
+                        <div class="alert alert-error alert-form">{{ $message }}</div>
                     @enderror
                 </div>
 
@@ -27,7 +27,7 @@
                     <label for="activity_datetime">Fecha y hora:</label>
                     <input type="datetime-local" id="activity_datetime" name="activity_datetime">
                     @error('activity_datetime')
-                        <div class="alert-error-uspas">{{ $message }}</div>
+                        <div class="alert alert-error alert-form">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="">
@@ -41,7 +41,7 @@
                         </select>
                     </td>
                     @error('teacher_id')
-                        <div class="alert-error-uspas">{{ $message }}</div>
+                        <div class="alert alert-error alert-form">{{ $message }}</div>
                     @enderror
                 </div>
 
@@ -80,15 +80,8 @@
                 <!-- Hidden que contendrá el JSON de la cesta -->
                 <input type="hidden" name="materialsBasketInput" id="materialsBasketInput">
 
-                {{-- Mensajes flash --}}
-                @if(session('success'))
-                    <div class="alert alert-success">{{ session('success') }}</div>
-                @endif
-
-                {{-- Mensajes de error --}}
-                @if(session('error'))
-                    <div class="alert alert-error-uspas">{{ session('error') }}</div>
-                @endif
+                {{-- Alertas flash --}}
+                <x-alerts />
 
                 <input type="submit" value="Crear" class="btn btn-primary">
             </form>

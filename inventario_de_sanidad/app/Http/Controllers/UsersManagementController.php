@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Enums\FlashType;
 use App\Models\User;
 use Carbon\Carbon;
 use App\Mail\ChangePassword;
 use App\Mail\UserCreation;
 use Illuminate\Support\Facades\Mail;
+
 class UsersManagementController extends Controller
 {
     /**
@@ -81,7 +83,7 @@ class UsersManagementController extends Controller
         ]);
         Mail::to($credentials["email"])->send(new UserCreation($password,$credentials["nombre"],$credentials["apellidos"],$credentials["email"]));
 
-        return back()->with('mensaje', 'Usuario ' . $credentials["nombre"] . ' ' . $credentials["apellidos"] . ' creado con éxito.');
+        return back()->with(FlashType::SUCCESS->value, 'Usuario ' . $credentials["nombre"] . ' ' . $credentials["apellidos"] . ' creado con éxito.');
     }
 
     public function generateRandomPassword($length)
@@ -106,10 +108,9 @@ class UsersManagementController extends Controller
 
         User::where('user_id', $user)->delete();
 
-        return back()->with([
-            'mensaje' => 'Usuario dado de baja con éxito.',
-        ]);
+        return back()->with(FlashType::SUCCESS->value, 'Usuario dado de baja con éxito.');
     }
+
     public function changePasswordUser(Request $request)
     {
         $user = $request["user_id"];
@@ -120,8 +121,7 @@ class UsersManagementController extends Controller
         $userInfo->first_log = 0;
         $userInfo->save();
         Mail::to($userInfo->email)->send(new ChangePassword($password,$userInfo->first_name,$userInfo->last_name));
-        return back()->with([
-            'mensaje' => 'Contraseña modificada con exito',
-        ]);
+
+        return back()->with(FlashType::SUCCESS->value, 'Contraseña modificada con exito');
     }
 }

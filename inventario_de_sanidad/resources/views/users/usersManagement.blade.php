@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="{{ asset('css/tables.css') }}">
     <link rel="stylesheet" href="{{ asset('css/loader.css') }}">
     <link rel="stylesheet" href="{{ asset('css/dialog.css') }}">
-
 @endpush
 
 @section('content')
@@ -28,9 +27,8 @@
         <input type="button" class="btn btn-danger" value="Cancelar" id="cancelarContra">
     </dialog>
 
-    @if (session('mensaje'))
-        <p class="alert-success">{{ session('mensaje') }}</p>
-    @endif
+    {{-- Alertas flash --}}
+    <x-alerts />
 
     <h1>Gestion de usuarios</h1>
 

@@ -24,7 +24,7 @@
             <label for="name">Nombre</label>
             <input type="text" name="name" id="name" value="{{ old('name', $material->name) }}">
             @error('name')
-                <div class="alert-error-uspas">{{ $message }}</div>
+                <div class="alert alert-error alert-form">{{ $message }}</div>
             @enderror
         </div>
 
@@ -32,7 +32,7 @@
             <label for="description">Descripción</label>
             <textarea name="description" id="description" rows="3">{{ old('description', $material->description) }}</textarea>
             @error('description')
-                <div class="alert-error-uspas">{{ $message }}</div>
+                <div class="alert alert-error alert-form">{{ $message }}</div>
             @enderror
         </div>
 
@@ -44,7 +44,7 @@
                  alt="Previsualización"
                  style="max-width: 150px; display: block; margin-top: 10px;">
             @error('image')
-                <div class="alert-error-uspas">{{ $message }}</div>
+                <div class="alert alert-error alert-form">{{ $message }}</div>
             @enderror
         </div>
 
@@ -55,15 +55,8 @@
         </select>
         <div></div>
 
-        {{-- Flash messages --}}
-        @if (session('success'))
-            <p class="alert-success">{{ session('success') }}</p>
-        @endif
-
-        {{-- Mensajes de error --}}
-        @if (session('error'))
-            <p class="alert-error-uspas">{{ session('error') }}</p>
-        @endif
+        {{-- Alertas flash --}}
+        <x-alerts />
 
         <div class="form-actions">
             <input type="submit" value="Actualizar [NO HACE NADA]" class="btn btn-success">

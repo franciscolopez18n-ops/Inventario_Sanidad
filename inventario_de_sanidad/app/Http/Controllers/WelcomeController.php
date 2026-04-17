@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
-use App\Models\Storage;
+use App\Enums\FlashType;
 use App\Models\User;
 
 class WelcomeController extends Controller
@@ -75,6 +75,6 @@ class WelcomeController extends Controller
         $user->first_log = 1;
         $user->save();
 
-        return redirect()->route('welcome')->with('mensaje', 'Contraseña actualizada con éxito.');
+        return redirect()->route('welcome')->with(FlashType::SUCCESS->value, 'Contraseña actualizada con éxito.');
     }
 }

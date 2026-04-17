@@ -32,19 +32,8 @@
             </div>
         </div>
 
-        {{-- Mensajes flash --}}
-        @if(session('success'))
-            <div class="alert alert-success">
-            {{ session('success') }}
-            </div>
-        @endif
-
-        {{-- Mensajes de error --}}
-        @if(session('error'))
-            <div class="alert alert-error-uspas">
-            {{ session('error') }}
-            </div>
-        @endif
+        {{-- Alertas flash --}}
+        <x-alerts />
 
         </div>
     </div>

@@ -209,7 +209,7 @@ async function getMaterialData(event) {
     }
 
     let drawer = document.form.drawer.value;
-    if (drawer && isNaN(parseInt(drawer, 10))) {
+    if (drawer && (isNaN(drawer) || drawer <= 0)) {
         errors.push("El cajón de uso debe ser un número mayor que 0.");
     }
 
@@ -348,19 +348,13 @@ function deleteMaterialData(event) {
     let index = basket.length - 1;
 
     // Buscar y eliminar el material por id.
-    while (!deleted || index >= 0) {
+    while (!deleted && index >= 0) {
         if (basket[index].id == materialId) {
             basket.splice(index, 1);
             deleted = true;
         }
-        index -= 1;
-    }
 
-    // Eliminar la fila de la tabla
-    let row = button.closest("tr");
-
-    if (row && row.parentNode) {
-        row.parentNode.removeChild(row);
+        index--;
     }
 
     // Se guarda la cesta actualizada en la cookie.

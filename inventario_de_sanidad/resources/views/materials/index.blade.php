@@ -76,15 +76,8 @@
             </div>
         </div>
 
-        <!-- Mensajes flash -->
-        @if (session('success'))
-            <p class="alert-success">{{ session('success') }}</p>
-        @endif
-
-        <!-- Mensajes de error -->
-        @if (session('error'))
-            <p class="alert-error-uspas">{{ session('error') }}</p>
-        @endif
+        <!-- Alertas flash -->
+        <x-alerts />
 
         <div id="paginacion" class="pagination-controls">
             <!-- Aquí se inyectarán los botones de paginación desde JS -->
