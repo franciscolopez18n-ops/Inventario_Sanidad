@@ -60,7 +60,9 @@ function renderTable(limit, paginaActual) {
         // Imagen del material
         let td = document.createElement("td");
         let img = document.createElement("img");
-        img.src = new URL('/storage/', window.location).href + (item.image_path ?? "no_image.jpg");
+        img.src = item.image_path
+            ? new URL('/storage/', window.location).href + item.image_path
+            : new URL('/img/no_image.jpg', window.location).href;
         img.style.maxWidth = "100px";
         td.appendChild(img);
         tr.appendChild(td);

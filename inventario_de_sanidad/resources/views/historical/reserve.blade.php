@@ -53,22 +53,26 @@
                         <th>Balda</th>
                         <th>Unidades</th>
                         <th>Unidades Mínimas</th>
-
                     </tr>
                 </thead>
                 <tbody>
                     <?php
-                    // @foreach($materials as $material)
-                    //     <tr>
-                    //         <td><img src="{{ asset($material->image_path ?? 'storage/no_image.jpg') }}" alt="{{ $material->name }}" class="cell-img"></td>
-                    //         <td>{{ $material->name }}</td>
-                    //         <td class="cell-description">{{ $material->description }}</td>
-                    //         <td>{{ $material->cabinet }}</td>
-                    //         <td>{{ $material->shelf }}</td>
-                    //         <td>{{ $material->units }}</td>
-                    //         <td>{{ $material->min_units }}</td>
-                    //     </tr>
-                    // @endforeach
+                        /* @foreach($materials as $material)
+                            <tr>
+                                <td>
+                                    <img src="{{ asset($material->image_path 
+                                        ? 'storage/' . $material->image_path 
+                                        : 'img/no_image.jpg')
+                                    }}" alt="{{ $material->name }}" class="cell-img">
+                                </td>
+                                <td>{{ $material->name }}</td>
+                                <td class="cell-description">{{ $material->description }}</td>
+                                <td>{{ $material->cabinet }}</td>
+                                <td>{{ $material->shelf }}</td>
+                                <td>{{ $material->units }}</td>
+                                <td>{{ $material->min_units }}</td>
+                            </tr>
+                        @endforeach */
                     ?>
                 </tbody>
             </table>

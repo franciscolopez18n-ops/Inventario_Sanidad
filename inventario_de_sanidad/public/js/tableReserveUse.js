@@ -123,7 +123,9 @@ function crearMaterialCard(material) {
     let isStudent = document.querySelector(".user-role").textContent.includes("student"); // Verifica si el usuario es admin
 
     let img = document.createElement("img");
-    img.src = material.image_path ? `/storage/${material.image_path}` : "/storage/no_image.jpg";
+    img.src = material.image_path
+        ? `/storage/${material.image_path}`
+        : `/img/no_image.jpg`;
     img.alt = material.name ?? "Sin nombre";
     card.appendChild(img);
 
@@ -173,7 +175,10 @@ function renderTable(limit, paginaActual) {
         // Columna con imagen del material
         let td = document.createElement("td");
         let img = document.createElement("img");
-        img.src = new URL('/storage/', window.location).href + (item.image_path ?? "no_image.jpg");
+        img.src = new URL(
+            item.image_path ? '/storage/' + item.image_path : '/img/no_image.jpg',
+            window.location
+        ).href;
         img.style.maxWidth = "100px";
         td.appendChild(img);
         tr.appendChild(td);

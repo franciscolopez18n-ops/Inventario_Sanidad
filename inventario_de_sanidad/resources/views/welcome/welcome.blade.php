@@ -9,7 +9,7 @@
 @section('content')
 
 @php
-    use App\Enums\FlashType;
+    use App\Constants\FlashType;
 @endphp
 
 <!-- Dialog para cambiar contraseña -->
@@ -38,14 +38,14 @@
     </div>
 </dialog>
 
-@if (session(FlashType::SUCCESS->value))
+@if (session(FlashType::SUCCESS))
     <div class="con">
         <h1>Bienvenido/a <span>{{ Cookie::get('NAME') }}</span></h1>
         <p>Has iniciado sesión correctamente.</p>
     </div>
 
     <div id="successToast" class="toast-success hidden">
-        <p>{{ session(FlashType::SUCCESS->value) }}</p>
+        <p>{{ session(FlashType::SUCCESS) }}</p>
     </div>
 @endif
 

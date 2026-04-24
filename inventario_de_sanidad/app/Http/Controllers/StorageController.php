@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Modification;
-use App\Enums\FlashType;
+use App\Constants\FlashType;
 use App\Models\Storage;
 use App\Models\Material;
 use App\Models\User;
@@ -80,9 +80,9 @@ class StorageController extends Controller
 
         // Si no se encuentra el registro en 'use' o 'reserve' se retorna un error.
         if (empty($reserveRecord)) {
-            return back()->with(FlashType::ERROR->value, 'El material no está añadido en el almacenamiento de reserva.');
+            return back()->with(FlashType::ERROR, 'El material no está añadido en el almacenamiento de reserva.');
         } else if (empty($useRecord)  && !$validated["onlyReserve"]) {
-            return back()->with(FlashType::ERROR->value, 'El material no está añadido en el almacenamiento de uso.');
+            return back()->with(FlashType::ERROR, 'El material no está añadido en el almacenamiento de uso.');
         }
 
         // Se asignan los nuevos valores provenientes del request para el almacenamiento de uso.
@@ -113,7 +113,7 @@ class StorageController extends Controller
         )
         {
             // Si no se detecta ningún cambio, se retorna un mensaje informativo.
-            return back()->with(FlashType::INFO->value, 'No se han detectado cambios en los datos.');
+            return back()->with(FlashType::INFO, 'No se han detectado cambios en los datos.');
         }
 
         try {
@@ -124,7 +124,7 @@ class StorageController extends Controller
 
                 // Se verifica que la diferencia no provoque que el stock de reserva sea negativo.
                 if (abs($differenceReserve) > $reserveRecord->units && $reserveRecord->units > 0) {
-                    return back()->with(FlashType::ERROR->value, 'La cantidad de reserva no puede ser negativa.');
+                    return back()->with(FlashType::ERROR, 'La cantidad de reserva no puede ser negativa.');
                 }
 
                 // Inicia una transacción de base de datos: si algo falla, se revierte todo.
@@ -148,7 +148,7 @@ class StorageController extends Controller
                 $this->comprobateUnits($material, 'reserve', $currentLocation);
 
                 // Devuelve una respuesta de éxito al usuario.
-                return back()->with(FlashType::SUCCESS->value, 'Se ha actualizado correctamente el almacenamiento de reserva.');
+                return back()->with(FlashType::SUCCESS, 'Se ha actualizado correctamente el almacenamiento de reserva.');
             }
     
             // Se calculan las diferencias en unidades para el almacenamiento de uso y reserva.
@@ -157,20 +157,20 @@ class StorageController extends Controller
     
             // Si cambia ambas unidades, no se realiza el cambio.
             if ($differenceUse !== 0 && $differenceReserve !== 0) {
-                return back()->with(FlashType::ERROR->value, 'Solo puedes modificar una de las dos cantidades; el otro valor se ajustará automáticamente.');
+                return back()->with(FlashType::ERROR, 'Solo puedes modificar una de las dos cantidades; el otro valor se ajustará automáticamente.');
             }
     
             if ($differenceUse !== 0) {
                 // Si se modifica la cantidad de uso, se ajusta automáticamente la de reserva.
                 $newReserveUnits  = $reserveRecord->units - $differenceUse;
                 if ($newReserveUnits < 0) {
-                    return back()->with(FlashType::ERROR->value, 'No puedes transferir más unidades de las que hay en reserva.');
+                    return back()->with(FlashType::ERROR, 'No puedes transferir más unidades de las que hay en reserva.');
                 }
             } else if ($differenceReserve !== 0) {
                 // Si se modifica la cantidad de reserva, se ajusta automáticamente la de uso.
                 $newUseUnits  = $useRecord->units - $differenceReserve;
                 if ($newUseUnits < 0) {
-                    return back()->with(FlashType::ERROR->value, 'No puedes transferir más unidades de las que hay en uso.');
+                    return back()->with(FlashType::ERROR, 'No puedes transferir más unidades de las que hay en uso.');
                 }
             }
     
@@ -219,10 +219,10 @@ class StorageController extends Controller
             $this->comprobateUnits($material, 'reserve', $currentLocation);
     
             // Devuelve una respuesta de éxito al usuario.
-            return back()->with(FlashType::SUCCESS->value, 'Almacenamiento actualizado correctamente.');
+            return back()->with(FlashType::SUCCESS, 'Almacenamiento actualizado correctamente.');
         } catch (\Exception $e) {
             // Si ocurre algún error durante el proceso, muestra un mensaje de error.
-            return back()->with(FlashType::ERROR->value, 'Error al modificar los registros: ' . $e->getMessage());
+            return back()->with(FlashType::ERROR, 'Error al modificar los registros: ' . $e->getMessage());
         }
     }
 
@@ -275,7 +275,7 @@ class StorageController extends Controller
 
         // Si no existe el registro se retorna un mensaje de error.
         if (!$useRecord) {
-            return back()->with(FlashType::ERROR->value, 'No se ha encontrado el almacenamiento de uso en esta ubicación.');
+            return back()->with(FlashType::ERROR, 'No se ha encontrado el almacenamiento de uso en esta ubicación.');
         }
 
         // Obtiene las unidades actuales disponibles en uso.
@@ -310,10 +310,10 @@ class StorageController extends Controller
             $this->comprobateUnits($material, 'use', $currentLocation);
 
             // Devuelve una respuesta de éxito al usuario.
-            return back()->with(FlashType::SUCCESS->value, "Se han restado {$modifiedUnits} unidades.");
+            return back()->with(FlashType::SUCCESS, "Se han restado {$modifiedUnits} unidades.");
         } catch (\Exception $e) {
             // Si ocurre algún error durante el proceso, muestra un mensaje de error.
-            return back()->with(FlashType::ERROR->value, 'Error al modificar el almacenamiento: ' . $e->getMessage());
+            return back()->with(FlashType::ERROR, 'Error al modificar el almacenamiento: ' . $e->getMessage());
         }
     }
 

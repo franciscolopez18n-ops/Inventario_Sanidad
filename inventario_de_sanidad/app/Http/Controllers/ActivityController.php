@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Enums\FlashType;
+use App\Constants\FlashType;
 use App\Models\Activity;
 use App\Models\MaterialActivity;
 use App\Models\Material;
@@ -34,7 +34,7 @@ class ActivityController extends Controller
     {
         $user = User::find(Cookie::get('USERPASS'));
         if (!$user) {
-            return back()->with(FlashType::ERROR->value, 'Usuario no encontrado.');
+            return back()->with(FlashType::ERROR, 'Usuario no encontrado.');
         }
         
         $activities = $user->activities()
@@ -52,7 +52,7 @@ class ActivityController extends Controller
     {
         $user = User::find(Cookie::get('USERPASS'));
         if (!$user) {
-            return back()->with(FlashType::ERROR->value, 'Usuario no encontrado.');
+            return back()->with(FlashType::ERROR, 'Usuario no encontrado.');
         }
         
         $activities = Activity::with('materials','teacher','user')
@@ -70,7 +70,7 @@ class ActivityController extends Controller
     {
         $user = User::find(Cookie::get('USERPASS'));
         if (!$user) {
-            return back()->with(FlashType::ERROR->value, 'Usuario no encontrado.');
+            return back()->with(FlashType::ERROR, 'Usuario no encontrado.');
         }
         
         $activities = $user->activities()
@@ -105,7 +105,7 @@ class ActivityController extends Controller
 
         // Si no hay datos válidos en la cesta, redirige con mensaje de error.
         if (empty($basket) || !is_array($basket)) {
-            return back()->with(FlashType::ERROR->value, 'No hay materiales en la cesta.');
+            return back()->with(FlashType::ERROR, 'No hay materiales en la cesta.');
         }
 
         // Recupera el ID del usuario desde la cookie.
@@ -113,7 +113,7 @@ class ActivityController extends Controller
 
         // Si no hay usuario válido, redirige con error.
         if (!$user_id || !User::find($user_id)) {
-            return back()->with(FlashType::ERROR->value, 'Usuario no válido.');
+            return back()->with(FlashType::ERROR, 'Usuario no válido.');
         }
 
         try {
@@ -135,10 +135,10 @@ class ActivityController extends Controller
             Cookie::queue(Cookie::forget('materialsBasket'));
 
             // Redirige con mensaje de éxito.
-            return back()->with(FlashType::SUCCESS->value, 'Actividad insertada correctamente.');
+            return back()->with(FlashType::SUCCESS, 'Actividad insertada correctamente.');
         } catch (\Exception $e) {
             // Si algo falla, redirige con el mensaje de error.
-            return back()->with(FlashType::ERROR->value, 'Error al insertar la actividad: ' . $e->getMessage());
+            return back()->with(FlashType::ERROR, 'Error al insertar la actividad: ' . $e->getMessage());
         }
     }
 

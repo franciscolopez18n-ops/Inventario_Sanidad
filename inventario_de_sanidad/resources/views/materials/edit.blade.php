@@ -34,9 +34,9 @@
             <label for="image" class="btn btn-primary">Cambiar Imagen <i class="fa-solid fa-image"></i></label>
             <input type="file" name="image" id="image" class="file-upload-input" onchange="previewImage(event, '#imgPreview')">
             <img id="imgPreview"
-                 src="{{ asset('storage/' . ($material->image_path ?? 'no_image.jpg')) }}"
-                 alt="Previsualización"
-                 style="max-width: 150px; display: block; margin-top: 10px;">
+                src="{{ asset($material->image_path ? 'storage/' . $material->image_path : 'img/no_image.jpg') }}"
+                alt="Previsualización"
+                style="max-width: 150px; display: block; margin-top: 10px;">
             @error('image')
                 <div class="alert alert-error alert-form">{{ $message }}</div>
             @enderror

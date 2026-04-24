@@ -1,16 +1,18 @@
 @php
-    use App\Enums\FlashType;
+    use App\Constants\FlashType;
 
     $classes = [
-        FlashType::SUCCESS->value => 'alert alert-success',
-        FlashType::ERROR->value => 'alert alert-error',
-        FlashType::WARNING->value => 'alert alert-warning',
-        FlashType::INFO->value => 'alert alert-info'
+        FlashType::SUCCESS => 'alert alert-success',
+        FlashType::ERROR => 'alert alert-error',
+        FlashType::WARNING => 'alert alert-warning',
+        FlashType::INFO => 'alert alert-info'
     ];
 @endphp
 
-@foreach (FlashType::cases() as $type)
-    @foreach((array)session($type->value, []) as $i => $message)
-        <p class="{{ $classes[$type->value] }}"> {{ $message }} </p>
+<div class="alerts-container">
+    @foreach (FlashType::cases() as $type)
+        @foreach((array)session($type, []) as $i => $message)
+            <p class="{{ $classes[$type] }}"> {{ $message }} </p>
+        @endforeach
     @endforeach
-@endforeach
+</div>

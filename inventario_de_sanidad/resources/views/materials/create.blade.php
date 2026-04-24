@@ -17,7 +17,6 @@
     <div class="basket-toggle">
         <button id="toggleBasketBtn" class="btn btn-outline btn-notifications" type="button">
             <i class="fa-solid fa-basket-shopping"></i>
-            {{-- <span class="basket-count">{{ count($basket) }}</span> --}}
         </button>
     </div>
 
@@ -26,19 +25,22 @@
         @csrf
 
         <div class="form-group">
-            <input type="text" name="name" placeholder="Nombre del material" value="{{ old('name') }}">
+            <input type="text" name="name" placeholder="Nombre del material">
         </div>
 
         <div class="form-group">
-            <textarea name="description" rows="3" placeholder="Descripción del material">{{ old('description') }}</textarea>
+            <textarea name="description" rows="3" placeholder="Descripción del material"></textarea>
         </div>
 
         <div class="form-group">
             <p>Localización</p>
+
             <input type="radio" id="cae" name="storage" value="CAE">
             <label for="cae">CAE</label><br>
+
             <input type="radio" id="odontology" name="storage" value="odontology">
             <label for="odontology">Odontología</label><br>
+
             <input type="radio" id="ambos" name="storage" value="ambos">
             <label for="ambos">Ambos</label><br>
         </div>
@@ -47,11 +49,11 @@
         <fieldset class="fieldset">
             <legend>Uso</legend>
             <div class="form-grid-5">
-                <input type="number" name="units_use" placeholder="Cantidad" value="{{ old('units_use') }}">
-                <input type="number" name="min_units_use" placeholder="Cantidad mínima" value="{{ old('min_units_use') }}">
-                <input type="number" name="cabinet_use" placeholder="Armario" value="{{ old('cabinet_use') }}">
-                <input type="number" name="shelf_use" placeholder="Balda" value="{{ old('shelf_use') }}">
-                <input type="number" name="drawer" placeholder="Cajón" value="{{ old('drawer') }}">
+                <input type="number" name="units_use" placeholder="Cantidad">
+                <input type="number" name="min_units_use" placeholder="Cantidad mínima">
+                <input type="number" name="cabinet_use" placeholder="Armario">
+                <input type="number" name="shelf_use" placeholder="Balda">
+                <input type="number" name="drawer" placeholder="Cajón">
             </div>
         </fieldset>
 
@@ -59,10 +61,10 @@
         <fieldset class="fieldset">
             <legend>Reserva</legend>
             <div class="form-grid-4">
-                <input type="number" name="units_reserve" placeholder="Cantidad" value="{{ old('units_reserve') }}">
-                <input type="number" name="min_units_reserve" placeholder="Cantidad mínima" value="{{ old('min_units_reserve') }}">
-                <input type="text" name="cabinet_reserve" placeholder="Armario" value="{{ old('cabinet_reserve') }}">
-                <input type="number" name="shelf_reserve" placeholder="Balda" value="{{ old('shelf_reserve') }}">
+                <input type="number" name="units_reserve" placeholder="Cantidad">
+                <input type="number" name="min_units_reserve" placeholder="Cantidad mínima">
+                <input type="text" name="cabinet_reserve" placeholder="Armario">
+                <input type="number" name="shelf_reserve" placeholder="Balda">
             </div>
         </fieldset>
 
@@ -84,8 +86,6 @@
         {{-- Mensaje de éxito --}}
         <div id="success-message" class="success hidden"></div>
 
-        <input type="hidden" name="materialsAddBasket" id="materialsAddBasket">
-
         {{-- Botón de alta --}}
         <input type="submit" value="Alta" class="btn btn-success">
     </form>
@@ -94,10 +94,6 @@
     <x-alerts />
 
     {{-- Cesta --}}
-    @php
-        $basket = json_decode(Cookie::get('materialsAddBasket','[]'), true);
-    @endphp
-
     <div class="basket-section hidden">
         <h4 class="basket-title">Cesta de Materiales</h4>
         
