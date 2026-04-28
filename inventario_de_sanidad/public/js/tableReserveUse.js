@@ -1,11 +1,7 @@
 /**
  * Registra el evento para ejecutar la función `inicio` cuando el DOM esté listo.
- * Compatible con navegadores modernos y antiguos.
  */
-if (document.addEventListener)
-    window.addEventListener("DOMContentLoaded", inicio);
-else if (document.attachEvent)
-    window.attachEvent("DOMContentLoaded", inicio);
+window.addEventListener("DOMContentLoaded", inicio);
 
 /**
  * Función principal que inicializa la vista, espera los datos históricos,

@@ -1,7 +1,4 @@
-if (document.addEventListener)
-    window.addEventListener("load", inicio);
-else if (document.attachEvent)
-    window.attachEvent("onload", inicio);
+window.addEventListener("load", inicio);
 
 // Función que retorna una promesa con los datos
 function updateDataRetrieve() {

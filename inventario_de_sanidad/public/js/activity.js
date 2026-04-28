@@ -1,9 +1,5 @@
-// Al cargar la página, se ejecuta la función inicio() con compatibilidad para navegadores antiguos.
-if (document.addEventListener) {
-    window.addEventListener("load", inicio);
-} else if (document.attachEvent) {
-    window.attachEvent("onload", inicio);
-}
+// Al cargar la página, se ejecuta la función inicio()
+window.addEventListener("load", inicio);
 
 // Función que se ejecuta una vez carga la página.
 function inicio() {
@@ -14,18 +10,11 @@ function inicio() {
 
     // Si existe el botón para agregar.
     if (addButton) {
-        // Se asignan los eventos de "click" comprobando la compatibilidad con el navegador.
+        // Se asignan los eventos de "click".
         // Y se recorre cada botón de eliminación para asignar el evento "click".
-        if (document.addEventListener) {
-            addButton.addEventListener("click", addMaterialDataCookie);
-            for (let i = 0; i < deleteButtons.length; i++) {
-                deleteButtons[i].addEventListener("click", deleteMaterialDataCookie);
-            }
-        } else if (document.attachEvent) {
-            addButton.attachEvent("onclick", addMaterialDataCookie);
-            for (let i = 0; i < deleteButtons.length; i++) {
-                deleteButtons[i].attachEvent("onclick", deleteMaterialDataCookie);
-            }
+        addButton.addEventListener("click", addMaterialDataCookie);
+        for (let i = 0; i < deleteButtons.length; i++) {
+            deleteButtons[i].addEventListener("click", deleteMaterialDataCookie);
         }
     }
 
@@ -104,11 +93,8 @@ function updateTable() {
         deleteButton.textContent = "Eliminar";
 
         // Se añade el evento de click al botón para eliminar.
-        if (document.addEventListener) {
-            deleteButton.addEventListener("click", deleteMaterialDataCookie);
-        } else if (document.attachEvent) {
-            deleteButton.attachEvent("onclick", deleteMaterialDataCookie);
-        }
+        deleteButton.addEventListener("click", deleteMaterialDataCookie);
+        
 
         // Se añaden las celdas a la fila: nombre del material, unidades y botón de eliminación.
         buttonTd.appendChild(deleteButton);

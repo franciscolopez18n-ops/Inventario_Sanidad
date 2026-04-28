@@ -1,15 +1,5 @@
-function addEvent(element, eventName, handler) {
-    if (element.addEventListener) {
-        element.addEventListener(eventName, handler, false);
-    } else if (element.attachEvent) {
-        element.attachEvent('on' + eventName, function () {
-            handler.call(element, window.event);
-        });
-    }
-}
-
 // Ejecutar al cargar el DOM
-addEvent(document, "DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
     // Obtener estado guardado del modo oscuro desde el localStorage
     let darkmode = localStorage.getItem('darkmode');
     let themeSwitch = document.getElementById('theme-switch');
@@ -20,7 +10,7 @@ addEvent(document, "DOMContentLoaded", function () {
     }
 
     // Añadir evento click al botón para alternar tema
-    addEvent(themeSwitch, "click", toggleTheme);
+    themeSwitch.addEventListener("click", toggleTheme);
 });
 
 

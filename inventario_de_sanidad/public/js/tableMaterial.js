@@ -1,13 +1,10 @@
 // ====================== EVENTO INICIAL ======================
 
 /**
- * Asigna el evento de carga inicial compatible con navegadores modernos y antiguos.
+ * Asigna el evento de carga inicial.
  * Ejecuta la función `inicio` una vez que el DOM esté completamente cargado.
  */
-if (document.addEventListener)
-    window.addEventListener("DOMContentLoaded", inicio); // Moderno
-else if (document.attachEvent)
-    window.attachEvent("DOMContentLoaded", inicio); // IE
+window.addEventListener("DOMContentLoaded", inicio);
 
 // ====================== FUNCIÓN INICIO ======================
 

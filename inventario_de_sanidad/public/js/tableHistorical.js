@@ -1,8 +1,4 @@
-// Asigna el evento de inicio dependiendo del navegador
-if (document.addEventListener)
-    window.addEventListener("DOMContentLoaded", inicio); // Navegadores modernos
-else if (document.attachEvent)
-    window.attachEvent("DOMContentLoaded", inicio); // Compatibilidad antigua (IE)
+window.addEventListener("DOMContentLoaded", inicio);
 
 /**
  * Función principal que espera a que `window.MODIFICATIONSDATA` esté disponible, oculta el loader,

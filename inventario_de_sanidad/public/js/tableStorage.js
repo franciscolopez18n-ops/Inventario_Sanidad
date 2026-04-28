@@ -1,11 +1,7 @@
 /**
  * Detecta cuando el DOM está listo y ejecuta la función `inicio`.
- * Compatible con navegadores modernos y antiguos.
  */
-if (document.addEventListener)
-    window.addEventListener("DOMContentLoaded", inicio);
-else if (document.attachEvent)
-    window.attachEvent("DOMContentLoaded", inicio);
+window.addEventListener("DOMContentLoaded", inicio);
 
 /**
  * Función principal que espera que los datos estén disponibles, oculta el loader,

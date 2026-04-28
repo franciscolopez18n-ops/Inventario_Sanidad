@@ -1,13 +1,7 @@
 const imageInput = document.getElementById("image");
 const fileNameDisplay = document.getElementById("file-name");
 
-if (imageInput.addEventListener) {
-    imageInput.addEventListener("change", handleImageChange, false);
-} else if (imageInput.attachEvent) {
-    imageInput.attachEvent("onchange", function () {
-        handleImageChange.call(imageInput);
-    });
-}
+imageInput.addEventListener("change", handleImageChange);
 
 function handleImageChange() {
     const fileName = this.files[0] ? this.files[0].name : "Ningún archivo seleccionado";

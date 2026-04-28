@@ -1,7 +1,4 @@
-if (document.addEventListener)
-    window.addEventListener("load", inicio);
-else if (document.attachEvent)
-    window.attachEvent("onload", inicio);
+window.addEventListener("load", inicio);
 
 // Función asíncrona que obtiene los datos de usuario del servidor
 async function userDataRetrieve() {
@@ -32,18 +29,10 @@ function inicio() {
     let botonesBaja = document.querySelectorAll("[id^='btn-delete-']");
 
     for (let btn of botonesVer) {
-        if (document.addEventListener) {
-            btn.addEventListener("submit", mostrarDialogConfirmacion);
-        } else if (document.attachEvent) {
-            btn.attachEvent("onsubmit", mostrarDialogConfirmacion);
-        }
+        btn.addEventListener("submit", mostrarDialogConfirmacion);
     }
 
     for (let btn of botonesBaja) {
-        if (document.addEventListener) {
-            btn.addEventListener("submit", mostrarDialogConfirmacion);
-        } else if (document.attachEvent) {
-            btn.attachEvent("onsubmit", mostrarDialogConfirmacion);
-        }
+        btn.addEventListener("submit", mostrarDialogConfirmacion);
     }
 }
