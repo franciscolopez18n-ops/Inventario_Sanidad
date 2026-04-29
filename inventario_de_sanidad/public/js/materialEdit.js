@@ -1,7 +1,4 @@
-if (document.addEventListener)
-    window.addEventListener("load", inicio);
-else if (document.attachEvent)
-    window.attachEvent("onload", inicio);
+window.addEventListener("load", inicio);
 
 // Función que retorna una promesa con los datos
 function updateDataRetrieve() {
@@ -24,17 +21,11 @@ function updateDataRetrieve() {
 
 // Función inicio que espera la promesa antes de continuar
 function  inicio() {
-
     updateDataRetrieve();
 
     let botonesBaja = document.querySelectorAll("[id^='btn-delete-']") 
     console.log(botonesBaja);
     for (let btn of botonesBaja) {
-        if (document.addEventListener){
-            btn.addEventListener("submit", mostrarDialogConfirmacion);
-        }else if (document.attachEvent){
-            btn.attachEvent("onsubmit", mostrarDialogConfirmacion);
-        }
+        btn.addEventListener("submit", mostrarDialogConfirmacion);
     }
-    
 }

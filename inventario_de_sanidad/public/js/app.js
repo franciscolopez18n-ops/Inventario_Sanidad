@@ -1,14 +1,4 @@
-function addEvent(element, eventName, handler) {
-    if (element.addEventListener) {
-        element.addEventListener(eventName, handler, false);
-    } else if (element.attachEvent) {
-        element.attachEvent('on' + eventName, function () {
-            handler.call(element, window.event);
-        });
-    }
-}
-
-addEvent(document, "DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
     let sidebar = document.querySelector('.sidebar');
     let linkTexts = document.querySelectorAll('.link-text');
     let btnNotifications = document.getElementById("btn-notifications");
@@ -65,8 +55,8 @@ function initSidebarToggle(sidebar, linkTexts) {
         }
     }
 
-    addEvent(document, 'click', handleDocumentClick);
-    addEvent(sidebar, 'transitionend', handleTransitionEnd);
+    document.addEventListener('click', handleDocumentClick);
+    sidebar.addEventListener('transitionend', handleTransitionEnd);
 }
 
 // Inicializa la apertura/cierre de submenús dentro del sidebar
@@ -79,7 +69,7 @@ function initSubmenus() {
         let toggleLink = parent.querySelector("a");
         if (toggleLink) {
             // Al hacer click en el enlace del submenú, evita la navegación y alterna la clase 'open'
-            addEvent(toggleLink, "click", function (e) {
+            toggleLink.addEventListener("click", function (e) {
                 e.preventDefault();
                 parent.classList.toggle("open");
             });
@@ -110,9 +100,8 @@ function initNotifications(btnNotifications, notificationsList) {
         }
     }
 
-    addEvent(btnNotifications, "click", toggleNotifications);
-    addEvent(document, "click", closeNotifications);
-
+    btnNotifications.addEventListener("click", toggleNotifications);
+    document.addEventListener("click", closeNotifications);
 }
 
 // Inicializa el toggle para mostrar/ocultar la sección de logout en el menú de usuario
@@ -132,9 +121,8 @@ function initLogoutToggle(userInfoToggle, logoutSection) {
         }
     }
 
-    addEvent(userInfoToggle, "click", toggleLogout);
-    addEvent(document, "click", hideLogout);
-
+    userInfoToggle.addEventListener("click", toggleLogout);
+    document.addEventListener("click", hideLogout);
 }
 
 // Marca como activo el link seleccionado dentro del sidebar
@@ -148,7 +136,7 @@ function initActiveLinks() {
 
         if (href && href !== '') {
             // Al hacer click, remueve 'active' de todos y la añade al seleccionado
-            addEvent(link, 'click', function () {
+            link.addEventListener('click', function () {
                 let j = 0;
                 while (j < links.length) {
                     links[j].classList.remove('active');

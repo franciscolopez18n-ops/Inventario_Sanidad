@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Constants\FlashType;
 use App\Models\Material;
 use App\Models\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage as StorageFacade;
 
 class MaterialManagementController extends Controller {
@@ -65,19 +66,42 @@ class MaterialManagementController extends Controller {
      * @return \Illuminate\Http\RedirectResponse
      */
     public function storeBatch(Request $request) {
-        // Valida que la cookie 'materialsAddBasket' esté presente en el request.
-        $validated = $request->validate([
-            'materialsAddBasket' => 'required'
-        ], [
-            'materialsAddBasket.required' => 'Debe introducir datos a la cesta'
-        ]);
+        // Decodifica la cookie desde JSON a un array asociativo. Si no es válido, usa un array vacío que será rechazado.
+        // Los métodos de Laravel esperan cookies encriptadas por ellos mismos, por lo que hay que leerla en crudo
+        $basket = json_decode(urldecode($_COOKIE['materialsAddBasket'] ?? '[]'), true);
+        
+        if (empty($basket)) {
+            return back()->with(FlashType::ERROR, 'No hay materiales añadidos en la cesta para dar de alta.');
+        }
 
-        // Decodifica la cookie desde JSON a un array asociativo. Si no es válido, usa array vacío.
-        $basket = json_decode($validated['materialsAddBasket'], true) ?? [];
+        // Comprobaciones de seguridad por si el frontend fue manipulado.
+        foreach ($basket as &$material) {
+            // Normalizaciones
+            $material['reserve']['drawer'] = null;
 
-        // Si no hay datos válidos en la cesta, redirige con mensaje de error.
-        if (empty($basket) || !is_array($basket)) {
-            return back()->with('error', 'No hay materiales en la cesta para dar de alta.');
+            // Validaciones
+            $validator = validator($material, [
+                'name' => 'required|string',
+                'description' => 'required|string',
+                'storage' => 'required|in:CAE,odontology,ambos',
+                'image_temp' => 'nullable|string',
+
+                'use.units' => 'required|numeric|min:1',
+                'use.min_units' => 'required|numeric|min:1',
+                'use.cabinet' => 'required|numeric|min:1',
+                'use.shelf' => 'required|numeric|min:1',
+                'use.drawer' => 'required|numeric|min:1',
+
+                'reserve.units' => 'required|numeric|min:1',
+                'reserve.min_units' => 'required|numeric|min:1',
+                'reserve.cabinet' => 'required|string',
+                'reserve.shelf' => 'required|numeric|min:1',
+                // 'reserve.drawer' => 'present',
+            ]);
+
+            if ($validator->fails()) {
+                return back()->with(FlashType::ERROR, 'Los datos de la cesta no son válidos.');
+            }
         }
 
         // Array para almacenar información de imágenes que deben moverse tras la transacción.
@@ -115,7 +139,7 @@ class MaterialManagementController extends Controller {
 
         } catch (\Exception $e) {
             // Si hay error en la transacción, muestra mensaje de error.
-            return back()->with('error', 'Error al insertar los materiales: ' . $e->getMessage());
+            return back()->with(FlashType::ERROR, 'Error al insertar los materiales: ' . $e->getMessage());
         }
 
         $failedMaterials = [];
@@ -144,11 +168,11 @@ class MaterialManagementController extends Controller {
 
         // Si no hubo errores al mover imágenes, muestra mensaje de éxito.
         if (empty($failedMaterials)) {
-            return back()->with('success', 'Materiales incorporados correctamente.');
+            return back()->with(FlashType::SUCCESS, 'Materiales incorporados correctamente.');
         } else {
             // Si hubo fallos al mover imágenes, muestra advertencia con los materiales afectados.
             $failedList = implode(', ', $failedMaterials);
-            return back()->with('warning', "Error al mover imágenes para los siguientes materiales: $failedList. Los demás se incorporaron correctamente.");
+            return back()->with(FlashType::WARNING, "Error al mover imágenes para los siguientes materiales: $failedList. Los demás se incorporaron correctamente.");
         }
     }
 
@@ -203,7 +227,7 @@ class MaterialManagementController extends Controller {
             // Verifica si el material aún existe en la base de datos mediante su ID.
             if (!Material::find($material->material_id)) {
                 // Si no existe (puede haber sido eliminado previamente), muestra advertencia.
-                return back()->with('warning', 'El material no existe o ya ha sido eliminado.');
+                return back()->with(FlashType::WARNING, 'El material no existe o ya ha sido eliminado.');
             }
 
             // Almacena la ruta de la imagen asociada al material (si existe).
@@ -218,10 +242,10 @@ class MaterialManagementController extends Controller {
             $material->delete();
 
             // Devuelve una respuesta de éxito al usuario.
-            return back()->with('success', 'Material eliminado correctamente.');
+            return back()->with(FlashType::SUCCESS, 'Material eliminado correctamente.');
         } catch (\Exception $e) {
             // Si ocurre algún error durante el proceso, muestra un mensaje de error.
-            return back()->with('error', 'Error al eliminar el material: ' . $e->getMessage());
+            return back()->with(FlashType::ERROR, 'Error al eliminar el material: ' . $e->getMessage());
         }
     }
 
@@ -236,12 +260,12 @@ class MaterialManagementController extends Controller {
         $validated = $request->validate([
             'name'        => 'required|string|max:60',
             'description' => 'required|string|max:100',
-            'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
+            'image'       => 'nullable|image|mimes:jpeg,png|max:4096',
         ], [
             'name.required'        => 'Debe introducir el nombre del material.',
             'description.required' => 'Debe introducir la descripción del material.',
             'image.image'          => 'El fichero debe ser una imagen.',
-            'image.mimes'          => 'Solo se aceptan jpeg, png, jpg, gif o svg.',
+            'image.mimes'          => 'Solo se aceptan jpeg o png.',
             'image.max'            => 'La imagen no puede superar 4 MB.',
         ]);
 
@@ -275,7 +299,7 @@ class MaterialManagementController extends Controller {
             });
 
             // Si todo fue bien, se muestra mensaje de éxito.
-            return back()->with('success', 'Material editado correctamente.');
+            return back()->with(FlashType::SUCCESS, 'Material editado correctamente.');
         } catch (\Exception $e) {
             // Si hubo un error, y se subió una nueva imagen, se elimina para evitar archivos huérfanos.
             if (!empty($newPath) && StorageFacade::disk('public')->exists($newPath)) {
@@ -283,7 +307,7 @@ class MaterialManagementController extends Controller {
             }
 
             // Se informa del error al usuario.
-            return back()->with('error', 'Error al editar el material: ' . $e->getMessage());
+            return back()->with(FlashType::ERROR, 'Error al editar el material: ' . $e->getMessage());
         }
     }
 
@@ -295,7 +319,7 @@ class MaterialManagementController extends Controller {
      */
     public function uploadTemp(Request $request) {
         $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:4096'
+            'image' => 'required|image|mimes:jpeg,png|max:4096'
         ]);
 
         // Se almacena la imagen en la carpeta 'temp' del disco 'public' y devuelve la ruta relativa dentro del disco.

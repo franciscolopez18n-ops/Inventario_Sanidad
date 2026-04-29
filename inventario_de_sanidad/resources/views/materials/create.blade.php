@@ -17,7 +17,6 @@
     <div class="basket-toggle">
         <button id="toggleBasketBtn" class="btn btn-outline btn-notifications" type="button">
             <i class="fa-solid fa-basket-shopping"></i>
-            {{-- <span class="basket-count">{{ count($basket) }}</span> --}}
         </button>
     </div>
 
@@ -26,63 +25,47 @@
         @csrf
 
         <div class="form-group">
-            <input type="text" name="name" placeholder="Nombre del material" value="{{ old('name') }}">
-            @error('name')
-                <div class="alert-error-uspas">{{ $message }}</div>
-            @enderror
+            <input type="text" name="name" placeholder="Nombre del material">
         </div>
 
         <div class="form-group">
-            <textarea name="description" rows="3" placeholder="Descripción del material">{{ old('description') }}</textarea>
-            @error('description')
-                <div class="alert-error-uspas">{{ $message }}</div>
-            @enderror
+            <textarea name="description" rows="3" placeholder="Descripción del material"></textarea>
         </div>
 
         <div class="form-group">
             <p>Localización</p>
+
             <input type="radio" id="cae" name="storage" value="CAE">
             <label for="cae">CAE</label><br>
+
             <input type="radio" id="odontology" name="storage" value="odontology">
             <label for="odontology">Odontología</label><br>
+
             <input type="radio" id="ambos" name="storage" value="ambos">
             <label for="ambos">Ambos</label><br>
-            @error('storage')
-                <div class="alert-error-uspas">{{ $message }}</div>
-            @enderror
         </div>
 
         {{-- Uso --}}
         <fieldset class="fieldset">
             <legend>Uso</legend>
             <div class="form-grid-5">
-                <input type="number" name="units_use" placeholder="Cantidad" min="0" value="{{ old('units_use') }}">
-                <input type="number" name="min_units_use" placeholder="Cantidad mínima" min="0" value="{{ old('min_units_use') }}">
-                <input type="number" name="cabinet_use" placeholder="Armario" value="{{ old('cabinet_use') }}">
-                <input type="number" name="shelf_use" placeholder="Balda" min="0" value="{{ old('shelf_use') }}">
-                <input type="number" name="drawer" placeholder="Cajón" value="{{ old('drawer') }}">
+                <input type="number" name="units_use" placeholder="Cantidad">
+                <input type="number" name="min_units_use" placeholder="Cantidad mínima">
+                <input type="number" name="cabinet_use" placeholder="Armario">
+                <input type="number" name="shelf_use" placeholder="Balda">
+                <input type="number" name="drawer" placeholder="Cajón">
             </div>
-            @foreach (['units_use', 'min_units_use', 'cabinet_use', 'shelf_use', 'drawer'] as $field)
-                @error($field)
-                    <div class="alert-error-uspas">{{ $message }}</div>
-                @enderror
-            @endforeach
         </fieldset>
 
         {{-- Reserva --}}
         <fieldset class="fieldset">
             <legend>Reserva</legend>
             <div class="form-grid-4">
-                <input type="number" name="units_reserve" placeholder="Cantidad" min="0" value="{{ old('units_reserve') }}">
-                <input type="number" name="min_units_reserve" placeholder="Cantidad mínima" min="0" value="{{ old('min_units_reserve') }}">
-                <input type="text" name="cabinet_reserve" placeholder="Armario" value="{{ old('cabinet_reserve') }}">
-                <input type="number" name="shelf_reserve" placeholder="Balda" value="{{ old('shelf_reserve') }}">
+                <input type="number" name="units_reserve" placeholder="Cantidad">
+                <input type="number" name="min_units_reserve" placeholder="Cantidad mínima">
+                <input type="text" name="cabinet_reserve" placeholder="Armario">
+                <input type="number" name="shelf_reserve" placeholder="Balda">
             </div>
-            @foreach (['units_reserve', 'min_units_reserve', 'cabinet_reserve', 'shelf_reserve'] as $field)
-                @error($field)
-                    <div class="alert-error-uspas">{{ $message }}</div>
-                @enderror
-            @endforeach
         </fieldset>
 
         <div class="form-group file-upload">
@@ -103,53 +86,38 @@
         {{-- Mensaje de éxito --}}
         <div id="success-message" class="success hidden"></div>
 
-        <input type="hidden" name="materialsAddBasket" id="materialsAddBasket">
-
         {{-- Botón de alta --}}
         <input type="submit" value="Alta" class="btn btn-success">
     </form>
 
-    {{-- Flash messages --}}
-    @if (session('success'))
-        <p class="alert-success">{{ session('success') }}</p>
-    @endif
-
-    {{-- Mensajes de error --}}
-    @if (session('error'))
-        <p class="alert-error-uspas">{{ session('error') }}</p>
-    @endif
+    {{-- Alertas flash --}}
+    <x-alerts />
 
     {{-- Cesta --}}
-    @php
-        $basket = json_decode(Cookie::get('materialsAddBasket','[]'), true);
-    @endphp
-
     <div class="basket-section hidden">
-            <h4 class="basket-title">Cesta de Materiales</h4>
-            <div class="table-wrapper">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th rowspan="2">Nombre</th>
-                            <th rowspan="2">Descripción</th>
-                            <th rowspan="2">Localización</th>
-                            <th colspan="5">Uso</th>
-                            <th colspan="4">Reserva</th>
-                            <th rowspan="2">Imagen</th>
-                            <th rowspan="2"></th>
-                        </tr>
-                        <tr>
-                            <th>Cant.</th><th>Mín</th><th>Armario</th><th>Balda</th><th>Cajón</th>
-                            <th>Cant.</th><th>Mín</th><th>Armario</th><th>Balda</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                    </tbody>
-                </table>
-            </div>
+        <h4 class="basket-title">Cesta de Materiales</h4>
+        
+        <div class="table-wrapper">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th rowspan="2">Nombre</th>
+                        <th rowspan="2">Descripción</th>
+                        <th rowspan="2">Localización</th>
+                        <th colspan="5">Uso</th>
+                        <th colspan="4">Reserva</th>
+                        <th rowspan="2">Imagen</th>
+                        <th rowspan="2"></th>
+                    </tr>
+                    <tr>
+                        <th>Cant.</th><th>Mín</th><th>Armario</th><th>Balda</th><th>Cajón</th>
+                        <th>Cant.</th><th>Mín</th><th>Armario</th><th>Balda</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div>
-</div>
+    </div>
 @endsection
 
 @push('scripts')

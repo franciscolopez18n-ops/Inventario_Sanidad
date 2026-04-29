@@ -30,35 +30,35 @@
                     <label>Cantidad</label>
                     <input type="number" name="use_units" class="form-control" value="{{ $useRecord->units ?? '0' }}" min="0" required>
                     @error('use_units')
-                        <div class="alert-error-uspas">{{ $message }}</div>
+                        <div class="alert alert-error alert-form">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="">
                     <label>Cantidad Mínima</label>
                     <input type="number" name="use_min_units" class="form-control" value="{{ $useRecord->min_units ?? '0' }}" min="0" required>
                     @error('use_min_units')
-                        <div class="alert-error-uspas">{{ $message }}</div>
+                        <div class="alert alert-error alert-form">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="">
                     <label>Armario</label>
                     <input type="number" name="use_cabinet" class="form-control" value="{{ $useRecord->cabinet ?? '0' }}" min="0" required>
                     @error('use_cabinet')
-                        <div class="alert-error-uspas">{{ $message }}</div>
+                        <div class="alert alert-error alert-form">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="">
                     <label>Balda</label>
                     <input type="number" name="use_shelf" class="form-control" value="{{ $useRecord->shelf ?? '0' }}" min="0" required>
                     @error('use_shelf')
-                        <div class="alert-error-uspas">{{ $message }}</div>
+                        <div class="alert alert-error alert-form">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="">
                     <label>Cajón</label>
                     <input type="number" name="drawer" class="form-control" value="{{ $useRecord->drawer ?? '0' }}" min="0" required>
                     @error('drawer')
-                        <div class="alert-error-uspas">{{ $message }}</div>
+                        <div class="alert alert-error alert-form">{{ $message }}</div>
                     @enderror
                 </div>
             </div>
@@ -76,28 +76,28 @@
                     <label>Cantidad</label>
                     <input type="number" name="reserve_units" class="form-control" value="{{ $reserveRecord->units ?? '' }}" min="0" required>
                     @error('reserve_units')
-                        <div class="alert-error-uspas">{{ $message }}</div>
+                        <div class="alert alert-error alert-form">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="">
                     <label>Cantidad Mínima</label>
                     <input type="number" name="reserve_min_units" class="form-control" value="{{ $reserveRecord->min_units ?? '' }}" min="0" required>
                     @error('reserve_min_units')
-                        <div class="alert-error-uspas">{{ $message }}</div>
+                        <div class="alert alert-error alert-form">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="">
                     <label>Armario</label>
                     <input type="text" name="reserve_cabinet" class="form-control" value="{{ $reserveRecord->cabinet ?? '' }}" required>
                     @error('reserve_cabinet')
-                        <div class="alert-error-uspas">{{ $message }}</div>
+                        <div class="alert alert-error alert-form">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="">
                     <label>Balda</label>
                     <input type="number" name="reserve_shelf" class="form-control" value="{{ $reserveRecord->shelf ?? '' }}" min="0" required>
                     @error('reserve_shelf')
-                        <div class="alert-error-uspas">{{ $message }}</div>
+                        <div class="alert alert-error alert-form">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="">
@@ -120,18 +120,9 @@
         <br>
     </form>
 
-    <!-- Mensajes flash -->
-    @if (session('success'))
-        <p class="alert-success">{{ session('success') }}</p>
-    @endif
-
-    @if (session('error'))
-        <p class="alert-error-uspas">{{ session('error') }}</p>
-    @endif
-
-    @if (session('info'))
-        <p class="alert-error-uspas">{{ session('info') }}</p>
-    @endif
+    <!-- Alertas flash -->
+    <x-alerts />
+    
 </div>
 @endsection
 

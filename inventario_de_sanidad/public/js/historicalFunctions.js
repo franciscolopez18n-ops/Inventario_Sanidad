@@ -1,8 +1,4 @@
-if (document.addEventListener) {
-    window.addEventListener("load", inicio, false);
-} else if (document.attachEvent) {
-    window.attachEvent("onload", inicio);
-}
+window.addEventListener("load", inicio);
 
 function updateDataRetrieveModifications() {
     let result = fetch('/historical/modificationsHistoricalData')

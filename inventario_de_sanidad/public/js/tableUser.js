@@ -1,7 +1,4 @@
-if (document.addEventListener)
-    window.addEventListener("DOMContentLoaded", inicio);
-else if (document.attachEvent)
-    window.attachEvent("DOMContentLoaded", inicio);
+window.addEventListener("DOMContentLoaded", inicio);
 
 /**
  * Función principal que inicializa la carga y renderizado de datos

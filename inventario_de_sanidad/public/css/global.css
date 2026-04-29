@@ -225,22 +225,43 @@ a {
 }
 
 /* === Mensajes flash === */
-.alert-success {
+.alert {
   padding: 0.8rem 1.2rem;
-  background-color: #e6f5ea;
-  border-left: 4px solid #3bb54a;
-  color: #2e7d32;
+  border-left: 4px solid var(--alert-border);
+  background-color: var(--alert-bg);
+  color: var(--alert-text);
   border-radius: 0.5rem;
   font-size: 0.875rem;
 }
 
-.alert-error-uspas {
-  padding: 0.8rem 1.2rem;
-  background-color: #fdecea;
-  border-left: 4px solid #e53935;
-  color: #c62828;
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
+.alert-form {
+  margin-top: 0.25rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+.alert-success {
+  --alert-bg: #e6f5ea;
+  --alert-border: #3bb54a;
+  --alert-text: #2e7d32;
+}
+
+.alert-error {
+  --alert-bg: #fdecea;
+  --alert-border: #e53935;
+  --alert-text: #c62828;
+}
+
+.alert-warning {
+  --alert-bg: #fff4e5;
+  --alert-border: #f0a500;
+  --alert-text: #8a6d1d;
+}
+
+.alert-info {
+  --alert-bg: #e7f3fe;
+  --alert-border: #2196f3;
+  --alert-text: #0b5ed7;
 }
 
 

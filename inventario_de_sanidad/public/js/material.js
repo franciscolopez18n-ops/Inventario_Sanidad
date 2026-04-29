@@ -3,12 +3,8 @@ const COOKIE_NAME = "materialsAddBasket";
 // URL base para cargar imágenes desde el almacenamiento.
 const storageUrl = new URL('/storage/', window.location).href;
 
-// Al cargar la página, se ejecuta la función inicio() con compatibilidad para navegadores antiguos.
-if (document.addEventListener) {
-    window.addEventListener("load",inicio)
-} else if (document.attachEvent) {
-    window.attachEvent("onload",inicio);
-}
+// Al cargar la página, se ejecuta la función inicio()
+window.addEventListener("load", inicio);
 
 // Función que se ejecuta una vez carga la página.
 function inicio() {
@@ -18,12 +14,8 @@ function inicio() {
     // Botón de "Añadir material".
     let addButton = document.form.add;
 
-    // Asigna evento click al botón "Añadir".
-    if (document.addEventListener) {
-        addButton.addEventListener("click", getMaterialData);
-    } else if (document.attachEvent) {
-        addButton.attachEvent("onclick", getMaterialData);
-    }
+    // Escuchar evento de clic del botón de Añadir
+    addButton.addEventListener("click", (event) => withDisabled(event.target, () => getMaterialData()));
 
     // Muestra la cesta con los datos almacenados.
     renderBasket();
@@ -86,8 +78,15 @@ function setCookieValue(basket, name) {
     // Se obtiene la fecha en formato UTC.
     let expiration = dateExpiration.toUTCString();
 
+    let value = encodeURIComponent(JSON.stringify(basket));
+    if (value.length > 4096) {
+        return false;
+    }
+
     // Se guarda la cookie codificada con el valor de la cesta.
-    document.cookie = name + "=" + encodeURIComponent(JSON.stringify(basket)) + "; expires=" + expiration + "; path=/";
+    document.cookie = name + "=" + value + "; expires=" + expiration + "; path=/";
+
+    return true;
 }
 
 // Crea una celda <td> en una fila con contenido y etiqueta opcional.
@@ -133,7 +132,7 @@ function renderBasket() {
             let imageTd = document.createElement("td");
             let newImg = document.createElement("img");
             newImg.className = "cell-img";
-            newImg.src = storageUrl + (basket[i].image_temp || "no_image.jpg");
+            newImg.src = basket[i].image_temp ? storageUrl + basket[i].image_temp : '/img/no_image.jpg';
             newImg.alt = basket[i].name;
             imageTd.appendChild(newImg);
             newTr.appendChild(imageTd);
@@ -148,167 +147,158 @@ function renderBasket() {
             newButton.appendChild(iconTrash);
 
             // Asignar evento al botón.
-            if (document.addEventListener) {
-                newButton.addEventListener("click", deleteMaterialData);
-            } else if (document.attachEvent) {
-                newButton.attachEvent("onclick", deleteMaterialData);
-            }
+            newButton.addEventListener("click", deleteMaterialData);
 
             buttonTd.appendChild(newButton);
             newTr.appendChild(buttonTd);
 
             tbody.appendChild(newTr);
         }
-
-        // Se actualiza el valor del input oculto con el contenido actualizado de la cesta.
-        document.getElementById(COOKIE_NAME).value = JSON.stringify(basket);
     }
 }
 
+// Wrapper pensado para desactivar automáticamente el botón asociado a un evento, para evitar doble envío.
+async function withDisabled(button, fn) {
+    button.disabled = true;
+    await fn();
+    button.disabled = false;
+}
+
 // Captura y valida los datos del formulario y añade el material al carrito.
-async function getMaterialData(event) {
-    // Desactiva el botón para evitar doble envío.
-    event.target.disabled = true;
-    let errors = [];
+async function getMaterialData() {
+    let formErrors = [];
     let tempPath = null;
 
     // Validaciones del formulario.
     let name = document.form.name.value.trim();
     if (!name) {
-        errors.push("El nombre es obligatorio.");
+        formErrors.push("El nombre es obligatorio.");
     }
 
     let description = document.form.description.value.trim();
     if (!description) {
-        errors.push("La descripción es obligatoria.");
+        formErrors.push("La descripción es obligatoria.");
     }
 
     let storage = document.form.storage.value;
     if (!storage) {
-        errors.push("Debes seleccionar un almacenamiento.");
+        formErrors.push("Debes seleccionar un almacenamiento.");
     }
 
     let units_use = document.form.units_use.value;
     if (isNaN(units_use) || units_use <= 0) {
-        errors.push("La cantidad de unidades de uso debe ser un número mayor que 0.");
+        formErrors.push("La cantidad de unidades de uso debe ser un número mayor que 0.");
     }
 
     let min_units_use = document.form.min_units_use.value;
     if (isNaN(min_units_use) || min_units_use <= 0) {
-        errors.push("La cantidad mínima de unidades de uso debe ser un número mayor que 0.");
+        formErrors.push("La cantidad mínima de unidades de uso debe ser un número mayor que 0.");
     }
 
     let cabinet_use = document.form.cabinet_use.value;
-    if (!cabinet_use) {
-        errors.push("El armario de uso es obligatorio.");
+    if (isNaN(cabinet_use) || cabinet_use <= 0) {
+        formErrors.push("El armario de uso debe ser un número mayor que 0.");
     }
 
     let shelf_use = document.form.shelf_use.value;
     if (isNaN(shelf_use) || shelf_use <= 0) {
-        errors.push("La balda de uso debe ser un número mayor que 0.");
+        formErrors.push("La balda de uso debe ser un número mayor que 0.");
     }
 
     let drawer = document.form.drawer.value;
-    if (drawer && isNaN(parseInt(drawer, 10))) {
-        errors.push("El cajón de uso debe ser un número mayor que 0.");
+    if (drawer && (isNaN(drawer) || drawer <= 0)) {
+        formErrors.push("El cajón de uso debe ser un número mayor que 0.");
     }
 
     let units_reserve = document.form.units_reserve.value;
     if (isNaN(units_reserve) || units_reserve <= 0) {
-        errors.push("La cantidad de unidades de reserva debe ser un número mayor que 0.");
+        formErrors.push("La cantidad de unidades de reserva debe ser un número mayor que 0.");
     }
 
     let min_units_reserve = document.form.min_units_reserve.value;
     if (isNaN(min_units_reserve) || min_units_reserve <= 0) {
-        errors.push("La cantidad mínima de unidades de reserva debe ser un número mayor que 0.");
+        formErrors.push("La cantidad mínima de unidades de reserva debe ser un número mayor que 0.");
     }
 
     let cabinet_reserve = document.form.cabinet_reserve.value.trim();
     if (!cabinet_reserve) {
-        errors.push("El armario de reserva es obligatorio.");
+        formErrors.push("El armario de reserva es obligatorio.");
     }
 
     let shelf_reserve = document.form.shelf_reserve.value;
     if (isNaN(shelf_reserve) || shelf_reserve <= 0) {
-        errors.push("La balda de reserva debe ser un número mayor que 0.");
+        formErrors.push("La balda de reserva debe ser un número mayor que 0.");
     }
 
     // Procesar imagen si existe.
     let image = document.form.image.files[0];
     if (image) {
-        let validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/svg'];
+        let validTypes = ['image/jpeg', 'image/png'];
         if (!validTypes.includes(image.type)) {
-            errors.push('Formato de imagen inválido (solo JPG, PNG o GIF)');
+            formErrors.push('Formato de imagen inválido (solo JPG o PNG)');
         } else {
             tempPath = await uploadTempImage(image);
         }
     }
 
-    if (errors.length > 0) {
-        displayErrors(errors);
-    } else {
-        // Se crea un objeto con los datos del material.
-        let newMaterial = {
-            id: Date.now(),
-            name: name,
-            description: description,
-            storage: storage,
-            image_temp: tempPath,
-            use: {
-                units: units_use,
-                min_units: min_units_use,
-                cabinet: cabinet_use,
-                shelf: shelf_use,
-                drawer: drawer
-            },
-            reserve: {
-                units: units_reserve,
-                min_units: min_units_reserve,
-                cabinet: cabinet_reserve,
-                shelf: shelf_reserve,
-                drawer: null
-            }
-        };
-
-        // Se obtiene la cesta actual desde la cookie.
-        let basket = getCookieValue(COOKIE_NAME);
-        // Se añade el material a la cesta.
-        basket.push(newMaterial);
-        // Se guarda la cesta actualizada en la cookie.
-        setCookieValue(basket, COOKIE_NAME);
-        // Se actualiza la tabla visual de la cesta.
-        renderBasket();
-
-        // Limpiar formulario.
-        document.form.reset();
-        document.getElementById("imgPreview").src = "";
-        document.getElementById("file-name").textContent = "Ningún archivo seleccionado";
-    
-        // Mostrar mensaje de éxito.
-        const successMsg = document.getElementById("success-message");
-        successMsg.textContent = "Material añadido al carrito.";
-        successMsg.classList.remove("hidden");
-
-        // Ocultarlo después de unos segundos.
-        setTimeout(() => {
-            successMsg.classList.add("hidden");
-        }, 5000);
+    if (formErrors.length > 0) {
+        displayErrors(formErrors);
+        return;
     }
 
-    event.target.disabled = false;
+    // Se crea un objeto con los datos del material.
+    let newMaterial = {
+        id: Date.now(),
+        name: name,
+        description: description,
+        storage: storage,
+        image_temp: tempPath,
+        use: {
+            units: units_use,
+            min_units: min_units_use,
+            cabinet: cabinet_use,
+            shelf: shelf_use,
+            drawer: drawer
+        },
+        reserve: {
+            units: units_reserve,
+            min_units: min_units_reserve,
+            cabinet: cabinet_reserve,
+            shelf: shelf_reserve,
+            drawer: null
+        }
+    };
+
+    // Se obtiene la cesta actual desde la cookie.
+    let basket = getCookieValue(COOKIE_NAME);
+    // Se añade el material a la cesta.
+    basket.push(newMaterial);
+    // Se intenta guardar la cesta actualizada en la cookie.
+    if (!setCookieValue(basket, COOKIE_NAME)) {
+        displayErrors("La cesta es demasiado grande para ser almacenada.");
+        return;
+    }
+    // Se actualiza la tabla visual de la cesta.
+    renderBasket();
+
+    // Limpiar formulario.
+    document.form.reset();
+    document.getElementById("imgPreview").src = "";
+    document.getElementById("file-name").textContent = "Ningún archivo seleccionado";
+
+    // Mostrar mensaje de éxito.
+    const alertsContainer = document.querySelector(".alerts-container");
+    const successMsg = document.createElement("p");
+    successMsg.className = "alert alert-success";
+    successMsg.textContent = "Material añadido al carrito.";
+    alertsContainer.appendChild(successMsg);
 }
 
 // Muestra los errores como un alert.
 function displayErrors(errors) {
-    let message = "";
-
-    if (errors.length > 0) {
-        for (let i = 0; i < errors.length; i++) {
-            message += "- " + errors[i] + "\n";
-        }
-
-        window.alert(message);
-    }
+    let list = Array.isArray(errors) ? errors : [errors];
+    let message = list.map(e => "- " + e).join("\n");
+    if (message) window.alert(message);
 }
 
 // Sube la imagen al servidor y devuelve la ruta temporal.
@@ -348,19 +338,13 @@ function deleteMaterialData(event) {
     let index = basket.length - 1;
 
     // Buscar y eliminar el material por id.
-    while (!deleted || index >= 0) {
+    while (!deleted && index >= 0) {
         if (basket[index].id == materialId) {
             basket.splice(index, 1);
             deleted = true;
         }
-        index -= 1;
-    }
 
-    // Eliminar la fila de la tabla
-    let row = button.closest("tr");
-
-    if (row && row.parentNode) {
-        row.parentNode.removeChild(row);
+        index--;
     }
 
     // Se guarda la cesta actualizada en la cookie.

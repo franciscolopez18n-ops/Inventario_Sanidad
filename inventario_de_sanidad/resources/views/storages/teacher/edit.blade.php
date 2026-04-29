@@ -22,7 +22,7 @@
                 <input id="use_units" type="number" name="use_units" class="form-control input-gray" value="{{ $useRecord->units ?? '0' }}" readonly>
             </div>
             @error('use_units')
-                <div class="alert-error-uspas">{{ $message }}</div>
+                <div class="alert alert-error alert-form">{{ $message }}</div>
             @enderror
 
             <div class="form-group">
@@ -38,26 +38,12 @@
             <br>
         </form>
 
-        <!-- Mensajes flash -->
-        @if (session('success'))
-            <p class="alert-success">{{ session('success') }}</p>
-        @endif
-
-        <!-- Mensajes de error -->
-        @if (session('error'))
-            <p class="alert-error-uspas">{{ session('error') }}</p>
-        @endif
-
-        <!-- Info -->
-        @if (session('info'))
-            <p class="alert-error-uspas">{{ session('info') }}</p>
-        @endif
+        <!-- Alertas flash -->
+        <x-alerts />
 
         @error('subtract_units')
-            <p class="alert-error-uspas">{{ $message }}</p>
+            <p class="alert alert-error alert-form">{{ $message }}</p>
         @enderror
     </div>
 </div>
 @endsection
-
-

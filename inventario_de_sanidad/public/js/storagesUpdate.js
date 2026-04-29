@@ -1,7 +1,4 @@
-if (document.addEventListener)
-    window.addEventListener("load", inicio);
-else if (document.attachEvent)
-    window.attachEvent("onload", inicio);
+window.addEventListener("load", inicio);
 
 function updateDataRetrieve() {
     return fetch('/storages/updateData')

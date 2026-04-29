@@ -1,7 +1,4 @@
-if (document.addEventListener)
-    window.addEventListener("load",inicio)
-else if (document.attachEvent)
-    window.attachEvent("onload",inicio);
+window.addEventListener("load", inicio);
 
 // Obtener datos del usuario (para saber si es primer login)
 function userDataRetrieve() {
@@ -14,7 +11,7 @@ function userDataRetrieve() {
             return jsonData;
         })
         .then(function (data) {
-            //console.log("📦 Datos del usuario:", data);
+            //console.log("Datos del usuario:", data);
             return data;
         })
         .catch(function (error) {
@@ -42,14 +39,10 @@ function mostrarDialogInicio(e) {
     
     dialog.style.display = "flex";
     // dialog.setAttribute("open", "true");
-    // console.log("💬 Diálogo abierto.");
+    // console.log("Diálogo abierto.");
 
     let form = dialog.querySelector("form");
-    if (document.addEventListener) {
-        form.addEventListener("submit",newPass)
-    } else if (document.attachEvent) {
-        form.attachEvent("onsubmit",newPass);
-    }
+    form.addEventListener("submit", newPass);
 }
 
 // Función para validar la contraseña
