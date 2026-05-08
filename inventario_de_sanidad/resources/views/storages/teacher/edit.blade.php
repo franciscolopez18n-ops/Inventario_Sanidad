@@ -10,7 +10,7 @@
 <div class="">
     <div class="edit-container">
         @php
-            $useRecord = $material->storage->where('storage_type', 'use')->where('storage',$currentLocation)->first();
+            $useRecord = $material->storageUse()->where('storage', $currentLocation)->first();
         @endphp
         <form action="{{ route('storages.subtract.teacher', [$material->material_id, $currentLocation]) }}" method="POST">
             @csrf
@@ -19,7 +19,7 @@
 
             <div class="form-group">
                 <label for="use_units">Unidades en Uso</label>
-                <input id="use_units" type="number" name="use_units" class="form-control input-gray" value="{{ $useRecord->units ?? '0' }}" readonly>
+                <input id="use_units" type="number" name="use_units" class="form-control input-gray" value="{{ $useRecord->units ?? 0 }}" readonly>
             </div>
             @error('use_units')
                 <div class="alert alert-error alert-form">{{ $message }}</div>
@@ -27,7 +27,7 @@
 
             <div class="form-group">
                 <label for="subtract_units">Unidades a restar</label>
-                <input id="subtract_units" type="number" placeholder="Cantidad a restar" name="subtract_units" class="form-control" value="0" min="0" max="{{ $useRecord->units ?? '0' }}" required>
+                <input id="subtract_units" type="number" placeholder="Cantidad a restar" name="subtract_units" class="form-control" value="0" min="0" max="{{ $useRecord->units ?? 0 }}" required>
             </div>
             
             <br>

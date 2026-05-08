@@ -5,8 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Modification extends Model
-{
+class Modification extends Model {
     use HasFactory;
     protected $table = 'modifications';
     public $timestamps = false;
@@ -19,13 +18,11 @@ class Modification extends Model
         'user_id', 'material_id', 'storage_type', 'storage', 'action_datetime', 'units',
     ];
 
-    public function user()
-    {
+    public function user() {
         return $this->belongsTo(User::class, 'user_id', 'user_id');
     }
 
-    public function storage()
-    {
+    public function storage() {
         return $this->belongsTo(Storage::class, ['material_id', 'storage_type']);
     }
 }

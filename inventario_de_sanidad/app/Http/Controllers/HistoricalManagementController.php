@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Material;
 
-class HistoricalManagementController extends Controller
-{
+class HistoricalManagementController extends Controller {
     /**
      * Devuelve un JSON con el historial de modificaciones en los materiales.
      *
@@ -46,29 +46,30 @@ class HistoricalManagementController extends Controller
     }
 
     /**
-     * Devuelve un JSON con los materiales según el tipo de almacenamiento (use/reserve).
+     * Devuelve un JSON con los materiales según el tipo de almacenamiento (uso/reserva).
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function historicalData()
-    {
-        $type = explode("=",url()->full())[1];
+    public function historicalData() {
+        $type = request()->query('type');
 
-        $materials = DB::table('storages')
-            ->join('materials', 'storages.material_id', '=', 'materials.material_id')
+        $table = $type === 'use' ? 'storages_use' : 'storages_reserve';
+
+        $materials = DB::table($table)
+            ->join('materials', "{$table}.material_id", '=', 'materials.material_id')
             ->select(
                 'materials.material_id',
                 'materials.name',
                 'materials.description',
                 'materials.image_path',
-                'storages.storage',
-                'storages.cabinet',
-                'storages.shelf',
-                'storages.units',
-                'storages.min_units'
+                "{$table}.storage",
+                "{$table}.cabinet",
+                "{$table}.shelf",
+                "{$table}.units",
+                "{$table}.min_units"
             )
-            ->where('storages.storage_type',$type )
             ->get();
+
         return response()->json($materials);
     }
 }

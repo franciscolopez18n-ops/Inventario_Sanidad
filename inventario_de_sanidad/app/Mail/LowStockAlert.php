@@ -6,33 +6,18 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Storage;
+use App\Contracts\StockStorage;
 
-class LowStockAlert extends Mailable
-{
+class LowStockAlert extends Mailable {
     use Queueable, SerializesModels;
 
-    public $storage, $materialName;
+    public $storage;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
-    public function __construct(Storage $storage, $materialName)
-    {
+    public function __construct(StockStorage $storage) {
         $this->storage = $storage;
-        $this->materialName = $materialName;
     }
 
-    /**
-     * Build the message.
-     *
-     * @return $this
-     */
-    public function build()
-    {
-        //return $this->view('view.name');
+    public function build() {
         return $this->subject('⚠️ Alerta: Stock Bajo de Material')->view('emails.low_stock_alert');
     }
 }

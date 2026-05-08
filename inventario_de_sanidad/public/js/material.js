@@ -118,15 +118,15 @@ function renderBasket() {
             createRow(basket[i].name, newTr, "Nombre");
             createRow(basket[i].description, newTr, "Descripción");
             createRow(basket[i].storage, newTr, "Localización");
-            createRow(basket[i].use.units, newTr, "Cant. Uso");
-            createRow(basket[i].use.min_units, newTr, "Mín. Uso");
-            createRow(basket[i].use.cabinet, newTr, "Armario Uso");
-            createRow(basket[i].use.shelf, newTr, "Balda Uso");
-            createRow(basket[i].use.drawer, newTr, "Cajón Uso");
-            createRow(basket[i].reserve.units, newTr, "Cant. Reserva");
-            createRow(basket[i].reserve.min_units, newTr, "Mín. Reserva");
-            createRow(basket[i].reserve.cabinet, newTr, "Armario Reserva");
-            createRow(basket[i].reserve.shelf, newTr, "Balda Reserva");
+            createRow(basket[i].units_use, newTr, "Cant. Uso");
+            createRow(basket[i].min_units_use, newTr, "Mín. Uso");
+            createRow(basket[i].cabinet_use, newTr, "Armario Uso");
+            createRow(basket[i].shelf_use, newTr, "Balda Uso");
+            createRow(basket[i].drawer_use, newTr, "Cajón Uso");
+            createRow(basket[i].units_reserve, newTr, "Cant. Reserva");
+            createRow(basket[i].min_units_reserve, newTr, "Mín. Reserva");
+            createRow(basket[i].cabinet_reserve, newTr, "Armario Reserva");
+            createRow(basket[i].shelf_reserve, newTr, "Balda Reserva");
 
             // Imagen del material.
             let imageTd = document.createElement("td");
@@ -205,8 +205,8 @@ async function getMaterialData() {
         formErrors.push("La balda de uso debe ser un número mayor que 0.");
     }
 
-    let drawer = document.form.drawer.value;
-    if (drawer && (isNaN(drawer) || drawer <= 0)) {
+    let drawer_use = document.form.drawer_use.value;
+    if (isNaN(drawer_use) || drawer_use <= 0) {
         formErrors.push("El cajón de uso debe ser un número mayor que 0.");
     }
 
@@ -253,20 +253,17 @@ async function getMaterialData() {
         description: description,
         storage: storage,
         image_temp: tempPath,
-        use: {
-            units: units_use,
-            min_units: min_units_use,
-            cabinet: cabinet_use,
-            shelf: shelf_use,
-            drawer: drawer
-        },
-        reserve: {
-            units: units_reserve,
-            min_units: min_units_reserve,
-            cabinet: cabinet_reserve,
-            shelf: shelf_reserve,
-            drawer: null
-        }
+
+        units_use: units_use,
+        min_units_use: min_units_use,
+        cabinet_use: cabinet_use,
+        shelf_use: shelf_use,
+        drawer_use: drawer_use,
+        
+        units_reserve: units_reserve,
+        min_units_reserve: min_units_reserve,
+        cabinet_reserve: cabinet_reserve,
+        shelf_reserve: shelf_reserve
     };
 
     // Se obtiene la cesta actual desde la cookie.
