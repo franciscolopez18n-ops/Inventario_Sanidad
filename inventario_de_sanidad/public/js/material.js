@@ -24,24 +24,37 @@ function inicio() {
 // Alterna la visibilidad entre el formulario y la sección del carrito.
 function initToggleBasket() {
     const toggleBtn = document.getElementById("toggleBasketBtn");
+    const cartText = document.getElementById("cart-text"); // Para cambiar el texto
+    const icon = toggleBtn.querySelector("i"); // Para cambiar el icono
+    
     const formSections = document.querySelectorAll(".material-form, .form-title, .form-group, fieldset, .form-actions");
     const basketSection = document.querySelector(".basket-section");
-    let showingBasketOnly = false;
+    
+    let muestraSoloCesta = false;
 
+    // Al hacer click
     toggleBtn.addEventListener("click", function () {
-        showingBasketOnly = !showingBasketOnly;
+        muestraSoloCesta = !muestraSoloCesta;
 
-        formSections.forEach(el => el.classList.toggle("hidden", showingBasketOnly));
+        formSections.forEach(el => el.classList.toggle("hidden", muestraSoloCesta)); // ocultamos-mostramos el formulario
 
         if (basketSection) {
-            basketSection.classList.toggle("hidden", !showingBasketOnly);
+            basketSection.classList.toggle("hidden", !muestraSoloCesta); // ocultamos-mostramos la cesta
         }
 
-        toggleBtn.classList.remove(showingBasketOnly ? "btn-outline" : "btn-primary");
-        toggleBtn.classList.add(showingBasketOnly ? "btn-primary" : "btn-outline");
+        // cambiamos el texto y el icono
+        if (muestraSoloCesta) {
+            cartText.textContent = "Volver al formulario";
+            icon.className = "fa-solid fa-arrow-left"; // Icono de volver  
+            toggleBtn.classList.add("active"); 
+        } else {
+            cartText.textContent = "Ver carrito";
+            icon.className = "fa-solid fa-cart-shopping"; // Icono de carrito
+            
+            toggleBtn.classList.remove("active");
+        }
     });
 }
-
 // Recupera el valor de una cookie y lo convierte en objeto JS.
 function getCookieValue(name) {
     let cookieString = document.cookie;

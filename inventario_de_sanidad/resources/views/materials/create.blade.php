@@ -15,8 +15,9 @@
 
     {{-- Boton de agregar a la cesta --}}
     <div class="basket-toggle">
-        <button id="toggleBasketBtn" class="btn btn-outline btn-notifications" type="button">
-            <i class="fa-solid fa-basket-shopping"></i>
+        <button id="toggleBasketBtn" class="botonCarrito" type="button">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span id="cart-text">Ver carrito</span>
         </button>
     </div>
 
@@ -78,16 +79,22 @@
             <span id="file-name" class="file-name-display">Ningún archivo seleccionado</span>
         </div>
 
-        {{-- Botón de añadir --}}
-        <div class="form-actions">
-            <input type="button" value="Añadir" class="btn btn-primary" name="add">
+        <div class="form-actions-group">
+            {{-- Botón de añadir --}}
+            <button type="button" name="add" class="btn btn-primary">
+                <i class="fa-solid fa-plus mr-2"></i> Añadir
+            </button>
+            
+            {{-- Botón de alta (submit real) --}}
+            <button type="submit" id="btn-submit-alta" value="Alta" class="btn btn-success">
+                <i class="fa-solid fa-check-double mr-2"></i> Alta
+            </button>
         </div>
 
         {{-- Mensaje de éxito --}}
         <div id="success-message" class="success hidden"></div>
 
-        {{-- Botón de alta --}}
-        <input type="submit" value="Alta" class="btn btn-success">
+        
     </form>
 
     {{-- Alertas flash --}}
