@@ -53,7 +53,7 @@
                 <input type="number" name="min_units_use" placeholder="Cantidad mínima">
                 <input type="number" name="cabinet_use" placeholder="Armario">
                 <input type="number" name="shelf_use" placeholder="Balda">
-                <input type="number" name="drawer_use" placeholder="Cajón">
+                <input type="number" name="drawer" placeholder="Cajón">
             </div>
         </fieldset>
 

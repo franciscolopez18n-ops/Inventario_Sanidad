@@ -31,10 +31,10 @@
           <tr>
             <td style="padding:16px;color:#333333;line-height:1.5;font-size:16px;">
               <p style="margin:0 0 12px;">
-                El material <strong>{{ $storage->material->name }}</strong> tiene una cantidad actual de 
-                <strong>{{ $storage->getUnits() }}</strong>, que está por debajo del mínimo permitido 
-                (<strong>{{ $storage->getMinUnits() }}</strong>) en el almacenamiento de 
-                <strong>{{ $storage->getModeLabel() === 'use' ? 'uso' : 'reserva' }}</strong>
+                El material <strong>{{ $materialName }}</strong> tiene una cantidad actual de 
+                <strong>{{ $storage->units }}</strong>, que está por debajo del mínimo permitido 
+                (<strong>{{ $storage->min_units }}</strong>) en el almacenamiento de 
+                <strong>{{ $storage->storage_type === 'use' ? 'uso' : 'reserva' }}</strong>
                 en el almacen de <strong>{{ $storage->storage === 'odontology' ? 'Odontología' : 'CAE' }}</strong>.
               </p>
               <p style="margin:0 0 12px;">

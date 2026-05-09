@@ -75,23 +75,28 @@ class MaterialManagementController extends Controller {
         }
 
         // Comprobaciones de seguridad por si el frontend fue manipulado.
-        foreach ($basket as $material) {
+        foreach ($basket as &$material) {
+            // Normalizaciones
+            $material['reserve']['drawer'] = null;
+
+            // Validaciones
             $validator = validator($material, [
                 'name' => 'required|string',
                 'description' => 'required|string',
                 'storage' => 'required|in:CAE,odontology,ambos',
                 'image_temp' => 'nullable|string',
 
-                'units_use' => 'required|numeric|min:1',
-                'min_units_use' => 'required|numeric|min:1',
-                'cabinet_use' => 'required|numeric|min:1',
-                'shelf_use' => 'required|numeric|min:1',
-                'drawer_use' => 'required|numeric|min:1',
+                'use.units' => 'required|numeric|min:1',
+                'use.min_units' => 'required|numeric|min:1',
+                'use.cabinet' => 'required|numeric|min:1',
+                'use.shelf' => 'required|numeric|min:1',
+                'use.drawer' => 'required|numeric|min:1',
 
-                'units_reserve' => 'required|numeric|min:1',
-                'min_units_reserve' => 'required|numeric|min:1',
-                'cabinet_reserve' => 'required|string',
-                'shelf_reserve' => 'required|numeric|min:1',
+                'reserve.units' => 'required|numeric|min:1',
+                'reserve.min_units' => 'required|numeric|min:1',
+                'reserve.cabinet' => 'required|string',
+                'reserve.shelf' => 'required|numeric|min:1',
+                // 'reserve.drawer' => 'present',
             ]);
 
             if ($validator->fails()) {
@@ -124,7 +129,7 @@ class MaterialManagementController extends Controller {
                         ];
                     }
 
-                    // Registra el almacenamiento del material.
+                    // Registra el almacenamiento del material (en uso o reserva).
                     $this->storeMaterialInStorage($material, $materialData);
                 }
             });
@@ -172,7 +177,7 @@ class MaterialManagementController extends Controller {
     }
 
     /**
-     * Registra el almacenamiento en los almacenes 'CAE' u 'odontology' para un material.
+     * Registra el almacenamiento en los almacenes 'CAE' u 'odontology' para un material en los tipos 'use' y 'reserve'.
      *
      * @param Material $material           Instancia del material recién creado o existente.
      * @param array $materialData          Datos de entrada con la información de almacenamiento, incluyendo ubicación y unidades.
@@ -192,22 +197,22 @@ class MaterialManagementController extends Controller {
                 break;
         }
 
-        // Recorre cada almacén seleccionado
+        // Recorre cada almacén seleccionado...
         foreach ($storages as $storage) {
-            // Crea un nuevo registro en la tabla de almacenamiento con la información correspondiente.
-            Storage::create([
-                'material_id'           => $material->material_id,
-                'storage'               => $storage,
-                'units_use'             => $materialData['units_use'],
-                'min_units_use'         => $materialData['min_units_use'],
-                'cabinet_use'           => $materialData['cabinet_use'],
-                'shelf_use'             => $materialData['shelf_use'],
-                'drawer_use'            => $materialData['drawer_use'],
-                'units_reserve'         => $materialData['units_reserve'],
-                'min_units_reserve'     => $materialData['min_units_reserve'],
-                'cabinet_reserve'       => $materialData['cabinet_reserve'],
-                'shelf_reserve'         => $materialData['shelf_reserve'],
-            ]);
+            // ...y para cada tipo de almacenamiento (uso y reserva).
+            foreach (['use', 'reserve'] as $type) {
+                // Crea un nuevo registro en la tabla de almacenamiento con la información correspondiente.
+                Storage::create([
+                    'material_id'  => $material->material_id,
+                    'storage'      => $storage,
+                    'storage_type' => $type,
+                    'cabinet'      => $materialData[$type]['cabinet'],
+                    'shelf'        => $materialData[$type]['shelf'],
+                    'drawer'       => $materialData[$type]['drawer'],
+                    'units'        => $materialData[$type]['units'],
+                    'min_units'    => $materialData[$type]['min_units'],
+                ]);
+            }
         }
     }
 
