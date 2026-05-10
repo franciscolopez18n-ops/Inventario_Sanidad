@@ -12,7 +12,7 @@ class StorageReserve extends Model implements StockStorage {
     use HasFactory;
     use HasModifications;
 
-    protected $table = 'storages_reserve';
+    protected $table = 'storage_reserve';
     protected $primaryKey = null;
     public $incrementing = false;
     public $timestamps = false;

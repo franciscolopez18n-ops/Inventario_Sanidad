@@ -11,7 +11,7 @@ class StorageUse extends Model implements StockStorage {
     use HasFactory;
     use HasModifications;
 
-    protected $table = 'storages_use';
+    protected $table = 'storage_use';
     protected $primaryKey = null;
     public $incrementing = false;
     public $timestamps = false;
