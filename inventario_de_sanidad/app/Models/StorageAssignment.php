@@ -1,0 +1,41 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class StorageAssignment extends Model {
+    use HasFactory;
+
+    protected $table = 'storage_assignments';
+    public $timestamps = false;
+
+    protected $fillable = [
+        'material_id',
+        'storage',
+        'storage_type',
+    ];
+
+    public function material() {
+        return $this->belongsTo(Material::class, 'material_id', 'material_id');
+    }
+
+    public function storage() {
+        return xStorage::where('material_id', $this->material_id)->where('storage', $this->storage);
+    }
+
+    public function modifications() {
+        return $this->hasMany(xModification::class, 'material_id', 'material_id')
+            ->where('storage', $this->storage)
+            ->where('storage_type', $this->storage_type);
+    }
+
+    public function isUse(): bool {
+        return $this->storage_type === 'use';
+    }
+
+    public function isReserve(): bool {
+        return $this->storage_type === 'reserve';
+    }
+}

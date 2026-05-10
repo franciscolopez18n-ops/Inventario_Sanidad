@@ -52,7 +52,7 @@ class HistoricalManagementController extends Controller
      */
     public function historicalData()
     {
-        $type = explode("=",url()->full())[1];
+        $type = request()->query('type');
 
         $materials = DB::table('storages')
             ->join('materials', 'storages.material_id', '=', 'materials.material_id')

@@ -12,7 +12,12 @@ class DatabaseSeeder extends Seeder {
             MaterialsSeeder::class,
             ActivitiesSeeder::class,
             StoragesSeeder::class,
+            xStoragesSeeder::class,
+            StoragesUseSeeder::class,
+            StoragesReserveSeeder::class,
+            StorageAssignmentsSeeder::class,
             ModificationsSeeder::class,
+            xModificationsSeeder::class,
             MaterialActivitySeeder::class,
         ]);
     }
