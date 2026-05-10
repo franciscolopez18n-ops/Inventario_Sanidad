@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use App\Constants\FlashType;
 use App\Models\Material;
 use App\Models\Storage;
+use App\Models\xStorage;
+use App\Models\StorageAssignment;
+use App\Models\StorageUse;
+use App\Models\StorageReserve;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
@@ -75,28 +79,23 @@ class MaterialManagementController extends Controller {
         }
 
         // Comprobaciones de seguridad por si el frontend fue manipulado.
-        foreach ($basket as &$material) {
-            // Normalizaciones
-            $material['reserve']['drawer'] = null;
-
-            // Validaciones
+        foreach ($basket as $material) {
             $validator = validator($material, [
                 'name' => 'required|string',
                 'description' => 'required|string',
                 'storage' => 'required|in:CAE,odontology,ambos',
                 'image_temp' => 'nullable|string',
 
-                'use.units' => 'required|numeric|min:1',
-                'use.min_units' => 'required|numeric|min:1',
-                'use.cabinet' => 'required|numeric|min:1',
-                'use.shelf' => 'required|numeric|min:1',
-                'use.drawer' => 'required|numeric|min:1',
+                'units_use' => 'required|numeric|min:1',
+                'min_units_use' => 'required|numeric|min:1',
+                'cabinet_use' => 'required|numeric|min:1',
+                'shelf_use' => 'required|numeric|min:1',
+                'drawer_use' => 'required|numeric|min:1',
 
-                'reserve.units' => 'required|numeric|min:1',
-                'reserve.min_units' => 'required|numeric|min:1',
-                'reserve.cabinet' => 'required|string',
-                'reserve.shelf' => 'required|numeric|min:1',
-                // 'reserve.drawer' => 'present',
+                'units_reserve' => 'required|numeric|min:1',
+                'min_units_reserve' => 'required|numeric|min:1',
+                'cabinet_reserve' => 'required|string',
+                'shelf_reserve' => 'required|numeric|min:1',
             ]);
 
             if ($validator->fails()) {
@@ -199,20 +198,64 @@ class MaterialManagementController extends Controller {
 
         // Recorre cada almacén seleccionado...
         foreach ($storages as $storage) {
-            // ...y para cada tipo de almacenamiento (uso y reserva).
-            foreach (['use', 'reserve'] as $type) {
-                // Crea un nuevo registro en la tabla de almacenamiento con la información correspondiente.
-                Storage::create([
-                    'material_id'  => $material->material_id,
-                    'storage'      => $storage,
-                    'storage_type' => $type,
-                    'cabinet'      => $materialData[$type]['cabinet'],
-                    'shelf'        => $materialData[$type]['shelf'],
-                    'drawer'       => $materialData[$type]['drawer'],
-                    'units'        => $materialData[$type]['units'],
-                    'min_units'    => $materialData[$type]['min_units'],
-                ]);
-            }
+            xStorage::create([
+                'material_id' => $material->material_id,
+                'storage'     => $storage,
+                'qr_path'     => null,
+            ]);
+
+            StorageAssignment::create([
+                'material_id'  => $material->material_id,
+                'storage'      => $storage,
+                'storage_type' => 'use',
+            ]);
+
+            StorageAssignment::create([
+                'material_id'  => $material->material_id,
+                'storage'      => $storage,
+                'storage_type' => 'reserve',
+            ]);
+
+            StorageUse::create([
+                'material_id' => $material->material_id,
+                'storage'     => $storage,
+                'units'       => $materialData['units_use'],
+                'min_units'   => $materialData['min_units_use'],
+                'cabinet'     => $materialData['cabinet_use'],
+                'shelf'       => $materialData['shelf_use'],
+                'drawer'      => $materialData['drawer_use'],
+            ]);
+
+            StorageReserve::create([
+                'material_id' => $material->material_id,
+                'storage'     => $storage,
+                'units'       => $materialData['units_reserve'],
+                'min_units'   => $materialData['min_units_reserve'],
+                'cabinet'     => $materialData['cabinet_reserve'],
+                'shelf'       => $materialData['shelf_reserve'],
+            ]);
+
+            // ...y para cada tipo de almacenamiento (uso y reserva) crea un nuevo registro en la tabla de almacenamiento con la información correspondiente.
+            Storage::create([
+                'material_id'  => $material->material_id,
+                'storage'      => $storage,
+                'storage_type' => 'use',
+                'cabinet'      => $materialData['cabinet_use'],
+                'shelf'        => $materialData['shelf_use'],
+                'drawer'       => $materialData['drawer_use'],
+                'units'        => $materialData['units_use'],
+                'min_units'    => $materialData['min_units_use'],
+            ]);
+
+            Storage::create([
+                'material_id'  => $material->material_id,
+                'storage'      => $storage,
+                'storage_type' => 'reserve',
+                'cabinet'      => $materialData['cabinet_reserve'],
+                'shelf'        => $materialData['shelf_reserve'],
+                'units'        => $materialData['units_reserve'],
+                'min_units'    => $materialData['min_units_reserve'],
+            ]);
         }
     }
 
