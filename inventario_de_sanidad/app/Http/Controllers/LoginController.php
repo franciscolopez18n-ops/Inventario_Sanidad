@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage as StorageFacade;
+use Illuminate\Support\Facades\Storage as StorageFacades;
 use App\Models\User;
 
 
@@ -66,7 +66,7 @@ class LoginController extends Controller
     {
         if (Cookie::get('TYPE') === 'admin') {
             // Borra carpeta temporal y cookies del administrador.
-            StorageFacade::disk('public')->deleteDirectory('temp');
+            StorageFacades::disk('public')->deleteDirectory('temp');
             Cookie::queue(Cookie::forget('materialsAddBasket'));
             Cookie::queue(Cookie::forget('materialsBasket'));
         }

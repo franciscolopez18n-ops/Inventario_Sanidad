@@ -102,18 +102,6 @@ function getCSRFToken() {
 }
 
 /**
- * Crea un input oculto con el token CSRF.
- * @returns {HTMLInputElement} Input generado.
- */
-function getHiddenToken() {
-    let token = document.createElement("input");
-    token.type = "hidden";
-    token.name = "_token";
-    token.value = getCSRFToken(); // Asigna el token como valor
-    return token;
-}
-
-/**
  * Crea un input oculto con un valor personalizado (por ejemplo, ID).
  * @param {string|number} param - Valor a asignar.
  * @param {string} nameId - Nombre del input.

@@ -3,41 +3,55 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use App\Models\xStorage;
+use Illuminate\Support\Facades\Storage as StorageFacades;
 
 class xStoragesSeeder extends Seeder {
+
+    // Combinaciones material_id => [almacenes]
+    private array $storages = [
+        1  => ['odontology', 'CAE'],
+        2  => ['CAE'],
+        3  => ['odontology'],
+        4  => ['CAE'],
+        5  => ['CAE'],
+        6  => ['CAE'],
+        7  => ['odontology', 'CAE'],
+        8  => ['CAE'],
+        9  => ['CAE'],
+        10 => ['CAE'],
+        11 => ['CAE'],
+        12 => ['CAE'],
+        13 => ['CAE'],
+        14 => ['CAE'],
+        15 => ['CAE'],
+        16 => ['CAE'],
+        17 => ['CAE'],
+        18 => ['CAE'],
+        19 => ['CAE'],
+        20 => ['CAE'],
+        21 => ['CAE'],
+        22 => ['CAE'],
+        23 => ['CAE'],
+        24 => ['CAE'],
+        25 => ['CAE'],
+        26 => ['CAE'],
+        27 => ['CAE'],
+        28 => ['CAE'],
+    ];
+
     public function run() {
-        DB::table('xstorages')->insert([
-            ['material_id' => 1,  'storage' => 'odontology', 'qr_path' => null],
-            ['material_id' => 1,  'storage' => 'CAE',        'qr_path' => null],
-            ['material_id' => 2,  'storage' => 'CAE',        'qr_path' => null],
-            ['material_id' => 3,  'storage' => 'odontology', 'qr_path' => null],
-            ['material_id' => 4,  'storage' => 'CAE',        'qr_path' => null],
-            ['material_id' => 5,  'storage' => 'CAE',        'qr_path' => null],
-            ['material_id' => 6,  'storage' => 'CAE',        'qr_path' => null],
-            ['material_id' => 7,  'storage' => 'odontology', 'qr_path' => null],
-            ['material_id' => 7,  'storage' => 'CAE',        'qr_path' => null],
-            ['material_id' => 8,  'storage' => 'CAE',        'qr_path' => null],
-            ['material_id' => 9,  'storage' => 'CAE',        'qr_path' => null],
-            ['material_id' => 10, 'storage' => 'CAE',        'qr_path' => null],
-            ['material_id' => 11, 'storage' => 'CAE',        'qr_path' => null],
-            ['material_id' => 12, 'storage' => 'CAE',        'qr_path' => null],
-            ['material_id' => 13, 'storage' => 'CAE',        'qr_path' => null],
-            ['material_id' => 14, 'storage' => 'CAE',        'qr_path' => null],
-            ['material_id' => 15, 'storage' => 'CAE',        'qr_path' => null],
-            ['material_id' => 16, 'storage' => 'CAE',        'qr_path' => null],
-            ['material_id' => 17, 'storage' => 'CAE',        'qr_path' => null],
-            ['material_id' => 18, 'storage' => 'CAE',        'qr_path' => null],
-            ['material_id' => 19, 'storage' => 'CAE',        'qr_path' => null],
-            ['material_id' => 20, 'storage' => 'CAE',        'qr_path' => null],
-            ['material_id' => 21, 'storage' => 'CAE',        'qr_path' => null],
-            ['material_id' => 22, 'storage' => 'CAE',        'qr_path' => null],
-            ['material_id' => 23, 'storage' => 'CAE',        'qr_path' => null],
-            ['material_id' => 24, 'storage' => 'CAE',        'qr_path' => null],
-            ['material_id' => 25, 'storage' => 'CAE',        'qr_path' => null],
-            ['material_id' => 26, 'storage' => 'CAE',        'qr_path' => null],
-            ['material_id' => 27, 'storage' => 'CAE',        'qr_path' => null],
-            ['material_id' => 28, 'storage' => 'CAE',        'qr_path' => null],
-        ]);
+        StorageFacades::deleteDirectory('qrcodes/');
+        StorageFacades::makeDirectory('qrcodes/');
+
+        foreach ($this->storages as $materialId => $locations) {
+            foreach ($locations as $location) {
+                xStorage::create([
+                    'material_id' => $materialId,
+                    'storage'     => $location,
+                    'qr_path'     => xStorage::generateQr($materialId, $location),
+                ]);
+            }
+        }
     }
 }

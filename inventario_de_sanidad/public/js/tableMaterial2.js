@@ -66,25 +66,16 @@ function renderTable(limit, paginaActual) {
 
         // Botón Editar
         let tdAc = document.createElement("td");
-        let formAc = document.createElement("form");
-        formAc.method = "GET";
-        formAc.action = `/materials/${item.material_id}/edit2`;
-        formAc.id = `btn-ver-${item.material_id}`;
 
-        let formToken = getHiddenToken(); // CSRF
-        let formId = getHiddenId(item.material_id, "material_id");
+        let linkEdit = document.createElement("a");
+        linkEdit.href = `/materials/update/${item.material_id}`;
+        linkEdit.style.cssText = "color: inherit; text-decoration: none; cursor: pointer;";
 
-        let btnAc = document.createElement("button");
-        btnAc.type = "submit";
-        btnAc.style.cssText = "background: none; border: none; cursor: pointer;";
         let iconEdit = document.createElement("i");
         iconEdit.classList.add("fa", "fa-pencil");
-        btnAc.appendChild(iconEdit);
 
-        formAc.appendChild(formToken);
-        formAc.appendChild(formId);
-        formAc.appendChild(btnAc);
-        tdAc.appendChild(formAc);
+        linkEdit.appendChild(iconEdit);
+        tdAc.appendChild(linkEdit);
         tr.appendChild(tdAc);
 
         // Botón Eliminar

@@ -48,11 +48,13 @@
             @enderror
         </div>
 
-        <select onchange="this.nextElementSibling.textContent=this.value?'Aquí se muestran los datos de almacenamiento y se permite su edición':''">
-            <option value="">-- Selecciona para editar almacenamiento --</option>
-            <option value="cae">CAE</option>
-            <option value="odontologia">Odontología</option>
-        </select>
+        @if(isset($storage))
+            <p>Has accedido por QR (se muestra la información de un solo almacén para editar)</p>
+        @else
+            <p>Has accedido manualmente (se muestra la información de todos los almacenes para editar)</p>
+        @endif
+
+        {{-- Aquí se muestran los datos de almacenamiento y se permite su edición --}}
         <div></div>
 
         {{-- Alertas flash --}}
@@ -61,7 +63,7 @@
         <div class="form-actions">
             <input type="submit" value="Actualizar [NO HACE NADA]" class="btn btn-success">
             <br><br><br>
-            <a href="{{ route('materials.index2') }}" class="btn btn-outline">Volver al listado</a>
+            <a href="{{ route('materials.update.index') }}" class="btn btn-outline">Volver al listado</a>
         </div>
     </form>
 </div>

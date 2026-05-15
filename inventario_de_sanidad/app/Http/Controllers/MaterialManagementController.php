@@ -13,17 +13,29 @@ use App\Models\StorageReserve;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage as StorageFacade;
+use Illuminate\Support\Facades\Storage as StorageFacades;
 
 class MaterialManagementController extends Controller {
     
-    public function index2() {
-        return view('materials.index2');
+    public function updateIndex() {
+        return view('materials.update.index');
     }
 
-    public function edit2(Material $material) {
-        return view('materials.edit2')->with('material', $material);
+    public function updateManualEdit(Material $material) {
+        return view('materials.update.edit')->with('material', $material);
     }
+
+    public function updateQrEdit(Material $material, string $storage) {
+        $storage = xStorage::where('material_id', $material->material_id)
+            ->where('storage', $storage)
+            ->firstOrFail();
+
+        return view('materials.update.edit')
+            ->with('material', $material)
+            ->with('storage', $storage);
+    }
+
+
 
     /**
      * Muestra la vista principal de materiales.
@@ -146,7 +158,7 @@ class MaterialManagementController extends Controller {
         // Intenta mover cada imagen temporal a su ubicación definitiva.
         foreach ($imagesMaterials as $imageData) {
             try {
-                $moved = StorageFacade::disk('public')->move($imageData["image_temp"], $imageData["image_path"]);
+                $moved = StorageFacades::disk('public')->move($imageData["image_temp"], $imageData["image_path"]);
 
                 if (!$moved) {
                     // Si no se pudo mover, se agrega el ID del material a la lista de fallidos.
@@ -163,7 +175,7 @@ class MaterialManagementController extends Controller {
         }
 
         // Limpia el directorio temporal de imágenes.
-        StorageFacade::disk('public')->deleteDirectory('temp');
+        StorageFacades::disk('public')->deleteDirectory('temp');
 
         // Si no hubo errores al mover imágenes, muestra mensaje de éxito.
         if (empty($failedMaterials)) {
@@ -201,7 +213,7 @@ class MaterialManagementController extends Controller {
             xStorage::create([
                 'material_id' => $material->material_id,
                 'storage'     => $storage,
-                'qr_path'     => null,
+                'qr_path'     => xStorage::generateQr($material->material_id, $storage),
             ]);
 
             StorageAssignment::create([
@@ -278,7 +290,7 @@ class MaterialManagementController extends Controller {
 
             // Si existe una imagen asociada al material, se elimina del disco público.
             if (!empty($path)) {
-                StorageFacade::disk('public')->delete($path);
+                StorageFacades::disk('public')->delete($path);
             }
 
             // Elimina el registro del material de la base de datos.
@@ -332,7 +344,7 @@ class MaterialManagementController extends Controller {
 
                 // Si se subió una nueva imagen y existía una antigua, se elimina la anterior del disco.
                 if ($newPath && $oldPath) {
-                    $deleted = StorageFacade::disk('public')->delete($oldPath);
+                    $deleted = StorageFacades::disk('public')->delete($oldPath);
 
                     if (!$deleted) {
                         // Si no se pudo eliminar, se lanza una excepción para forzar el rollback.
@@ -345,8 +357,8 @@ class MaterialManagementController extends Controller {
             return back()->with(FlashType::SUCCESS, 'Material editado correctamente.');
         } catch (\Exception $e) {
             // Si hubo un error, y se subió una nueva imagen, se elimina para evitar archivos huérfanos.
-            if (!empty($newPath) && StorageFacade::disk('public')->exists($newPath)) {
-                StorageFacade::disk('public')->delete($newPath);
+            if (!empty($newPath) && StorageFacades::disk('public')->exists($newPath)) {
+                StorageFacades::disk('public')->delete($newPath);
             }
 
             // Se informa del error al usuario.

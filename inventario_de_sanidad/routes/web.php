@@ -111,7 +111,9 @@ Route::middleware('check.admin.cookie')->group(function () {
         Route::post('{material}/update', [MaterialManagementController::class, 'update'])->name('materials.update');
         Route::post('/upload-temp', [MaterialManagementController::class, 'uploadTemp'])->name('materials.uploadTemp');
 
-        Route::get('/index2', [MaterialManagementController::class, 'index2'])->name('materials.index2');
-        Route::get('{material}/edit2', [MaterialManagementController::class, 'edit2'])->name('materials.edit2');
+        // Nueva sección que fusiona las secciones Gestionar materiales y Gestionar almacenamiento (en desarrollo)
+        Route::get('/update', [MaterialManagementController::class, 'updateIndex'])->name('materials.update.index');
+        Route::get('/update/{material}', [MaterialManagementController::class, 'updateManualEdit'])->name('materials.update.manual');
+        Route::get('/update/{material}/storage/{storage}', [MaterialManagementController::class, 'updateQrEdit'])->name('materials.update.qr');
     });
 });
