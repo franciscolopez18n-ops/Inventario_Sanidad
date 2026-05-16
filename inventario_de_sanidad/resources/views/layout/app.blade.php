@@ -127,6 +127,14 @@
                             </li>
                         </ul>
                     </li>
+
+                    <li>
+                        <a href="{{ route('qrcodes.index') }}"
+                        class="{{ request()->routeIs('qrcodes.index') ? 'active' : '' }}">
+                            <i class="fa-solid fa-qrcode"></i>
+                            <span class="link-text">Códigos QR</span>
+                        </a>
+                    </li>
                 @endif
 
                 <!-- Menú para Estudiantes -->

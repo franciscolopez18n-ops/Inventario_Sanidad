@@ -31,8 +31,8 @@ class xStorage extends Model {
         $directory = 'qrcodes/';
         $qrPath = $directory . $materialId . '_' . $storage . '.svg';
 
-        if (!StorageFacades::exists($directory)) {
-            StorageFacades::makeDirectory($directory);
+        if (!StorageFacades::disk('local')->exists($directory)) {
+            StorageFacades::disk('local')->makeDirectory($directory);
         }
 
         QrCode::size(200)->generate(
@@ -40,7 +40,7 @@ class xStorage extends Model {
                 'material' => $materialId,
                 'storage'  => $storage
             ]),
-            StorageFacades::path($qrPath)
+            StorageFacades::disk('local')->path($qrPath)
         );
 
         return $qrPath;

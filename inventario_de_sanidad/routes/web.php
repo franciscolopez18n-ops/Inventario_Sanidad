@@ -8,6 +8,7 @@ use App\Http\Controllers\MaterialManagementController;
 use App\Http\Controllers\StorageController;
 use App\Http\Controllers\HistoricalManagementController;
 use App\Http\Controllers\ActivityController;
+use App\Http\Controllers\QrController;
 
 /*
 |--------------------------------------------------------------------------
@@ -76,6 +77,12 @@ Route::middleware('auth')->group(function () {
             Route::get('/reserve', [HistoricalManagementController::class, 'reserve'])->name('historical.reserve');
             Route::get('/historialModificaciones', [HistoricalManagementController::class, 'showModificationsHistorical'])->name('historical.modificationsHistorical');
             Route::get('/modificationsHistoricalData', [HistoricalManagementController::class, 'modificationsHistoricalData']);
+        });
+
+        //Códigos QR
+        Route::prefix('qrcodes')->group(function () {
+            Route::get('/', [QrController::class, 'index'])->name('qrcodes.index');
+            Route::get('/{file}', [QrController::class, 'show'])->name('qr.show');
         });
     });
 

@@ -41,8 +41,8 @@ class xStoragesSeeder extends Seeder {
     ];
 
     public function run() {
-        StorageFacades::deleteDirectory('qrcodes/');
-        StorageFacades::makeDirectory('qrcodes/');
+        StorageFacades::disk('local')->deleteDirectory('qrcodes');
+        StorageFacades::disk('local')->makeDirectory('qrcodes');
 
         foreach ($this->storages as $materialId => $locations) {
             foreach ($locations as $location) {
