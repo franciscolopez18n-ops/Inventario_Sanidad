@@ -40,9 +40,6 @@
             @error('user_type') <div class="alert alert-error alert-form">{{ $message }}</div> @enderror
         </div>
 
-        {{-- Alertas flash --}}
-        <x-alerts />
-
         <input class="btn btn-primary" type="submit" value="Registrar">
     </form>
 </div>

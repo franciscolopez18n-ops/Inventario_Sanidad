@@ -79,7 +79,7 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/historicalFunctions.js') }}"></script>
+    <script src="{{ asset('js/historicalModifications.js') }}"></script>
     <script src="{{ asset('js/loader.js') }}"></script>
     <script src="{{ asset('js/tableFunctions.js') }}"></script>
     <script src="{{ asset('js/tableHistorical.js') }}"></script>

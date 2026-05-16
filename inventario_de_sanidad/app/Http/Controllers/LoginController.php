@@ -7,17 +7,20 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage as StorageFacades;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 
-class LoginController extends Controller
-{
+class LoginController extends Controller {
     /**
      * Muestra el formulario de login.
      *
      * @return \Illuminate\View\View
      */
-    public function showLoginForm()
-    {
+    public function showLoginForm() {
+        if (Auth::check()) {
+            return redirect()->route('welcome');
+        }
+
         return view('auth.login');
     }
 
@@ -28,8 +31,7 @@ class LoginController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function login(Request $request)
-    {
+    public function login(Request $request) {
         $credentials = $request->validate([
             'user' => 'required',
             'password' => 'required'
@@ -43,14 +45,9 @@ class LoginController extends Controller
 
         // Verificar que usuario exista y que contraseña sea correcta
         if ($user && Hash::check($credentials['password'], $user->hashed_password)) {
-
-            // Guardar datos del usuario en cookies (duración 1440 minutos = 1 día)
-            Cookie::queue('USERPASS', $user->user_id, 1440);
-            Cookie::queue('NAME', $user->first_name . " " . $user->last_name, 1440);
-            Cookie::queue('EMAIL', $user->email, 1440);
-            Cookie::queue('TYPE', $user->user_type, 1440);
+            Auth::login($user);
             
-            return redirect()->route('welcome');
+            return redirect()->intended(route('welcome'));
         } else {
             return back()->withErrors(['login' => 'Usuario o contraseña incorrectos']);
         }
@@ -62,19 +59,18 @@ class LoginController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function logout()
-    {
-        if (Cookie::get('TYPE') === 'admin') {
+    public function logout(Request $request) {
+        if (Auth::user()->user_type === 'admin') {
             // Borra carpeta temporal y cookies del administrador.
             StorageFacades::disk('public')->deleteDirectory('temp');
             Cookie::queue(Cookie::forget('materialsAddBasket'));
             Cookie::queue(Cookie::forget('materialsBasket'));
         }
 
-        // Borra cookies con los datos del usuario.
-        Cookie::queue(Cookie::forget('USERPASS'));
-        Cookie::queue(Cookie::forget('NAME'));
-        Cookie::queue(Cookie::forget('TYPE'));
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
         return redirect()->route('login.form');
     }
 }

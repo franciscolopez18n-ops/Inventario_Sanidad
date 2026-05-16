@@ -12,87 +12,118 @@ class UsersSeeder extends Seeder {
     public function run() {
         DB::table('users')->insert([
             [
-                'first_name'     => 'Carlos',
-                'last_name'      => 'Pérez Ruiz',
-                'email'          => 'carlos.perez@educamadrid.com',
-                'hashed_password'=> Hash::make('clave'),
-                'first_log'      => false,
-                'user_type'      => 'student',
-                'created_at'     => Carbon::now('Europe/Madrid')
+                'first_name'      => 'Carlos',
+                'last_name'       => 'Pérez Ruiz',
+                'email'           => 'carlos.perez@educamadrid.com',
+                'hashed_password' => Hash::make('clave'),
+                'first_log'       => false,
+                'user_type'       => 'student',
+                'created_at'      => Carbon::now('Europe/Madrid')
             ],
             [
-                'first_name'     => 'Marcos',
-                'last_name'      => 'Gómez Blanco',
-                'email'          => 'marcos.gomez@educamadrid.com',
-                'hashed_password'=> Hash::make('clave'),
-                'first_log'      => false,
-                'user_type'      => 'student',
-                'created_at'     => Carbon::now('Europe/Madrid')
+                'first_name'      => 'Marcos',
+                'last_name'       => 'Gómez Blanco',
+                'email'           => 'marcos.gomez@educamadrid.com',
+                'hashed_password' => Hash::make('clave'),
+                'first_log'       => false,
+                'user_type'       => 'student',
+                'created_at'      => Carbon::now('Europe/Madrid')
             ],
             [
-                'first_name'     => 'Manuel',
-                'last_name'      => 'Álvarez Medrano',
-                'email'          => 'manuel.alvarez@educamadrid.com',
-                'hashed_password'=> Hash::make('clave'),
-                'first_log'      => false,
-                'user_type'      => 'student',
-                'created_at'     => Carbon::now('Europe/Madrid')
+                'first_name'      => 'Manuel',
+                'last_name'       => 'Álvarez Medrano',
+                'email'           => 'manuel.alvarez@educamadrid.com',
+                'hashed_password' => Hash::make('clave'),
+                'first_log'       => false,
+                'user_type'       => 'student',
+                'created_at'      => Carbon::now('Europe/Madrid')
             ],
             [
-                'first_name'     => 'Raúl',
-                'last_name'      => 'Fernández Díaz',
-                'email'          => 'raul.fernandez@educamadrid.com',
-                'hashed_password'=> Hash::make('clave'),
-                'first_log'      => false,
-                'user_type'      => 'student',
-                'created_at'     => Carbon::now('Europe/Madrid')
+                'first_name'      => 'Raúl',
+                'last_name'       => 'Fernández Díaz',
+                'email'           => 'raul.fernandez@educamadrid.com',
+                'hashed_password' => Hash::make('clave'),
+                'first_log'       => false,
+                'user_type'       => 'student',
+                'created_at'      => Carbon::now('Europe/Madrid')
             ],
             [
-                'first_name'     => 'Ariana',
-                'last_name'      => 'García Manzano',
-                'email'          => 'ariana.garcia@educamadrid.com',
-                'hashed_password'=> Hash::make('clave'),
-                'first_log'      => false,
-                'user_type'      => 'teacher',
-                'created_at'     => Carbon::now('Europe/Madrid')
+                'first_name'      => 'Ariana',
+                'last_name'       => 'García Manzano',
+                'email'           => 'ariana.garcia@educamadrid.com',
+                'hashed_password' => Hash::make('clave'),
+                'first_log'       => false,
+                'user_type'       => 'teacher',
+                'created_at'      => Carbon::now('Europe/Madrid')
             ],
             [
-                'first_name'     => 'Miriam',
-                'last_name'      => 'López Rouco',
-                'email'          => 'miriam.lopezrouco@educamadrid.com',
-                'hashed_password'=> Hash::make('clave'),
-                'first_log'      => false,
-                'user_type'      => 'teacher',
-                'created_at'     => Carbon::now('Europe/Madrid')
+                'first_name'      => 'Miriam',
+                'last_name'       => 'López Rouco',
+                'email'           => 'miriam.lopezrouco@educamadrid.com',
+                'hashed_password' => Hash::make('clave'),
+                'first_log'       => false,
+                'user_type'       => 'teacher',
+                'created_at'      => Carbon::now('Europe/Madrid')
             ],
             [
-                'first_name'     => 'Marta',
-                'last_name'      => 'Ramirez Castillo',
-                'email'          => 'marta.ramirez@educamadrid.com',
-                'hashed_password'=> Hash::make('clave'),
-                'first_log'      => false,
-                'user_type'      => 'teacher',
-                'created_at'     => Carbon::now('Europe/Madrid')
+                'first_name'      => 'Marta',
+                'last_name'       => 'Ramirez Castillo',
+                'email'           => 'marta.ramirez@educamadrid.com',
+                'hashed_password' => Hash::make('clave'),
+                'first_log'       => false,
+                'user_type'       => 'teacher',
+                'created_at'      => Carbon::now('Europe/Madrid')
             ],
             [
-                'first_name'     => 'Lucía',
-                'last_name'      => 'Fernández Soto',
-                'email'          => 'lucia.fernandez@educamadrid.com',
-                'hashed_password'=> Hash::make('clave'),
-                'first_log'      => false,
-                'user_type'      => 'admin',
-                'created_at'     => Carbon::now('Europe/Madrid')
+                'first_name'      => 'Lucía',
+                'last_name'       => 'Fernández Soto',
+                'email'           => 'lucia.fernandez@educamadrid.com',
+                'hashed_password' => Hash::make('clave'),
+                'first_log'       => false,
+                'user_type'       => 'admin',
+                'created_at'      => Carbon::now('Europe/Madrid')
             ],
             [
-                'first_name'     => 'Juan',
-                'last_name'      => 'Valdés Morilla',
-                'email'          => 'juan.valdes@educamadrid.com',
-                'hashed_password'=> Hash::make('clave'),
-                'first_log'      => false,
-                'user_type'      => 'admin',
-                'created_at'     => Carbon::now('Europe/Madrid')
+                'first_name'      => 'Juan',
+                'last_name'       => 'Valdés Morilla',
+                'email'           => 'juan.valdes@educamadrid.com',
+                'hashed_password' => Hash::make('clave'),
+                'first_log'       => false,
+                'user_type'       => 'admin',
+                'created_at'      => Carbon::now('Europe/Madrid')
             ],
-            
         ]);
+
+        if (app()->environment(['local', 'ngrok'])) {
+            DB::table('users')->insert([
+                [
+                    'first_name'      => 'Test',
+                    'last_name'       => 'Student',
+                    'email'           => 'test.student@test.com',
+                    'hashed_password' => Hash::make('test'),
+                    'first_log'       => false,
+                    'user_type'       => 'student',
+                    'created_at'      => Carbon::now('Europe/Madrid')
+                ],
+                [
+                    'first_name'      => 'Test',
+                    'last_name'       => 'Teacher',
+                    'email'           => 'test.teacher@test.com',
+                    'hashed_password' => Hash::make('test'),
+                    'first_log'       => false,
+                    'user_type'       => 'teacher',
+                    'created_at'      => Carbon::now('Europe/Madrid')
+                ],
+                [
+                    'first_name'      => 'Test',
+                    'last_name'       => 'Admin',
+                    'email'           => 'test.admin@test.com',
+                    'hashed_password' => Hash::make('test'),
+                    'first_log'       => false,
+                    'user_type'       => 'admin',
+                    'created_at'      => Carbon::now('Europe/Madrid')
+                ],
+            ]);
+        }
     }
 }

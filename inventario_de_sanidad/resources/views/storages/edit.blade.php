@@ -119,9 +119,6 @@
         </div>
         <br>
     </form>
-
-    <!-- Alertas flash -->
-    <x-alerts />
     
 </div>
 @endsection

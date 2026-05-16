@@ -42,9 +42,6 @@
             @enderror
         </div>
 
-        {{-- Alertas flash --}}
-        <x-alerts />
-
         <div class="form-actions">
             <input type="submit" value="Actualizar" class="btn btn-success">
             <br><br><br>

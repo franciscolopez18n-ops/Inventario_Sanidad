@@ -11,16 +11,15 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
-class ActivityController extends Controller
-{
+class ActivityController extends Controller {
     /**
      * Muestra el formulario de creación de actividades con la lista de materiales disponibles.
      *
      * @return \Illuminate\View\View
      */
-    public function createForm()
-    {
+    public function createForm() {
         $teachers = User::where('user_type', 'teacher')->get();
 
         return view('activities.create')->with('materials', Material::all())->with('teachers',$teachers);
@@ -30,35 +29,25 @@ class ActivityController extends Controller
      * Devuelve todas las actividades de un alumno en formato JSON ordenados por fecha de creación descendente.
      * @return mixed|\Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
-    public function activityData()
-    {
-        $user = User::find(Cookie::get('USERPASS'));
-        if (!$user) {
-            return back()->with(FlashType::ERROR, 'Usuario no encontrado.');
-        }
-        
-        $activities = $user->activities()
-            ->with('materials','teacher')
+    public function activityData() {
+        $activities = User::find(Auth::id())->activities()
+            ->with('materials', 'teacher')
             ->orderBy('created_at', 'desc')
             ->get();
+
         return response()->json($activities);
-    } 
+    }
 
     /**
      * Devuelve todas las actividades asignadas a un profesor en formato JSON ordenados por fecha de creación descendente.
      * @return mixed|\Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
-    public function activityTeacherData()
-    {
-        $user = User::find(Cookie::get('USERPASS'));
-        if (!$user) {
-            return back()->with(FlashType::ERROR, 'Usuario no encontrado.');
-        }
-        
-        $activities = Activity::with('materials','teacher','user')
-                    ->where('teacher_id',$user->user_id)
-                    ->orderBy('created_at', 'desc')
-                    ->get();
+    public function activityTeacherData() {
+        $activities = Activity::with('materials', 'teacher', 'user')
+            ->where('teacher_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         return response()->json($activities);
     }
 
@@ -66,17 +55,12 @@ class ActivityController extends Controller
      * Muestra el historial de actividades del usuario autenticado.
      * @return mixed|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function historyView()
-    {
-        $user = User::find(Cookie::get('USERPASS'));
-        if (!$user) {
-            return back()->with(FlashType::ERROR, 'Usuario no encontrado.');
-        }
-        
-        $activities = $user->activities()
+    public function historyView() {
+        $activities = User::find(Auth::id())->activities()
             ->with('materials')
             ->orderBy('created_at', 'desc')
             ->get();
+
         return view('activities.history')->with('activities', $activities);
     }
 
@@ -86,8 +70,7 @@ class ActivityController extends Controller
      * @param  \Illuminate\Http\Request  $request  Petición con los datos del formulario.
      * @return \Illuminate\Http\RedirectResponse   Redirección con mensaje de éxito o error.
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         $validated = $request->validate([
             'title'  => 'required',
             'activity_datetime'=> 'required|date',
@@ -108,13 +91,7 @@ class ActivityController extends Controller
             return back()->with(FlashType::ERROR, 'No hay materiales en la cesta.');
         }
 
-        // Recupera el ID del usuario desde la cookie.
-        $user_id = Cookie::get('USERPASS');
-
-        // Si no hay usuario válido, redirige con error.
-        if (!$user_id || !User::find($user_id)) {
-            return back()->with(FlashType::ERROR, 'Usuario no válido.');
-        }
+        $user_id = Auth::id();
 
         try {
             // Inicia una transacción de base de datos para garantizar consistencia.
@@ -149,8 +126,7 @@ class ActivityController extends Controller
      * @param mixed $basket                     Lista de materiales con sus unidades.
      * @return void
      */
-    private function storeMaterialsActivity(Activity $activity, $basket)
-    {
+    private function storeMaterialsActivity(Activity $activity, $basket) {
         foreach ($basket as $data) {
             MaterialActivity::create([
                 'activity_id' => $activity->activity_id,

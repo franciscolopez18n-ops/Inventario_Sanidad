@@ -11,7 +11,7 @@ use App\Http\Controllers\ActivityController;
 
 /*
 |--------------------------------------------------------------------------
-| Autenticación (views/auth)
+| Autenticación
 |--------------------------------------------------------------------------
 */
 Route::get('/', [LoginController::class, 'showLoginForm'])->name('login.form');
@@ -20,100 +20,121 @@ Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
 /*
 |--------------------------------------------------------------------------
-| Bienvenida / Primer Acceso (views/welcome)
+| Rutas protegidas
 |--------------------------------------------------------------------------
 */
-Route::get('/firstLogData', [WelcomeController::class, 'firstLogData']);
-Route::get('/welcome', [WelcomeController::class, 'welcome'])->name('welcome');
-Route::post('/welcome', [WelcomeController::class, 'changePasswordFirstLog'])->name('changePasswordFirstLog');
+Route::middleware('auth')->group(function () {
 
-/*
-|--------------------------------------------------------------------------
-| Almacenamiento Docente (views/storages/teacher)
-|--------------------------------------------------------------------------
-*/
-Route::middleware('check.teacher.cookie')->group(function () {
-    Route::get('/storages/update/{material}/{currentLocation}/teacher/edit', [StorageController::class, 'teacherEditView'])->name('storages.teacher.edit');
-    Route::post('/storages/update/{material}/{currentLocation}/teacher/process', [StorageController::class, 'subtractToUse'])->name('storages.subtract.teacher');
-});
-
-/*
-|--------------------------------------------------------------------------
-| Actividades (views/activities)
-|--------------------------------------------------------------------------
-*/
-Route::prefix('activities')->group(function () {
-    Route::get('/create', [ActivityController::class, 'createForm'])->name('activities.create');
-    Route::get('/history', [ActivityController::class, 'historyView'])->name('activities.history');
-    Route::post('/store', [ActivityController::class, 'store'])->name('activities.store');
-    Route::get('/activityData', [ActivityController::class, 'activityData']);
-    Route::get('/activityTeacherData', [ActivityController::class, 'activityTeacherData']);
-});
-
-/*
-|--------------------------------------------------------------------------
-| Rutas protegidas para Administradores
-|--------------------------------------------------------------------------
-*/
-Route::middleware('check.admin.cookie')->group(function () {
+    // Bienvenida / Primer Acceso
+    Route::get('/welcome', [WelcomeController::class, 'welcome'])->name('welcome');
+    Route::post('/welcome', [WelcomeController::class, 'changePasswordFirstLog'])->name('changePasswordFirstLog');
+    Route::get('/firstLogData', [WelcomeController::class, 'firstLogData']);
 
     /*
     |--------------------------------------------------------------------------
-    | Gestión de Usuarios (views/users)
+    | Administrador
     |--------------------------------------------------------------------------
     */
-    Route::get('/users/create', [UsersManagementController::class, 'showCreateUser'])->name('users.createUser');
-    Route::post('/users/create', [UsersManagementController::class, 'altaUsers'])->name('altaUsers.process');
-    Route::get('/users/management', [UsersManagementController::class, 'showUsersManagement'])->name('users.management');
-    Route::post('/users/management/delete', [UsersManagementController::class, 'bajaUsers'])->name('bajaUsers.process');
-    Route::post('/users/management/password', [UsersManagementController::class, 'changePasswordUser'])->name('password.process');
-    Route::get('/users/usersManagementData', [UsersManagementController::class, 'usersManagementData']);
+    Route::middleware('check.role:admin')->group(function () {
+
+        // Usuarios
+        Route::prefix('users')->group(function () {
+            Route::get('/create', [UsersManagementController::class, 'showCreateUser'])->name('users.createUser');
+            Route::post('/create', [UsersManagementController::class, 'altaUsers'])->name('altaUsers.process');
+            Route::get('/management', [UsersManagementController::class, 'showUsersManagement'])->name('users.management');
+            Route::post('/management/delete', [UsersManagementController::class, 'bajaUsers'])->name('bajaUsers.process');
+            Route::post('/management/password', [UsersManagementController::class, 'changePasswordUser'])->name('password.process');
+            Route::get('/usersManagementData', [UsersManagementController::class, 'usersManagementData']);
+        });
+
+        // Materiales
+        Route::prefix('materials')->group(function () {
+            Route::get('/index', [MaterialManagementController::class, 'index'])->name('materials.index');
+            Route::get('/materialsData', [MaterialManagementController::class, 'materialsData']);
+            Route::get('/create', [MaterialManagementController::class, 'createForm'])->name('materials.create');
+            Route::post('/store', [MaterialManagementController::class, 'storeBatch'])->name('materials.store');
+            Route::post('/upload-temp', [MaterialManagementController::class, 'uploadTemp'])->name('materials.uploadTemp');
+            Route::get('{material}/edit', [MaterialManagementController::class, 'edit'])->name('materials.edit');
+            Route::post('{material}/update', [MaterialManagementController::class, 'update'])->name('materials.update');
+            Route::post('{material}/destroy', [MaterialManagementController::class, 'destroy'])->name('materials.destroy');
+
+            // Nueva sección en desarrollo
+            Route::get('/update', [MaterialManagementController::class, 'updateIndex'])->name('materials.update.index');
+            Route::get('/update/{material}', [MaterialManagementController::class, 'updateManualEdit'])->name('materials.update.manual');
+            Route::get('/update/{material}/storage/{storage}', [MaterialManagementController::class, 'updateQrEdit'])->name('materials.update.qr');
+        });
+
+        // Almacenamiento
+        Route::prefix('storages')->group(function () {
+            Route::get('/update/{material}/{currentLocation}/edit', [StorageController::class, 'editView'])->name('storages.edit');
+            Route::post('/update/{material}/{currentLocation}/process', [StorageController::class, 'updateBatch'])->name('storages.updateBatch');
+            Route::post('/destroy/{material}/{currentLocation}', [StorageController::class, 'destroy'])->name('storages.destroy');
+        });
+
+        // Historial
+        Route::prefix('historical')->group(function () {
+            Route::get('/reserve', [HistoricalManagementController::class, 'reserve'])->name('historical.reserve');
+            Route::get('/historialModificaciones', [HistoricalManagementController::class, 'showModificationsHistorical'])->name('historical.modificationsHistorical');
+            Route::get('/modificationsHistoricalData', [HistoricalManagementController::class, 'modificationsHistoricalData']);
+        });
+    });
 
     /*
     |--------------------------------------------------------------------------
-    | Historial (views/historical)
+    | Profesor
     |--------------------------------------------------------------------------
     */
+    Route::middleware('check.role:teacher')->group(function () {
+
+        // Almacenamiento docente
+        Route::prefix('storages')->group(function () {
+            Route::get('/update/{material}/{currentLocation}/teacher/edit', [StorageController::class, 'teacherEditView'])->name('storages.teacher.edit');
+            Route::post('/update/{material}/{currentLocation}/teacher/process', [StorageController::class, 'subtractToUse'])->name('storages.subtract.teacher');
+        });
+
+        // Actividades
+        Route::prefix('activities')->group(function () {
+            Route::get('/activityTeacherData', [ActivityController::class, 'activityTeacherData']);
+        });
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Estudiante
+    |--------------------------------------------------------------------------
+    */
+    Route::middleware('check.role:student')->group(function () {
+
+        // Actividades
+        Route::prefix('activities')->group(function () {
+            Route::get('/create', [ActivityController::class, 'createForm'])->name('activities.create');
+            Route::post('/store', [ActivityController::class, 'store'])->name('activities.store');
+            Route::get('/activityData', [ActivityController::class, 'activityData']);
+        });
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Compartidas
+    |--------------------------------------------------------------------------
+    */
+
+    // Actividades compartidas
+    Route::middleware('check.role:student,teacher')->group(function () {
+        Route::get('/activities/history', [ActivityController::class, 'historyView'])->name('activities.history');
+    });
+
+    // Gestión de almacenamiento compartido
+    Route::middleware('check.role:admin,teacher')->group(function () {
+        Route::prefix('storages')->group(function () {
+            Route::get('/update', [StorageController::class, 'updateView'])->name('storages.updateView');
+            Route::get('/updateData', [StorageController::class, 'updateData'])->name('storages.updateData');
+        });
+    });
+
+    // Historial compartido
     Route::prefix('historical')->group(function () {
-        Route::get('/modificationsHistoricalData', [HistoricalManagementController::class, 'modificationsHistoricalData']);
+        Route::get('/use', [HistoricalManagementController::class, 'use'])->name('historical.use');
         Route::get('/historicalData', [HistoricalManagementController::class, 'historicalData']);
-        Route::get('/historialModificaciones', [HistoricalManagementController::class, 'showModificationsHistorical'])->name('historical.modificationsHistorical');
-        Route::get('/{type}', [HistoricalManagementController::class, 'index'])
-            ->where('type', 'reserve|use')
-            ->name('historical.type');
-    });
-
-    /*
-    |--------------------------------------------------------------------------
-    | Almacenamiento (views/storages)
-    |--------------------------------------------------------------------------
-    */
-    Route::prefix('storages')->group(function () {
-        Route::get('/update', [StorageController::class, 'updateView'])->name('storages.updateView');
-        Route::get('/updateData', [StorageController::class, 'updateData'])->name('storages.updateData');
-        Route::get('update/{material}/{currentLocation}/edit', [StorageController::class, 'editView'])->name('storages.edit');
-        Route::post('/update/{material}/{currentLocation}/process', [StorageController::class, 'updateBatch'])->name('storages.updateBatch');
-        Route::post('destroy/{material}/{currentLocation}', [StorageController::class, 'destroy'])->name('storages.destroy');
-    });
-
-    /*
-    |--------------------------------------------------------------------------
-    | Gestión de Materiales (views/materials)
-    |--------------------------------------------------------------------------
-    */
-    Route::prefix('materials')->group(function () {
-        Route::get('/index', [MaterialManagementController::class, 'index'])->name('materials.index');
-        Route::get('/materialsData', [MaterialManagementController::class, 'materialsData']);
-        Route::get('/create', [MaterialManagementController::class, 'createForm'])->name('materials.create');
-        Route::post('/store', [MaterialManagementController::class, 'storeBatch'])->name('materials.store');
-        Route::post('{material}/destroy', [MaterialManagementController::class, 'destroy'])->name('materials.destroy');
-        Route::get('{material}/edit', [MaterialManagementController::class, 'edit'])->name('materials.edit');
-        Route::post('{material}/update', [MaterialManagementController::class, 'update'])->name('materials.update');
-        Route::post('/upload-temp', [MaterialManagementController::class, 'uploadTemp'])->name('materials.uploadTemp');
-
-        // Nueva sección que fusiona las secciones Gestionar materiales y Gestionar almacenamiento (en desarrollo)
-        Route::get('/update', [MaterialManagementController::class, 'updateIndex'])->name('materials.update.index');
-        Route::get('/update/{material}', [MaterialManagementController::class, 'updateManualEdit'])->name('materials.update.manual');
-        Route::get('/update/{material}/storage/{storage}', [MaterialManagementController::class, 'updateQrEdit'])->name('materials.update.qr');
     });
 });

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 
 class HistoricalManagementController extends Controller
 {
@@ -34,15 +35,12 @@ class HistoricalManagementController extends Controller
         return view('historical.modificationsHistorical');
     }
 
-    /**
-     * Muestra una vista dinámica de historial, según el tipo solicitado.
-     *
-     * @param  string  $type
-     * @return \Illuminate\View\View
-     */
-    public function index($type)
-    {
-        return view("historical.$type");
+    public function use() {
+        return view('historical.use');
+    }
+
+    public function reserve() {
+        return view('historical.reserve');
     }
 
     /**
@@ -50,9 +48,8 @@ class HistoricalManagementController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function historicalData()
-    {
-        $type = explode("=",url()->full())[1];
+    public function historicalData() {
+        $type = explode("=", URL::full())[1];
 
         $materials = DB::table('storages')
             ->join('materials', 'storages.material_id', '=', 'materials.material_id')
@@ -67,7 +64,7 @@ class HistoricalManagementController extends Controller
                 'storages.units',
                 'storages.min_units'
             )
-            ->where('storages.storage_type',$type )
+            ->where('storages.storage_type', $type)
             ->get();
         return response()->json($materials);
     }

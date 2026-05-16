@@ -27,9 +27,6 @@
         <input type="button" class="btn btn-danger" value="Cancelar" id="cancelarContra">
     </dialog>
 
-    {{-- Alertas flash --}}
-    <x-alerts />
-
     <h1>Gestion de usuarios</h1>
 
     <form class="search-form">

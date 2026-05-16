@@ -90,9 +90,6 @@
         <input type="submit" value="Alta" class="btn btn-success">
     </form>
 
-    {{-- Alertas flash --}}
-    <x-alerts />
-
     {{-- Cesta --}}
     <div class="basket-section hidden">
         <h4 class="basket-title">Cesta de Materiales</h4>

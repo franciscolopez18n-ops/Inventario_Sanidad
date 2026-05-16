@@ -80,9 +80,6 @@
                 <!-- Hidden que contendrá el JSON de la cesta -->
                 <input type="hidden" name="materialsBasketInput" id="materialsBasketInput">
 
-                {{-- Alertas flash --}}
-                <x-alerts />
-
                 <input type="submit" value="Crear" class="btn btn-primary">
             </form>
         </div>

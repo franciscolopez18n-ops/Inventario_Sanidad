@@ -8,22 +8,20 @@ use App\Models\Storage;
 use App\Models\Material;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Mail\LowStockAlert;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
 
-class StorageController extends Controller
-{
+class StorageController extends Controller {
     /**
      * Muestra la vista principal de los almacenamientos.
      * Si es administrador vera los dos almacenamientos de uso y reserva.
      * Si es docente vera el almacenamiento de uso.
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function updateView()
-    {
+    public function updateView() {
         return view('storages.update');
     }
 
@@ -32,8 +30,7 @@ class StorageController extends Controller
      * @param \App\Models\Material $material
      * @return mixed|\Illuminate\Contracts\View\View
      */
-    public function editView(Material $material, $currentLocation)
-    {
+    public function editView(Material $material, $currentLocation) {
         return view('storages.edit')->with('material', $material)->with('currentLocation', $currentLocation);
     }
 
@@ -239,14 +236,10 @@ class StorageController extends Controller
      * @param mixed $currentLocation    Identificador del almacenamiento físico ('CAE' u 'odontology').
      * @return void
      */
-    private function storeEditInModification($material_id, $storage_type, $units, $currentLocation)
-    {
-        // Obtiene el ID del usuario desde la cookie 'USERPASS'.
-        $user_id = Cookie::get('USERPASS');
-
+    private function storeEditInModification($material_id, $storage_type, $units, $currentLocation) {
         // Crea un nuevo registro en la tabla 'modifications' con los datos de la modificación.
         Modification::create([
-            'user_id'         => $user_id,
+            'user_id'         => Auth::id(),
             'material_id'     => $material_id,
             'storage_type'    => $storage_type,
             'storage'         => $currentLocation,

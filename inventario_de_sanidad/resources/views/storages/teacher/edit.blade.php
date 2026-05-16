@@ -38,9 +38,6 @@
             <br>
         </form>
 
-        <!-- Alertas flash -->
-        <x-alerts />
-
         @error('subtract_units')
             <p class="alert alert-error alert-form">{{ $message }}</p>
         @enderror

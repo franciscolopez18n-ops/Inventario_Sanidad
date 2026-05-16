@@ -40,7 +40,7 @@
 
 @if (session(FlashType::SUCCESS))
     <div class="con">
-        <h1>Bienvenido/a <span>{{ Cookie::get('NAME') }}</span></h1>
+        <h1>Bienvenido/a <span>{{ Auth::user()->full_name }}</span></h1>
         <p>Has iniciado sesión correctamente.</p>
     </div>
 

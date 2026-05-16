@@ -57,9 +57,6 @@
         {{-- Aquí se muestran los datos de almacenamiento y se permite su edición --}}
         <div></div>
 
-        {{-- Alertas flash --}}
-        <x-alerts />
-
         <div class="form-actions">
             <input type="submit" value="Actualizar [NO HACE NADA]" class="btn btn-success">
             <br><br><br>

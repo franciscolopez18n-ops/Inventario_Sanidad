@@ -78,9 +78,6 @@
             </div>
         </div>
 
-        <!-- Alertas flash -->
-        <x-alerts />
-
         <div id="paginacion" class="pagination-controls">
             <!-- Aquí se inyectarán los botones de paginación desde JS -->
         </div>

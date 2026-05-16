@@ -34,7 +34,7 @@
         <nav>
             <ul>
                 <!-- Menú para Administrador -->
-                @if(Cookie::get('TYPE') === 'admin')
+                @if(Auth::user()->user_type === 'admin')
                     <li class="has-submenu">
                         <a href="">
                             <i class="fa-solid fa-user"></i>
@@ -105,15 +105,15 @@
                         </a>
                         <ul class="submenu">
                             <li>
-                                <a href="{{ route('historical.type', ['type' => 'use']) }}"
-                                class="{{ request()->fullUrlIs(route('historical.type', ['type' => 'use'])) ? 'active' : '' }}">
+                                <a href="{{ route('historical.use') }}"
+                                class="{{ request()->fullUrlIs(route('historical.use')) ? 'active' : '' }}">
                                     <i class="fa-solid fa-book-open"></i>
                                     <span class="link-text">Materiales en uso</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('historical.type', ['type' => 'reserve']) }}"
-                                class="{{ request()->fullUrlIs(route('historical.type', ['type' => 'reserve'])) ? 'active' : '' }}">
+                                <a href="{{ route('historical.reserve') }}"
+                                class="{{ request()->fullUrlIs(route('historical.reserve')) ? 'active' : '' }}">
                                     <i class="fa-solid fa-boxes-packing"></i>
                                     <span class="link-text">Materiales en reserva</span>
                                 </a>
@@ -130,7 +130,7 @@
                 @endif
 
                 <!-- Menú para Estudiantes -->
-                @if(Cookie::get('TYPE') === 'student')
+                @if(Auth::user()->user_type === 'student')
 
                     <li>
                         <a href="{{ route('activities.create') }}"
@@ -147,8 +147,8 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('historical.type', ['type' => 'use']) }}"
-                        class="{{ request()->fullUrlIs(route('historical.type', ['type' => 'use'])) ? 'active' : '' }}">
+                        <a href="{{ route('historical.use') }}"
+                        class="{{ request()->fullUrlIs(route('historical.use')) ? 'active' : '' }}">
                             <i class="fa-solid fa-book-open"></i>
                             <span class="link-text">Materiales en uso</span>
                         </a>
@@ -156,7 +156,7 @@
                 @endif
 
                 <!-- Menú para Docentes -->
-                @if(Cookie::get('TYPE') === 'teacher')
+                @if(Auth::user()->user_type === 'teacher')
                     <li>
                         <a href="{{ route('storages.updateView') }}"
                         class="{{ request()->routeIs('storages.updateView') ? 'active' : '' }}">
@@ -165,8 +165,8 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('historical.type', ['type' => 'use']) }}"
-                        class="{{ request()->fullUrlIs(route('historical.type', ['type' => 'use'])) ? 'active' : '' }}">
+                        <a href="{{ route('historical.use') }}"
+                        class="{{ request()->fullUrlIs(route('historical.use')) ? 'active' : '' }}">
                             <i class="fa-solid fa-book-open"></i>
                             <span class="link-text">Materiales en uso</span>
                         </a>
@@ -196,26 +196,23 @@
 
                 <!-- Notificaciones de alerta -->
                 @php
-                    use App\Models\User;
                     use App\Models\Storage;
-                    use Illuminate\Support\Facades\Cookie;
+                    use Illuminate\Support\Facades\Auth;
 
-                    $user = User::where('user_id', Cookie::get('USERPASS'))->first();
-                    
                     $notifications = collect();
 
-                    if ($user && $user->user_type === 'admin') {
+                    if (Auth::user()->user_type === 'admin') {
                         $notifications = Storage::join('materials', 'storages.material_id', '=', 'materials.material_id')
-                            ->select('materials.name','storage', 'storages.units', 'storage_type')
+                            ->select('materials.name', 'storage', 'storages.units', 'storage_type')
                             ->whereColumn('storages.units', '<', 'storages.min_units')
-                            ->orderBy('storage', "desc")
+                            ->orderBy('storage', 'desc')
                             ->get();
                     }
                 @endphp
 
                 <!-- Notificaciones -->
 
-                @if(Cookie::get('TYPE') === 'admin')
+                @if(Auth::user()->user_type === 'admin')
                 <div>
                     <div class="notifications-alert">
                         <button id="btn-notifications" class="btn btn-primary btn-notifications">
@@ -246,15 +243,15 @@
                     <!-- Info del usuario -->
                     <div class="user-info btn btn-notifications" id="user-info-toggle">
                         <i class="fa-solid fa-user"></i>
-                        {{-- <span>{{ Cookie::get('NAME') }}</span> --}}
+                        {{-- Auth::user()->full_name --}}
                     </div>
 
                     <!-- Logout oculto por defecto -->
                     <div class="logout fade-in" id="logout-section" style="display: none;">
                         <div class="user-details">
-                            <p class="user-name">{{ Cookie::get('NAME') }}</p>
-                            <p class="user-email">{{ Cookie::get('EMAIL') }}</p>
-                            <p class="user-role">{{ Cookie::get('TYPE') }}</p>
+                            <p class="user-name">{{ Auth::user()->full_name }}</p>
+                            <p class="user-email">{{ Auth::user()->email }}</p>
+                            <p class="user-role">{{ Auth::user()->user_type }}</p>
                         </div>
 
                         <hr>
@@ -270,6 +267,9 @@
         <!-- Contenido principal (cambia según la ruta) -->
         <main class="main-content">
             <div class="container">
+                {{-- Alertas flash --}}
+                <x-alerts />
+
                 @yield('content')
             </div>
         </main>
