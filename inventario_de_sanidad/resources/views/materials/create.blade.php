@@ -12,7 +12,10 @@
 @section('content')
 <div class="material-form-wrapper">
     <h1>Alta de Materiales</h1>
-
+    <div class="alerts-container">
+        <div id="success-message" class="success hidden"></div>
+        <x-alerts />
+    </div>
     {{-- Boton de agregar a la cesta --}}
     <div class="basket-toggle">
         <button id="toggleBasketBtn" class="botonCarrito" type="button">
@@ -91,14 +94,11 @@
             </button>
         </div>
 
-        {{-- Mensaje de éxito --}}
-        <div id="success-message" class="success hidden"></div>
-
+      
         
     </form>
 
-    {{-- Alertas flash --}}
-    <x-alerts />
+    
 
     {{-- Cesta --}}
     <div class="basket-section hidden">

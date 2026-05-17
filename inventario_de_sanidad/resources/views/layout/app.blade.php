@@ -35,6 +35,7 @@
             <ul>
                 <!-- Menú para Administrador -->
                 @if(Cookie::get('TYPE') === 'admin')
+                    <!-- Gestión de usuarios -->
                     <li class="has-submenu">
                         <a href="">
                             <i class="fa-solid fa-user"></i>
@@ -58,7 +59,7 @@
                             </li>
                         </ul>
                     </li>
-
+                    <!-- Gestión de materiales -->
                     <li class="has-submenu">
                         <a href="">
                             <i class="fa-solid fa-clipboard-list"></i>
@@ -96,7 +97,7 @@
                             </li>
                         </ul>
                     </li>
-
+                    <!-- Reservas de materiales -->
                     <li class="has-submenu">
                         <a href="">
                             <i class="fa-solid fa-book-bookmark"></i>

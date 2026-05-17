@@ -117,6 +117,11 @@ function renderBasket() {
     let basket = getCookieValue(COOKIE_NAME);
     let tbody = document.querySelector("table tbody");
 
+    const btnAlta = document.getElementById("btn-submit-alta");
+    if (btnAlta) {
+        // Se desactiva si la cesta está vacía (length es 0)
+        btnAlta.disabled = (basket.length === 0);
+    }
     // Limpia el contenido anterior de la tabla.
     while (tbody.rows.length > 0) {
         tbody.deleteRow(0);
@@ -305,13 +310,26 @@ async function getMaterialData() {
     successMsg.className = "alert alert-success";
     successMsg.textContent = "Material añadido al carrito.";
     alertsContainer.appendChild(successMsg);
+    autoHideAlerts();
 }
 
 // Muestra los errores como un alert.
 function displayErrors(errors) {
     let list = Array.isArray(errors) ? errors : [errors];
-    let message = list.map(e => "- " + e).join("\n");
-    if (message) window.alert(message);
+    let alertsContainer = document.querySelector(".alerts-container");
+
+    if (!alertsContainer) return;
+
+    list.forEach(error => {
+        let alert = document.createElement("p");
+
+        alert.className = "alert alert-error";
+        alert.textContent = error;
+
+        alertsContainer.appendChild(alert);
+    });
+
+    autoHideAlerts();
 }
 
 // Sube la imagen al servidor y devuelve la ruta temporal.
@@ -373,4 +391,36 @@ function deleteMaterialData(event) {
 // Borra una cookie estableciendo una fecha de expiración en el pasado.
 function deleteCookie(name) {
     document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+}
+
+// Función para que los avisos desaparezcan solos
+function autoHideAlerts() {
+    const alerts = document.querySelectorAll('.alert, #success-message');
+
+    alerts.forEach(alert => {
+        setTimeout(() => {
+            alert.style.transition = "opacity 0.5s ease";
+            alert.style.opacity = "0";
+            
+            setTimeout(() => {
+                alert.remove();
+            }, 500);
+        }, 3000); // 3 segundos
+    });
+}
+window.addEventListener("load", autoHideAlerts);
+
+function showAlert(type, message) {
+    let alertsContainer = document.querySelector(".alerts-container");
+
+    if (!alertsContainer) return;
+
+    let alert = document.createElement("p");
+
+    alert.className = `alert alert-${type}`;
+    alert.textContent = message;
+
+    alertsContainer.appendChild(alert);
+
+    autoHideAlerts();
 }
