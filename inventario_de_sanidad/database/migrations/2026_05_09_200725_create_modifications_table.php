@@ -4,9 +4,9 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateXmodificationsTable extends Migration {
+class CreateModificationsTable extends Migration {
     public function up() {
-        Schema::create('xmodifications', function (Blueprint $table) {
+        Schema::create('modifications', function (Blueprint $table) {
             $table->engine = 'InnoDB';
 
             $table->unsignedInteger('user_id');
@@ -35,6 +35,6 @@ class CreateXmodificationsTable extends Migration {
     }
 
     public function down() {
-        Schema::dropIfExists('xmodifications');
+        Schema::dropIfExists('modifications');
     }
 }

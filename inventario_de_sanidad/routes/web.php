@@ -69,13 +69,13 @@ Route::middleware('auth')->group(function () {
         Route::prefix('storages')->group(function () {
             Route::get('/update/{material}/{currentLocation}/edit', [StorageController::class, 'editView'])->name('storages.edit');
             Route::post('/update/{material}/{currentLocation}/process', [StorageController::class, 'updateBatch'])->name('storages.updateBatch');
-            Route::post('/destroy/{material}/{currentLocation}', [StorageController::class, 'destroy'])->name('storages.destroy');
         });
 
         // Historial
         Route::prefix('historical')->group(function () {
             Route::get('/reserve', [HistoricalManagementController::class, 'reserve'])->name('historical.reserve');
             Route::get('/historialModificaciones', [HistoricalManagementController::class, 'showModificationsHistorical'])->name('historical.modificationsHistorical');
+            
             Route::get('/modificationsHistoricalData', [HistoricalManagementController::class, 'modificationsHistoricalData']);
         });
 

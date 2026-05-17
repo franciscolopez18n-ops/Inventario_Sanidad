@@ -31,11 +31,11 @@
           <tr>
             <td style="padding:16px;color:#333333;line-height:1.5;font-size:16px;">
               <p style="margin:0 0 12px;">
-                El material <strong>{{ $materialName }}</strong> tiene una cantidad actual de 
-                <strong>{{ $storage->units }}</strong>, que está por debajo del mínimo permitido 
-                (<strong>{{ $storage->min_units }}</strong>) en el almacenamiento de 
-                <strong>{{ $storage->storage_type === 'use' ? 'uso' : 'reserva' }}</strong>
-                en el almacen de <strong>{{ $storage->storage === 'odontology' ? 'Odontología' : 'CAE' }}</strong>.
+                El material <strong>{{ $assignment->material->name }}</strong> tiene una cantidad actual de 
+                <strong>{{ $assignment->storageRecord()->getUnits() }}</strong>, que está por debajo del mínimo permitido 
+                (<strong>{{ $assignment->storageRecord()->getMinUnits() }}</strong>) en el almacenamiento de 
+                <strong>{{ $assignment->storage_type === 'use' ? 'uso' : 'reserva' }}</strong>
+                en el almacen de <strong>{{ $assignment->storage === 'odontology' ? 'Odontología' : 'CAE' }}</strong>.
               </p>
               <p style="margin:0 0 12px;">
                 Por favor, toma las medidas necesarias para reponer el stock.

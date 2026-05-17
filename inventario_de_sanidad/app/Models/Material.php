@@ -39,10 +39,6 @@ class Material extends Model {
         return $this->hasMany(Modification::class, 'material_id', 'material_id');
     }
 
-    public function xmodifications() {
-        return $this->hasMany(Modification::class, 'material_id', 'material_id');
-    }
-
     public function activities() {
         return $this->belongsToMany(Activity::class, 'material_activity', 'material_id', 'activity_id')->withPivot('quantity');
     }

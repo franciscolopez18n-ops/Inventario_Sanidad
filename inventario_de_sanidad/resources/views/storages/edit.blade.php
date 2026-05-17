@@ -22,7 +22,7 @@
             <legend>Datos para Uso</legend>
 
             @php
-                $useRecord = $material->storage->where('storage_type', 'use')->where('storage', $currentLocation)->first();
+                $useRecord = $material->storageUse()->where('storage', $currentLocation)->first();
             @endphp
 
             <div class="form-grid">
@@ -56,8 +56,8 @@
                 </div>
                 <div class="">
                     <label>Cajón</label>
-                    <input type="number" name="drawer" class="form-control" value="{{ $useRecord->drawer ?? '0' }}" min="0" required>
-                    @error('drawer')
+                    <input type="number" name="use_drawer" class="form-control" value="{{ $useRecord->drawer ?? '0' }}" min="0" required>
+                    @error('use_drawer')
                         <div class="alert alert-error alert-form">{{ $message }}</div>
                     @enderror
                 </div>
@@ -68,7 +68,7 @@
             <legend>Datos para Reserva</legend>
 
             @php
-                $reserveRecord = $material->storage->where('storage_type', 'reserve')->where('storage', $currentLocation)->first();
+                $reserveRecord = $material->storageReserve()->where('storage', $currentLocation)->first();
             @endphp
 
             <div class="form-grid">

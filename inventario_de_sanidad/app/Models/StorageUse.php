@@ -30,15 +30,16 @@ class StorageUse extends Model implements StockStorage {
         return $this->belongsTo(Material::class, 'material_id');
     }
 
-    public function getUnits(): int {
-        return $this->units;
+    public function getAssignment() {
+        return StorageAssignment::where('material_id', $this->material_id)
+            ->where('storage', $this->storage)
+            ->where('storage_type', 'use')
+            ->first();
     }
 
-    public function getMinUnits(): int {
-        return $this->min_units;
-    }
-
-    public function getModeLabel(): string {
-        return 'use';
-    }
+    public function getUnits(): int { return $this->units; }
+    public function getMinUnits(): int { return $this->min_units; }
+    public function getCabinet(): string { return (string) $this->cabinet; }
+    public function getShelf(): int { return $this->shelf; }
+    public function getDrawer(): ?int { return $this->drawer; }
 }

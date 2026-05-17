@@ -6,7 +6,6 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class ModificationsSeeder extends Seeder {
-
     public function run() {
         DB::table('modifications')->insert([
             ['user_id' => 8, 'material_id' => 1, 'storage' => 'CAE', 'storage_type' => 'reserve',  'units' => 10, 'action_datetime' => now()],

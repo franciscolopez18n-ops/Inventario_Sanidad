@@ -10,7 +10,7 @@
 <div class="">
     <div class="edit-container">
         @php
-            $useRecord = $material->storage->where('storage_type', 'use')->where('storage',$currentLocation)->first();
+            $useRecord = $material->storageUse()->where('storage', $currentLocation)->first();
         @endphp
         <form action="{{ route('storages.subtract.teacher', [$material->material_id, $currentLocation]) }}" method="POST">
             @csrf

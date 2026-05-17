@@ -17,7 +17,6 @@ class DatabaseSeeder extends Seeder {
             StoragesReserveSeeder::class,
             StorageAssignmentsSeeder::class,
             ModificationsSeeder::class,
-            xModificationsSeeder::class,
             MaterialActivitySeeder::class,
         ]);
     }

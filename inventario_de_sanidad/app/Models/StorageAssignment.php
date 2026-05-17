@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Contracts\StockStorage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -26,9 +27,27 @@ class StorageAssignment extends Model {
     }
 
     public function modifications() {
-        return $this->hasMany(xModification::class, 'material_id', 'material_id')
+        return $this->hasMany(Modification::class, 'material_id', 'material_id')
             ->where('storage', $this->storage)
             ->where('storage_type', $this->storage_type);
+    }
+
+    public function getStorageUse() {
+        return StorageUse::where('material_id', $this->material_id)
+            ->where('storage', $this->storage)
+            ->first();
+    }
+
+    public function getStorageReserve() {
+        return StorageReserve::where('material_id', $this->material_id)
+            ->where('storage', $this->storage)
+            ->first();
+    }
+
+    public function storageRecord(): StockStorage {
+        return $this->storage_type === 'use' 
+            ? $this->getStorageUse() 
+            : $this->getStorageReserve();
     }
 
     public function isUse(): bool {

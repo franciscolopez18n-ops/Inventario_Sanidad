@@ -6,22 +6,22 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 
-class HistoricalManagementController extends Controller
-{
+class HistoricalManagementController extends Controller {
     /**
      * Devuelve un JSON con el historial de modificaciones en los materiales.
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function modificationsHistoricalData()
-    {
+    public function modificationsHistoricalData() {
         $modifications = DB::table('modifications')
             ->join('users', 'modifications.user_id', '=', 'users.user_id')
             ->join('materials', 'modifications.material_id', '=', 'materials.material_id')
-            ->select('users.first_name', 'users.last_name', 'users.email', 'users.user_type','modifications.storage', 'users.created_at',
-                    'materials.name as material_name', 'modifications.units', 'modifications.action_datetime', 'modifications.storage_type')
-            ->orderBy("action_datetime",'desc')
+            ->select('users.first_name', 'users.last_name', 'users.email', 'users.user_type',
+                    'modifications.storage', 'materials.name as material_name',
+                    'modifications.units', 'modifications.action_datetime', 'modifications.storage_type')
+            ->orderBy('action_datetime', 'desc')
             ->get();
+
         return response()->json($modifications);
     }
 
