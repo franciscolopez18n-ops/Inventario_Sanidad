@@ -3,20 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Constants\FlashType;
-use App\Contracts\StockStorage;
-use App\Models\Modification;
+use App\Traits\HasStorageOperations;
 use App\Models\Storage;
+use App\Models\StorageUse;
 use App\Models\Material;
-use App\Models\User;
-use App\Models\StorageAssignment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
-use App\Mail\LowStockAlert;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Auth;
 
 class StorageController extends Controller {
+    use HasStorageOperations;
+
     /**
      * Muestra la vista principal de los almacenamientos.
      * Si es administrador vera los dos almacenamientos de uso y reserva.
@@ -28,256 +24,12 @@ class StorageController extends Controller {
     }
 
     /**
-     * Muestra la vista del administrador para editar los almacenamientos de un material específico.
-     * @param \App\Models\Material $material
-     * @return mixed|\Illuminate\Contracts\View\View
-     */
-    public function editView(Material $material, $currentLocation) {
-        return view('storages.edit')->with('material', $material)->with('currentLocation', $currentLocation);
-    }
-
-    /**
      * Muestra la vista del docente para editar el almacenamiento de uso de un material específico.
      * @param \App\Models\Material $material
      * @return mixed|\Illuminate\Contracts\View\View
      */
     public function teacherEditView(Material $material, $currentLocation) {
         return view('storages.teacher.edit')->with('material', $material)->with('currentLocation', $currentLocation);
-    }
-
-    /**
-     * Actualiza en batch el almacenamiento de un material en una ubicación específica.
-     * Permite modificar unidades, mínimos y ubicaciones (armario, estantería, cajón) 
-     * para los tipos de almacenamiento 'use' y 'reserve', con opción de modificar sólo reserva.
-     *
-     * @param \Illuminate\Http\Request $request        Petición HTTP con los datos de actualización.
-     * @param \App\Models\Material    $material        Instancia del Material.
-     * @param mixed                   $currentLocation Ubicación actual ('CAE' u 'odontology').
-     * @return \Illuminate\Http\RedirectResponse       Redirección con mensaje de resultado.
-     */
-    public function updateBatch(Request $request, Material $material, $currentLocation) {
-        $validated = $request->validate([
-            'use_units'         => 'required|integer|min:0',
-            'use_min_units'     => 'required|integer|min:0',
-            'use_cabinet'       => 'required|integer|min:0',
-            'use_shelf'         => 'required|integer|min:0',
-            'use_drawer'            => 'required|integer|min:0',
-
-            'reserve_units'     => 'required|integer|min:0',
-            'reserve_min_units' => 'required|integer|min:0',
-            'reserve_cabinet'   => 'required|string',
-            'reserve_shelf'     => 'required|integer|min:0',
-
-            'onlyReserve'       => 'nullable|boolean'
-        ]);
-
-        $useRecord = $material->storageUse()->where('storage', $currentLocation)->first();
-        $reserveRecord = $material->storageReserve()->where('storage', $currentLocation)->first();
-
-        // Si no se encuentra el registro en 'use' y 'reserve' se retorna un error.
-        if (empty($reserveRecord) || empty($useRecord)) {
-            return back()->with(FlashType::ERROR, 'El material no está añadido en este almacén');
-        }
-
-        // Se asignan los nuevos valores provenientes del request para el almacenamiento de uso.
-        $newUseUnits        = $validated['use_units'];
-        $newUseMin          = $validated['use_min_units'];
-        $newUseCabinet      = $validated['use_cabinet'];
-        $newUseShelf        = $validated['use_shelf'];
-        $newUseDrawer       = $validated['use_drawer'];
-
-        // Se asignan los nuevos valores para el almacenamiento de reserva.
-        $newReserveUnits    = $validated['reserve_units'];
-        $newReserveMin      = $validated['reserve_min_units'];
-        $newReserveCabinet  = $validated['reserve_cabinet'];
-        $newReserveShelf    = $validated['reserve_shelf'];
-
-        // Se comprueba si los nuevos valores coinciden exactamente con los actuales.
-        if
-        (
-            $newUseUnits        == $useRecord->units && 
-            $newUseMin          == $useRecord->min_units && 
-            $newUseCabinet      == $useRecord->cabinet && 
-            $newUseShelf        == $useRecord->shelf && 
-            $newUseDrawer       == $useRecord->drawer &&
-            $newReserveUnits    == $reserveRecord->units && 
-            $newReserveMin      == $reserveRecord->min_units && 
-            $newReserveCabinet  == $reserveRecord->cabinet && 
-            $newReserveShelf    == $reserveRecord->shelf
-        ) {
-            // Si no se detecta ningún cambio, se retorna un mensaje informativo.
-            return back()->with(FlashType::INFO, 'No se han detectado cambios en los datos.');
-        }
-
-        try {
-            // Solamente actualizar reserva.
-            if ($request->boolean('onlyReserve')) {
-                // Se calcula la diferencia de unidades para "reserve".
-                $differenceReserve = $newReserveUnits - $reserveRecord->units;
-
-                // Inicia una transacción de base de datos: si algo falla, se revierte todo.
-                DB::transaction(function() use (
-                    $material,
-                    $currentLocation,
-                    $reserveRecord,
-                    $newReserveUnits,
-                    $newReserveMin,
-                    $newReserveCabinet,
-                    $newReserveShelf,
-                    $differenceReserve
-                ) {
-                    // Actualiza el almacenamiento de reserva.
-                    Storage::where('material_id', $material->material_id)
-                    ->where('storage_type' , 'reserve')
-                    ->where('storage', $currentLocation)
-                    ->update([
-                        'units'     => $newReserveUnits,
-                        'min_units' => $newReserveMin,
-                        'cabinet'   => $newReserveCabinet,
-                        'shelf'     => $newReserveShelf,
-                    ]);
-
-                    $reserveRecord->update([
-                        'units'     => $newReserveUnits,
-                        'min_units' => $newReserveMin,
-                        'cabinet'   => $newReserveCabinet,
-                        'shelf'     => $newReserveShelf,
-                    ]);
-
-                    // Registra la modificación realizada en el almacenamiento de reserva, almacenando la diferencia calculada.
-                    $this->storeEditInModification($reserveRecord->getAssignment(), $differenceReserve);
-                });
-
-                // Se comprueba que las unidades actualizadas no sean menores que el mínimo de unidades.
-                $this->checkUnits($reserveRecord);
-
-                // Devuelve una respuesta de éxito al usuario.
-                return back()->with(FlashType::SUCCESS, 'Se ha actualizado correctamente el almacenamiento de reserva.');
-            }
-    
-            // Se calculan las diferencias en unidades para el almacenamiento de uso y reserva.
-            $differenceUse = $newUseUnits - $useRecord->units;
-            $differenceReserve = $newReserveUnits - $reserveRecord->units;
-    
-            // Si cambia ambas unidades, no se realiza el cambio.
-            if ($differenceUse !== 0 && $differenceReserve !== 0) {
-                return back()->with(FlashType::ERROR, 'Solo puedes modificar una de las dos cantidades; el otro valor se ajustará automáticamente.');
-            }
-    
-            if ($differenceUse !== 0) {
-                // Si se modifica la cantidad de uso, se ajusta automáticamente la de reserva.
-                $newReserveUnits = $reserveRecord->units - $differenceUse;
-                if ($newReserveUnits < 0) {
-                    return back()->with(FlashType::ERROR, 'No puedes transferir más unidades de las que hay en reserva.');
-                }
-            } else if ($differenceReserve !== 0) {
-                // Si se modifica la cantidad de reserva, se ajusta automáticamente la de uso.
-                $newUseUnits = $useRecord->units - $differenceReserve;
-                if ($newUseUnits < 0) {
-                    return back()->with(FlashType::ERROR, 'No puedes transferir más unidades de las que hay en uso.');
-                }
-            }
-    
-            // Se inicia una transacción para actualizar el almacenamiento de uso y reserva
-            // junto con el registro de las modificaciones de manera atómica.
-            DB::transaction(function() use (
-                $material,
-                $currentLocation,
-                $useRecord,
-                $reserveRecord,
-                $newUseUnits,
-                $newUseMin,
-                $newUseCabinet,
-                $newUseShelf,
-                $newUseDrawer,
-                $newReserveUnits,
-                $newReserveMin,
-                $newReserveCabinet,
-                $newReserveShelf,
-                $differenceUse,
-                $differenceReserve
-            ) {
-                // Actualiza el almacenamiento de uso.
-                Storage::where('material_id', $material->material_id)
-                    ->where('storage_type' , 'use')
-                    ->where('storage', $currentLocation)
-                    ->update([
-                        'units' => $newUseUnits,
-                        'min_units' => $newUseMin,
-                        'cabinet' => $newUseCabinet,
-                        'shelf' => $newUseShelf,
-                        'drawer' => $newUseDrawer
-                    ]);
-    
-                // Actualiza el almacenamiento de reserva.
-                Storage::where('material_id', $material->material_id)
-                    ->where('storage_type' , 'reserve')
-                    ->where('storage', $currentLocation)
-                    ->update([
-                        'units' => $newReserveUnits,
-                        'min_units' => $newReserveMin,
-                        'cabinet' => $newReserveCabinet,
-                        'shelf' => $newReserveShelf,
-                    ]);
-
-                $useRecord->update([
-                    'units'   => $newUseUnits,
-                    'min_units' => $newUseMin,
-                    'cabinet' => $newUseCabinet,
-                    'shelf'   => $newUseShelf,
-                    'drawer'  => $newUseDrawer,
-                ]);
-
-                $reserveRecord->update([
-                    'units'     => $newReserveUnits,
-                    'min_units' => $newReserveMin,
-                    'cabinet'   => $newReserveCabinet,
-                    'shelf'     => $newReserveShelf,
-                ]);
-        
-                // Registra las modificaciones correspondientes según cuál de las cantidades haya cambiado.
-                if ($differenceUse !== 0) {
-                    // Si se modificó la cantidad de uso, se registra la diferencia positiva en "use"
-                    $this->storeEditInModification($useRecord->getAssignment(), $differenceUse);
-                    // y la diferencia negativa en "reserve" para mantener el balance.
-                    $this->storeEditInModification($reserveRecord->getAssignment(), -$differenceUse);
-                } else if ($differenceReserve !== 0) {
-                    // Si se modificó la cantidad de reserva, se registra la diferencia positiva en "reserve"
-                    $this->storeEditInModification($reserveRecord->getAssignment(), $differenceReserve);
-                    // y la diferencia negativa en "use" para mantener el balance.
-                    $this->storeEditInModification($useRecord->getAssignment(), -$differenceReserve);
-                }
-            });
-
-            // Se comprueba que las unidades actualizadas no sean menores que el mínimo de unidades.
-            $this->checkUnits($useRecord);
-            $this->checkUnits($reserveRecord);
-    
-            // Devuelve una respuesta de éxito al usuario.
-            return back()->with(FlashType::SUCCESS, 'Almacenamiento actualizado correctamente.');
-        } catch (\Exception $e) {
-            // Si ocurre algún error durante el proceso, muestra un mensaje de error.
-            return back()->with(FlashType::ERROR, 'Error al modificar los registros: ' . $e->getMessage());
-        }
-    }
-
-    /**
-     * Registra las unidades modificadas de un material y almacenamiento específico.
-     * 
-     * Esta función crea un nuevo registro en la tabla de modificaciones (`modifications`)
-     * para dejar constancia de un cambio en las unidades de un material en un tipo 
-     * específico de almacenamiento (uso o reserva), junto con la ubicación y el usuario
-     */
-
-    private function storeEditInModification(StorageAssignment $assignment, int $units) {
-        Modification::create([
-            'user_id'         => Auth::id(),
-            'material_id'     => $assignment->material_id,
-            'storage_type'    => $assignment->storage_type,
-            'storage'         => $assignment->storage,
-            'units'           => $units,
-            'action_datetime' => Carbon::now('Europe/Madrid'),
-        ]);
     }
 
     /**
@@ -324,7 +76,9 @@ class StorageController extends Controller {
                     ->where('storage', $currentLocation)
                     ->decrement('units', $modifiedUnits);
 
-                $useRecord->decrement('units', $modifiedUnits);
+                StorageUse::where('material_id', $useRecord->material_id)
+                    ->where('storage', $useRecord->storage)
+                    ->decrement('units', $modifiedUnits);
 
                 // Registra la modificación con unidades negativas.
                 $this->storeEditInModification($useRecord->getAssignment(), -$modifiedUnits);
@@ -339,21 +93,6 @@ class StorageController extends Controller {
         } catch (\Exception $e) {
             // Si ocurre algún error durante el proceso, muestra un mensaje de error.
             return back()->with(FlashType::ERROR, 'Error al modificar el almacenamiento: ' . $e->getMessage());
-        }
-    }
-
-
-    /**
-     * Comprueba las unidades de un material en un tipo de almacenamiento.
-     *
-     * Si las unidades disponibles son menores que el mínimo definido, 
-     * se envía una advertencia por correo electrónico al administrador.
-     */
-
-    private function checkUnits(StockStorage $record) {
-        if ($record->getUnits() < $record->getMinUnits()) {
-            $adminEmails = User::where('user_type', 'admin')->pluck('email');
-            Mail::to($adminEmails)->send(new LowStockAlert($record->getAssignment()));
         }
     }
 

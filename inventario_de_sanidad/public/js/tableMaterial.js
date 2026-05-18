@@ -66,32 +66,23 @@ function renderTable(limit, paginaActual) {
 
         // Botón Editar
         let tdAc = document.createElement("td");
-        let formAc = document.createElement("form");
-        formAc.method = "GET";
-        formAc.action = `/materials/${item.material_id}/edit`;
-        formAc.id = `btn-ver-${item.material_id}`;
 
-        let formToken = getHiddenToken(); // CSRF
-        let formId = getHiddenId(item.material_id, "material_id");
+        let linkEdit = document.createElement("a");
+        linkEdit.href = `/materials/update/edit/${item.material_id}`;
+        linkEdit.style.cssText = "color: inherit; text-decoration: none; cursor: pointer;";
 
-        let btnAc = document.createElement("button");
-        btnAc.type = "submit";
-        btnAc.style.cssText = "background: none; border: none; cursor: pointer;";
         let iconEdit = document.createElement("i");
         iconEdit.classList.add("fa", "fa-pencil");
-        btnAc.appendChild(iconEdit);
 
-        formAc.appendChild(formToken);
-        formAc.appendChild(formId);
-        formAc.appendChild(btnAc);
-        tdAc.appendChild(formAc);
+        linkEdit.appendChild(iconEdit);
+        tdAc.appendChild(linkEdit);
         tr.appendChild(tdAc);
 
         // Botón Eliminar
         let tdDel = document.createElement("td");
         let formDel = document.createElement("form");
         formDel.method = "POST";
-        formDel.action = `/materials/${item.material_id}/destroy`;
+        formDel.action = `/materials/update/destroy/${item.material_id}`;
         formDel.id = "btn-delete-" + item.material_id;
 
         let token = getHiddenToken(); // CSRF

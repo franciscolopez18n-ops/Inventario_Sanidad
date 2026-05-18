@@ -186,38 +186,38 @@ async function getMaterialData() {
     }
 
     let units_use = document.form.units_use.value;
-    if (isNaN(units_use) || units_use <= 0) {
-        formErrors.push("La cantidad de unidades de uso debe ser un número mayor que 0.");
+    if (isNaN(units_use) || units_use < 0) {
+        formErrors.push("La cantidad de unidades de uso debe ser un número igual o mayor a 0.");
     }
 
     let min_units_use = document.form.min_units_use.value;
-    if (isNaN(min_units_use) || min_units_use <= 0) {
-        formErrors.push("La cantidad mínima de unidades de uso debe ser un número mayor que 0.");
+    if (isNaN(min_units_use) || min_units_use < 0) {
+        formErrors.push("La cantidad mínima de unidades de uso debe ser un número igual o mayor a 0.");
     }
 
     let cabinet_use = document.form.cabinet_use.value;
     if (isNaN(cabinet_use) || cabinet_use <= 0) {
-        formErrors.push("El armario de uso debe ser un número mayor que 0.");
+        formErrors.push("El armario de uso debe ser un número mayor a 0.");
     }
 
     let shelf_use = document.form.shelf_use.value;
     if (isNaN(shelf_use) || shelf_use <= 0) {
-        formErrors.push("La balda de uso debe ser un número mayor que 0.");
+        formErrors.push("La balda de uso debe ser un número mayor a 0.");
     }
 
     let drawer_use = document.form.drawer_use.value;
     if (isNaN(drawer_use) || drawer_use <= 0) {
-        formErrors.push("El cajón de uso debe ser un número mayor que 0.");
+        formErrors.push("El cajón de uso debe ser un número mayor a 0.");
     }
 
     let units_reserve = document.form.units_reserve.value;
-    if (isNaN(units_reserve) || units_reserve <= 0) {
-        formErrors.push("La cantidad de unidades de reserva debe ser un número mayor que 0.");
+    if (isNaN(units_reserve) || units_reserve < 0) {
+        formErrors.push("La cantidad de unidades de reserva debe ser un número igual o mayor a 0.");
     }
 
     let min_units_reserve = document.form.min_units_reserve.value;
-    if (isNaN(min_units_reserve) || min_units_reserve <= 0) {
-        formErrors.push("La cantidad mínima de unidades de reserva debe ser un número mayor que 0.");
+    if (isNaN(min_units_reserve) || min_units_reserve < 0) {
+        formErrors.push("La cantidad mínima de unidades de reserva debe ser un número igual o mayor a 0.");
     }
 
     let cabinet_reserve = document.form.cabinet_reserve.value.trim();

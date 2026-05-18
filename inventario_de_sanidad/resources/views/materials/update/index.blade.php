@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', 'Gestión de material [PRUEBA]')
+@section('title', 'Gestión de material')
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/tables.css') }}">
@@ -25,7 +25,7 @@
     </dialog>
 
     <div class="content-wrapper">
-        <h2>Gestión de material [PRUEBA]</h2>
+        <h2>Gestión de material</h2>
         <form class="search-form">
             <!-- Buscador -->
             <div class="search-container">
@@ -89,6 +89,6 @@
     <script src="{{ asset('js/dialogFunctions.js') }}"></script>
     <script src="{{ asset('js/materialEdit.js') }}"></script>
     <script src="{{ asset('js/tableFunctions.js') }}"></script>
-    <script src="{{ asset('js/tableMaterial2.js') }}"></script>
+    <script src="{{ asset('js/tableMaterial.js') }}"></script>
     <script src="{{ asset('js/filterToggle.js') }}"></script> 
 @endpush

@@ -27,6 +27,14 @@ class xStorage extends Model {
         return $this->belongsTo(Material::class, 'material_id', 'material_id');
     }
 
+    public function storageUse() {
+        return $this->hasOne(StorageUse::class, 'material_id', 'material_id')->where('storage', $this->storage);
+    }
+
+    public function storageReserve() {
+        return $this->hasOne(StorageReserve::class, 'material_id', 'material_id')->where('storage', $this->storage);
+    }
+
     public static function generateQr(int $materialId, string $storage): string {
         $directory = 'qrcodes/';
         $qrPath = $directory . $materialId . '_' . $storage . '.svg';

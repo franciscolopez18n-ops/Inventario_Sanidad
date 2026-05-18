@@ -74,24 +74,10 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('materials.index') }}"
-                                class="{{ request()->routeIs('materials.index') ? 'active' : '' }}">
-                                    <i class="fa-solid fa-minus"></i>
-                                    <span class="link-text">Gestionar materiales</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('storages.updateView') }}"
-                                class="{{ request()->routeIs('storages.updateView') ? 'active' : '' }}">
-                                    <i class="fa-solid fa-box-archive"></i>
-                                    <span class="link-text">Gestionar almacenamiento</span>
-                                </a>
-                            </li>
-                            <li>
                                 <a href="{{ route('materials.update.index') }}"
                                 class="{{ request()->routeIs('materials.update.index') ? 'active' : '' }}">
                                     <i class="fa-solid fa-box-archive"></i>
-                                    <span class="link-text">Gestionar material [Prueba]</span>
+                                    <span class="link-text">Gestionar material</span>
                                 </a>
                             </li>
                         </ul>

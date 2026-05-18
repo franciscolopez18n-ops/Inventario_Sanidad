@@ -50,25 +50,20 @@ Route::middleware('auth')->group(function () {
 
         // Materiales
         Route::prefix('materials')->group(function () {
-            Route::get('/index', [MaterialManagementController::class, 'index'])->name('materials.index');
-            Route::get('/materialsData', [MaterialManagementController::class, 'materialsData']);
+            // Alta de Material
             Route::get('/create', [MaterialManagementController::class, 'createForm'])->name('materials.create');
             Route::post('/store', [MaterialManagementController::class, 'storeBatch'])->name('materials.store');
             Route::post('/upload-temp', [MaterialManagementController::class, 'uploadTemp'])->name('materials.uploadTemp');
-            Route::get('{material}/edit', [MaterialManagementController::class, 'edit'])->name('materials.edit');
-            Route::post('{material}/update', [MaterialManagementController::class, 'update'])->name('materials.update');
-            Route::post('{material}/destroy', [MaterialManagementController::class, 'destroy'])->name('materials.destroy');
 
-            // Nueva sección en desarrollo
-            Route::get('/update', [MaterialManagementController::class, 'updateIndex'])->name('materials.update.index');
-            Route::get('/update/{material}', [MaterialManagementController::class, 'updateManualEdit'])->name('materials.update.manual');
-            Route::get('/update/{material}/storage/{storage}', [MaterialManagementController::class, 'updateQrEdit'])->name('materials.update.qr');
-        });
-
-        // Almacenamiento
-        Route::prefix('storages')->group(function () {
-            Route::get('/update/{material}/{currentLocation}/edit', [StorageController::class, 'editView'])->name('storages.edit');
-            Route::post('/update/{material}/{currentLocation}/process', [StorageController::class, 'updateBatch'])->name('storages.updateBatch');
+            // Gestionar material
+            Route::prefix('update')->group(function () {
+                Route::get('/', [MaterialManagementController::class, 'updateIndex'])->name('materials.update.index');
+                Route::get('/materialsData', [MaterialManagementController::class, 'materialsData']);
+                Route::get('/edit/{material}', [MaterialManagementController::class, 'updateManualEdit'])->name('materials.update.manual');
+                Route::post('/submit/{material}', [MaterialManagementController::class, 'updateSubmit'])->name('materials.update.submit');
+                Route::get('/edit/{material}/storage/{storage}', [MaterialManagementController::class, 'updateQrEdit'])->name('materials.update.qr');
+                Route::post('/destroy/{material}', [MaterialManagementController::class, 'updateDestroy'])->name('materials.update.destroy');
+            });
         });
 
         // Historial
@@ -95,6 +90,9 @@ Route::middleware('auth')->group(function () {
 
         // Almacenamiento docente
         Route::prefix('storages')->group(function () {
+            Route::get('/update', [StorageController::class, 'updateView'])->name('storages.updateView');
+            Route::get('/updateData', [StorageController::class, 'updateData']); // Endpoint JSON para /update
+
             Route::get('/update/{material}/{currentLocation}/teacher/edit', [StorageController::class, 'teacherEditView'])->name('storages.teacher.edit');
             Route::post('/update/{material}/{currentLocation}/teacher/process', [StorageController::class, 'subtractToUse'])->name('storages.subtract.teacher');
         });
@@ -129,14 +127,6 @@ Route::middleware('auth')->group(function () {
     // Actividades compartidas
     Route::middleware('check.role:student,teacher')->group(function () {
         Route::get('/activities/history', [ActivityController::class, 'historyView'])->name('activities.history');
-    });
-
-    // Gestión de almacenamiento compartido
-    Route::middleware('check.role:admin,teacher')->group(function () {
-        Route::prefix('storages')->group(function () {
-            Route::get('/update', [StorageController::class, 'updateView'])->name('storages.updateView');
-            Route::get('/updateData', [StorageController::class, 'updateData'])->name('storages.updateData');
-        });
     });
 
     // Historial compartido
