@@ -285,12 +285,17 @@ class MaterialManagementController extends Controller {
                 return back()->with(FlashType::WARNING, 'El material no existe o ya ha sido eliminado.');
             }
 
-            // Almacena la ruta de la imagen asociada al material (si existe).
+            // Elimina la imagen del material.
             $path = $material->image_path;
-
-            // Si existe una imagen asociada al material, se elimina del disco público.
             if (!empty($path)) {
                 StorageFacades::disk('public')->delete($path);
+            }
+
+            // Elimina las imágenes de los QR asociados al material.
+            foreach ($material->xstorages as $storage) {
+                if ($storage->qr_path) {
+                    StorageFacades::disk('local')->delete($storage->qr_path);
+                }
             }
 
             // Elimina el registro del material de la base de datos.

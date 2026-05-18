@@ -23,7 +23,7 @@ class Material extends Model {
         return $this->hasMany(Storage::class, 'material_id', 'material_id');
     }
 
-    public function xstorage() {
+    public function xstorages() {
         return $this->hasMany(xStorage::class, 'material_id', 'material_id');
     }
 

@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Schema;
 class CreateStorageUseTable extends Migration {
     public function up() {
         Schema::create('storage_use', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
+            
             $table->unsignedInteger('material_id');
             $table->enum('storage', ['odontology', 'CAE']);
 
