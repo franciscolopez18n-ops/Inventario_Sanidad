@@ -19,12 +19,8 @@ class Material extends Model {
         'name', 'description', 'image_path',
     ];
 
-    public function storage() {
+    public function storages() {
         return $this->hasMany(Storage::class, 'material_id', 'material_id');
-    }
-
-    public function xstorages() {
-        return $this->hasMany(xStorage::class, 'material_id', 'material_id');
     }
 
     public function storageUse() {

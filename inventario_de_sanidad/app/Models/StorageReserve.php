@@ -5,12 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Contracts\StockStorage;
-use App\Traits\HasModifications;
-
 
 class StorageReserve extends Model implements StockStorage {
     use HasFactory;
-    use HasModifications;
 
     protected $table = 'storage_reserve';
     protected $primaryKey = null;

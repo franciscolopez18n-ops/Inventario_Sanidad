@@ -23,7 +23,7 @@ class StorageAssignment extends Model {
     }
 
     public function storage() {
-        return xStorage::where('material_id', $this->material_id)->where('storage', $this->storage);
+        return Storage::where('material_id', $this->material_id)->where('storage', $this->storage);
     }
 
     public function modifications() {

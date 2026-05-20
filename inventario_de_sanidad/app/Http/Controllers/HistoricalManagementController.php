@@ -51,21 +51,27 @@ class HistoricalManagementController extends Controller {
     public function historicalData() {
         $type = explode("=", URL::full())[1];
 
+        $table = $type === 'use' ? 'storage_use' : 'storage_reserve';
+
         $materials = DB::table('storages')
             ->join('materials', 'storages.material_id', '=', 'materials.material_id')
+            ->join($table, function ($join) use ($table) {
+                $join->on('storages.material_id', '=', "$table.material_id")
+                    ->on('storages.storage', '=', "$table.storage");
+            })
             ->select(
                 'materials.material_id',
                 'materials.name',
                 'materials.description',
                 'materials.image_path',
                 'storages.storage',
-                'storages.cabinet',
-                'storages.shelf',
-                'storages.units',
-                'storages.min_units'
+                "$table.cabinet",
+                "$table.shelf",
+                "$table.units",
+                "$table.min_units"
             )
-            ->where('storages.storage_type', $type)
             ->get();
+
         return response()->json($materials);
     }
 }

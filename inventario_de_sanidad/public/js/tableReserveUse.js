@@ -193,13 +193,3 @@ function renderTable(limit, paginaActual) {
 
     renderPaginationButtons(filtrados.length, limit); // Actualiza botones de paginación
 }
-
-/**
- * Retorna la URL para editar un elemento según si el usuario es admin o no.
- * @param {number|string} id - ID del elemento a editar.
- * @returns {string} - URL de edición.
- */
-function getEditUrl(id) {
-    let isStudent = document.querySelector(".user-role").textContent.includes("admin");
-    return isStudent ? `/storages/update/${id}/edit` : `/storages/update/teacher/${id}/edit`;
-}

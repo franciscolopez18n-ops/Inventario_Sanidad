@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\xStorage;
+use App\Models\Storage;
 
 class QrController extends Controller {
     public function index() {
-        $storages = xStorage::with('material')->get();
+        $storages = Storage::with('material')->get();
         return view('qrcodes.index', compact('storages'));
     }
 

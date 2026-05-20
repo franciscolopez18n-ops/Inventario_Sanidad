@@ -7,7 +7,6 @@ use App\Constants\FlashType;
 use App\Traits\HasStorageOperations;
 use App\Models\Material;
 use App\Models\Storage;
-use App\Models\xStorage;
 use App\Models\StorageAssignment;
 use App\Models\StorageUse;
 use App\Models\StorageReserve;
@@ -23,7 +22,7 @@ class MaterialManagementController extends Controller {
     }
 
     public function updateManualEdit(Material $material) {
-        $storages = xStorage::where('material_id', $material->material_id)->get();
+        $storages = Storage::where('material_id', $material->material_id)->get();
 
         return view('materials.update.edit')
             ->with('material', $material)
@@ -31,7 +30,7 @@ class MaterialManagementController extends Controller {
     }
 
     public function updateQrEdit(Material $material, string $storage) {
-        $storageRecord = xStorage::where('material_id', $material->material_id)
+        $storageRecord = Storage::where('material_id', $material->material_id)
             ->where('storage', $storage)
             ->firstOrFail();
 
@@ -177,16 +176,6 @@ class MaterialManagementController extends Controller {
                             $differenceReserve = $validated[$storage]['reserve_units'] - $reserveRecord->units;
                         
                             // Actualiza el almacenamiento de reserva.
-                            Storage::where('material_id', $material->material_id)
-                                ->where('storage_type' , 'reserve')
-                                ->where('storage', $storage)
-                                ->update([
-                                    'units'     => $validated[$storage]['reserve_units'],
-                                    'min_units' => $validated[$storage]['reserve_min_units'],
-                                    'cabinet'   => $validated[$storage]['reserve_cabinet'],
-                                    'shelf'     => $validated[$storage]['reserve_shelf'],
-                                ]);
-
                             StorageReserve::where('material_id', $material->material_id)
                                 ->where('storage', $storage)
                                 ->update([
@@ -229,33 +218,7 @@ class MaterialManagementController extends Controller {
                                 }
                             }
 
-                            if ($storage == 'odontologyx') {
-                                dd(
-                                    'newUseUnits: '.$newUseUnits,
-                                    'useRecord->units: '.$useRecord->units,
-                                    'differenceUse: '.$differenceUse,
-                                    'newReserveUnits: '.$newReserveUnits,
-                                    'reserveRecord->units: '.$reserveRecord->units,
-                                    'differenceReserve: '.$differenceReserve,
-                                    'storage: '.$storage,
-                                );
-                            }
-
-                            // Nota: usar los registros cargados useRecord y reserveRecord no funciona para
-                            // actualizar porque Eloquent no soporta claves compuestas
-
                             // Actualiza el almacenamiento de uso.
-                            Storage::where('material_id', $material->material_id)
-                                ->where('storage_type' , 'use')
-                                ->where('storage', $storage)
-                                ->update([
-                                    'units' => $newUseUnits,
-                                    'min_units' => $validated[$storage]['use_min_units'],
-                                    'cabinet' => $validated[$storage]['use_cabinet'],
-                                    'shelf' => $validated[$storage]['use_shelf'],
-                                    'drawer' => $validated[$storage]['use_drawer']
-                                ]);
-
                             StorageUse::where('material_id', $material->material_id)
                                 ->where('storage', $storage)
                                 ->update([
@@ -267,16 +230,6 @@ class MaterialManagementController extends Controller {
                                 ]);
                 
                             // Actualiza el almacenamiento de reserva.
-                            Storage::where('material_id', $material->material_id)
-                                ->where('storage_type' , 'reserve')
-                                ->where('storage', $storage)
-                                ->update([
-                                    'units' => $newReserveUnits,
-                                    'min_units' => $validated[$storage]['reserve_min_units'],
-                                    'cabinet' => $validated[$storage]['reserve_cabinet'],
-                                    'shelf' => $validated[$storage]['reserve_shelf'],
-                                ]);
-
                             StorageReserve::where('material_id', $material->material_id)
                                 ->where('storage', $storage)
                                 ->update([
@@ -345,7 +298,7 @@ class MaterialManagementController extends Controller {
             }
 
             // Elimina las imágenes de los QR asociados al material.
-            foreach ($material->xstorages as $storage) {
+            foreach ($material->storages as $storage) {
                 if ($storage->qr_path) {
                     StorageFacades::disk('local')->delete($storage->qr_path);
                 }
@@ -514,10 +467,10 @@ class MaterialManagementController extends Controller {
 
         // Recorre cada almacén seleccionado...
         foreach ($storages as $storage) {
-            xStorage::create([
+            Storage::create([
                 'material_id' => $material->material_id,
                 'storage'     => $storage,
-                'qr_path'     => xStorage::generateQr($material->material_id, $storage),
+                'qr_path'     => Storage::generateQr($material->material_id, $storage),
             ]);
 
             StorageAssignment::create([
@@ -531,6 +484,8 @@ class MaterialManagementController extends Controller {
                 'storage'      => $storage,
                 'storage_type' => 'reserve',
             ]);
+
+            // ...y para cada tipo de almacenamiento (uso y reserva) crea un nuevo registro con la información correspondiente.
 
             StorageUse::create([
                 'material_id' => $material->material_id,
@@ -549,28 +504,6 @@ class MaterialManagementController extends Controller {
                 'min_units'   => $materialData['min_units_reserve'],
                 'cabinet'     => $materialData['cabinet_reserve'],
                 'shelf'       => $materialData['shelf_reserve'],
-            ]);
-
-            // ...y para cada tipo de almacenamiento (uso y reserva) crea un nuevo registro en la tabla de almacenamiento con la información correspondiente.
-            Storage::create([
-                'material_id'  => $material->material_id,
-                'storage'      => $storage,
-                'storage_type' => 'use',
-                'cabinet'      => $materialData['cabinet_use'],
-                'shelf'        => $materialData['shelf_use'],
-                'drawer'       => $materialData['drawer_use'],
-                'units'        => $materialData['units_use'],
-                'min_units'    => $materialData['min_units_use'],
-            ]);
-
-            Storage::create([
-                'material_id'  => $material->material_id,
-                'storage'      => $storage,
-                'storage_type' => 'reserve',
-                'cabinet'      => $materialData['cabinet_reserve'],
-                'shelf'        => $materialData['shelf_reserve'],
-                'units'        => $materialData['units_reserve'],
-                'min_units'    => $materialData['min_units_reserve'],
             ]);
         }
     }

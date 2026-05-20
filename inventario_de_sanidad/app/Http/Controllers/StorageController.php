@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Constants\FlashType;
 use App\Traits\HasStorageOperations;
-use App\Models\Storage;
 use App\Models\StorageUse;
 use App\Models\Material;
 use Illuminate\Http\Request;
@@ -71,11 +70,6 @@ class StorageController extends Controller {
             // Se ejecuta todo dentro de una transacción para asegurar integridad de datos.
             DB::transaction(function() use ($modifiedUnits, $material, $currentLocation, $useRecord) {
                 // Disminuye las unidades del almacenamiento de uso.
-                Storage::where('material_id', $material->material_id)
-                    ->where('storage_type','use')
-                    ->where('storage', $currentLocation)
-                    ->decrement('units', $modifiedUnits);
-
                 StorageUse::where('material_id', $useRecord->material_id)
                     ->where('storage', $useRecord->storage)
                     ->decrement('units', $modifiedUnits);
@@ -86,7 +80,6 @@ class StorageController extends Controller {
 
             // Se comprueba que las unidades actualizadas no sean menores que el mínimo de unidades.
             $this->checkUnits($useRecord);
-
 
             // Devuelve una respuesta de éxito al usuario.
             return back()->with(FlashType::SUCCESS, "Se han restado {$modifiedUnits} unidades.");
@@ -100,7 +93,29 @@ class StorageController extends Controller {
      * Devuelve todos los almacenamientos en formato JSON.
      * @return mixed|\Illuminate\Http\JsonResponse
      */
-    public function updateData(){
-        return response()->json(Material::with('storage')->get());
+    public function updateData() {
+        $storages = DB::table('materials')
+            ->join('storages', 'materials.material_id', '=', 'storages.material_id')
+            ->join('storage_use', function ($join) {
+                $join->on('storages.material_id', '=', 'storage_use.material_id')
+                    ->on('storages.storage', '=', 'storage_use.storage');
+            })
+            ->select(
+                'materials.material_id',
+                'materials.name',
+                'materials.description',
+                'materials.image_path',
+
+                'storages.storage',
+
+                'storage_use.units',
+                'storage_use.min_units',
+                'storage_use.cabinet',
+                'storage_use.shelf',
+                'storage_use.drawer'
+            )
+            ->get();
+
+        return response()->json($storages);
     }
 }

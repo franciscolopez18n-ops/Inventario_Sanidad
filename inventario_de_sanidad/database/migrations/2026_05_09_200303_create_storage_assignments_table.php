@@ -17,7 +17,7 @@ class CreateStorageAssignmentsTable extends Migration {
 
             $table->foreign(['material_id', 'storage'])
                 ->references(['material_id', 'storage'])
-                ->on('xstorages')
+                ->on('storages')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 

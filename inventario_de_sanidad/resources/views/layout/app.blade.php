@@ -190,16 +190,47 @@
 
                 <!-- Notificaciones de alerta -->
                 @php
-                    use App\Models\Storage;
                     use Illuminate\Support\Facades\Auth;
-
-                    $notifications = collect();
+                    use Illuminate\Support\Facades\DB;
 
                     if (Auth::user()->user_type === 'admin') {
-                        $notifications = Storage::join('materials', 'storages.material_id', '=', 'materials.material_id')
-                            ->select('materials.name', 'storage', 'storages.units', 'storage_type')
-                            ->whereColumn('storages.units', '<', 'storages.min_units')
-                            ->orderBy('storage', 'desc')
+                        $use = DB::table('storage_use as su')
+                            ->join('materials as m', 'm.material_id', '=', 'su.material_id')
+                            ->join('storages as st', function ($join) {
+                                $join->on('st.material_id', '=', 'su.material_id')
+                                    ->on('st.storage', '=', 'su.storage');
+                            })
+                            ->whereColumn('su.units', '<', 'su.min_units')
+                            ->select([
+                                'm.name',
+                                'su.material_id',
+                                'su.storage',
+                                DB::raw("'use' as type"),
+                                'su.units',
+                                'su.min_units'
+                            ]);
+
+                        $reserve = DB::table('storage_reserve as sr')
+                            ->join('materials as m', 'm.material_id', '=', 'sr.material_id')
+                            ->join('storages as st', function ($join) {
+                                $join->on('st.material_id', '=', 'sr.material_id')
+                                    ->on('st.storage', '=', 'sr.storage');
+                            })
+                            ->whereColumn('sr.units', '<', 'sr.min_units')
+                            ->select([
+                                'm.name',
+                                'sr.material_id',
+                                'sr.storage',
+                                DB::raw("'reserve' as type"),
+                                'sr.units',
+                                'sr.min_units'
+                            ]);
+
+                        $notifications = DB::query()
+                            ->fromSub($use->unionAll($reserve), 'notifications')
+                            ->orderBy('material_id')
+                            ->orderBy('storage')
+                            ->orderBy('type')
                             ->get();
                     }
                 @endphp
@@ -221,8 +252,14 @@
                         @if($notifications->isNotEmpty())
                             <h3>Notificaciones</h3>
                             <hr>
+
                             @foreach ($notifications as $warning)
-                                <p>- ({{$warning->storage == "CAE" ? "CAE" : "ODONTOLOGÍA"}})  <strong>{{$warning->name}}</strong> tiene solo {{$warning->units}} unidad/es en {{$warning->storage_type ==  "use" ? "uso" : "reserva"}}.</p>
+                                <p>
+                                    - ({{ $warning->storage == "CAE" ? "CAE" : "ODONTOLOGÍA" }})
+                                    <strong>{{ $warning->name }}</strong>
+                                    tiene solo {{ $warning->units }} unidad/es en
+                                    {{ $warning->type == "use" ? "uso" : "reserva" }}.
+                                </p>
                             @endforeach
 
                         @else
