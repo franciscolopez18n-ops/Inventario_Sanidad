@@ -9,7 +9,7 @@ use App\Models\Material;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class StorageController extends Controller {
+class TeacherStorageController extends Controller {
     use HasStorageOperations;
 
     /**

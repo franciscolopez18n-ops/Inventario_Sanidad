@@ -5,7 +5,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\UsersManagementController;
 use App\Http\Controllers\MaterialManagementController;
-use App\Http\Controllers\StorageController;
+use App\Http\Controllers\TeacherStorageController;
 use App\Http\Controllers\HistoricalManagementController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\QrController;
@@ -90,11 +90,11 @@ Route::middleware('auth')->group(function () {
 
         // Almacenamiento docente
         Route::prefix('storages')->group(function () {
-            Route::get('/update', [StorageController::class, 'updateView'])->name('storages.updateView');
-            Route::get('/updateData', [StorageController::class, 'updateData']); // Endpoint JSON para /update
+            Route::get('/update', [TeacherStorageController::class, 'updateView'])->name('storages.updateView');
+            Route::get('/updateData', [TeacherStorageController::class, 'updateData']); // Endpoint JSON para /update
 
-            Route::get('/update/{material}/{currentLocation}/teacher/edit', [StorageController::class, 'teacherEditView'])->name('storages.teacher.edit');
-            Route::post('/update/{material}/{currentLocation}/teacher/process', [StorageController::class, 'subtractToUse'])->name('storages.subtract.teacher');
+            Route::get('/update/{material}/{currentLocation}/edit', [TeacherStorageController::class, 'teacherEditView'])->name('storages.teacher.edit');
+            Route::post('/update/{material}/{currentLocation}/submit', [TeacherStorageController::class, 'subtractToUse'])->name('storages.subtract.teacher');
         });
 
         // Actividades

@@ -119,7 +119,7 @@ function crearAccionesTd(id, storage) {
     btnEditar.appendChild(iconEdit);
 
     btnEditar.onclick = () => {
-        window.location.href = `/storages/update/${id}/${storage}/teacher/edit`;
+        window.location.href = `/storages/update/${id}/${storage}/edit`;
     };
 
     tdAcciones.appendChild(btnEditar);
