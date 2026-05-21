@@ -69,8 +69,8 @@ Route::middleware('auth')->group(function () {
         // Historial
         Route::prefix('historical')->group(function () {
             Route::get('/reserve', [HistoricalManagementController::class, 'reserve'])->name('historical.reserve');
+
             Route::get('/historialModificaciones', [HistoricalManagementController::class, 'showModificationsHistorical'])->name('historical.modificationsHistorical');
-            
             Route::get('/modificationsHistoricalData', [HistoricalManagementController::class, 'modificationsHistoricalData']);
         });
 

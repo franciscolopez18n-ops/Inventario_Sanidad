@@ -53,7 +53,7 @@ class HistoricalManagementController extends Controller {
 
         $table = $type === 'use' ? 'storage_use' : 'storage_reserve';
 
-        $materials = DB::table('storages')
+        $query = DB::table('storages')
             ->join('materials', 'storages.material_id', '=', 'materials.material_id')
             ->join($table, function ($join) use ($table) {
                 $join->on('storages.material_id', '=', "$table.material_id")
@@ -69,8 +69,13 @@ class HistoricalManagementController extends Controller {
                 "$table.shelf",
                 "$table.units",
                 "$table.min_units"
-            )
-            ->get();
+            );
+
+        if ($type === 'use') {
+            $query->addSelect("$table.drawer");
+        }
+
+        $materials = $query->get();
 
         return response()->json($materials);
     }

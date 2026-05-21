@@ -1,3 +1,5 @@
+let isUse = window.location.href.split("/").pop() === 'use';
+
 /**
  * Registra el evento para ejecutar la función `inicio` cuando el DOM esté listo.
  */
@@ -89,10 +91,11 @@ function renderTableCards(limit, paginaActual) {
     while (container.firstChild) container.removeChild(container.firstChild);
     let isStudent = document.querySelector(".user-role").textContent.includes("student"); // Verifica si el usuario es admin
 
-    let filtro =  ["name", "description", "storage", "cabinet", "shelf", "units", "min_units"];
-    if (isStudent) {
-        filtro =  ["name", "description", "storage", "cabinet", "shelf"];
-    }
+    let filtro = ["name", "description", "storage", "cabinet", "shelf"];
+
+    if (isUse) filtro.push("drawer");
+    if (!isStudent) filtro.push("units", "min_units");
+
     // Aplica filtro según campos relevantes
     let filtrados = aplicarFiltro(filtro);
 
@@ -140,6 +143,7 @@ function crearMaterialCard(material) {
     ul.appendChild(crearLi("Localización", material.storage == "CAE" ? "CAE" : "Odontología"));
     ul.appendChild(crearLi("Armario", material.cabinet));
     ul.appendChild(crearLi("Balda", material.shelf));
+    if (isUse) ul.appendChild(crearLi("Cajón", material.drawer));
     if (!isStudent) {
         ul.appendChild(crearLi("Unidades", material.units));
         ul.appendChild(crearLi("Unidades mínimas", material.min_units));
@@ -185,6 +189,7 @@ function renderTable(limit, paginaActual) {
         tr.appendChild(crearDataLabel(crearTD(item.storage == "CAE" ? "CAE" : "Odontología"), "Localización"));
         tr.appendChild(crearDataLabel(crearTD(item.cabinet ?? "-"), "Armario"));
         tr.appendChild(crearDataLabel(crearTD(item.shelf ?? "-"), "Balda"));
+        if (isUse) tr.appendChild(crearDataLabel(crearTD(item.drawer ?? "-"), "Cajón"));
         tr.appendChild(crearDataLabel(crearTD(item.units ?? "-"), "Unidades"));
         tr.appendChild(crearDataLabel(crearTD(item.min_units ?? "-"), "Mínimo"));
 

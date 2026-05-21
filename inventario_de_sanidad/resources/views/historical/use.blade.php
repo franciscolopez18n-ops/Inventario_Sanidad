@@ -28,11 +28,11 @@
                     <label><input type="radio" name="filtro" value="3">Localización</label>
                     <label><input type="radio" name="filtro" value="4">Armario</label>
                     <label><input type="radio" name="filtro" value="5">Balda</label>
+                    <label><input type="radio" name="filtro" value="6">Cajón</label>
                     @if(Auth::user()->user_type !== 'student')
-                        <label><input type="radio" name="filtro" value="6">Unidades</label>
-                        <label><input type="radio" name="filtro" value="7">Unidades Mínimas</label>
+                        <label><input type="radio" name="filtro" value="7">Unidades</label>
+                        <label><input type="radio" name="filtro" value="8">Unidades Mínimas</label>
                     @endif
-
                 </div>
             </div>
         </div>
@@ -58,6 +58,7 @@
                         <th>Localización</th>
                         <th>Armario</th>
                         <th>Balda</th>
+                        <th>Cajón</th>
                         <th>Unidades</th>
                         <th>Unidades Mínimas</th>
                     </tr>
