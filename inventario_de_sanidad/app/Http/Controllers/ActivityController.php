@@ -75,20 +75,32 @@ class ActivityController extends Controller {
             'title'  => 'required',
             'activity_datetime'=> 'required|date',
             'teacher_id'=> 'required',
-            'materialsBasketInput' => 'required'
         ], [
             'title.required'  => 'Debe introducir la descripción de la actividad.',
             'activity_datetime.required' => 'Debe introducir la fecha y hora de la actividad.',
-            'teacher_id.required' =>'Debe introducir el nombre del profesor',
-            'materialsBasketInput.required' => 'Debe introducir datos a la cesta'
+            'teacher_id.required' =>'Debe introducir el nombre del profesor'
         ]);
 
         // Convierte la cadena JSON de la cesta a array asociativo.
-        $basket = json_decode($validated['materialsBasketInput'], true) ?? [];
+        // Los métodos de Laravel esperan cookies encriptadas por ellos mismos, por lo que hay que leerla en crudo
+        $basket = json_decode(urldecode($_COOKIE['materialsBasket'] ?? '[]'), true);
 
         // Si no hay datos válidos en la cesta, redirige con mensaje de error.
-        if (empty($basket) || !is_array($basket)) {
-            return back()->with(FlashType::ERROR, 'No hay materiales en la cesta.');
+        if (empty($basket)) {
+            return back()->withInput()->with(FlashType::ERROR, 'Debe introducir datos a la cesta.');
+        }
+
+        // Comprobaciones de seguridad por si el frontend fue manipulado.
+        foreach ($basket as $material) {
+            $validator = validator($material, [
+                'material_id' => 'exists:materials,material_id',
+                'name' => 'required|string',
+                'units' => 'required|numeric|min:1',
+            ]);
+
+            if ($validator->fails()) {
+                return back()->withInput()->with(FlashType::ERROR, 'Los datos de la cesta no son válidos.');
+            }
         }
 
         $user_id = Auth::id();
@@ -115,7 +127,7 @@ class ActivityController extends Controller {
             return back()->with(FlashType::SUCCESS, 'Actividad insertada correctamente.');
         } catch (\Exception $e) {
             // Si algo falla, redirige con el mensaje de error.
-            return back()->with(FlashType::ERROR, 'Error al insertar la actividad: ' . $e->getMessage());
+            return back()->withInput()->with(FlashType::ERROR, 'Error al insertar la actividad: ' . $e->getMessage());
         }
     }
 
