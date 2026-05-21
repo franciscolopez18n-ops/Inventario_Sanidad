@@ -97,29 +97,29 @@ class UsersSeeder extends Seeder {
         if (app()->environment(['local', 'ngrok'])) {
             DB::table('users')->insert([
                 [
-                    'first_name'      => 'Test',
-                    'last_name'       => 'Student',
-                    'email'           => 'test.student@test.com',
-                    'hashed_password' => Hash::make('test'),
-                    'first_log'       => false,
+                    'first_name'      => 'Cliente',
+                    'last_name'       => 'Estudiante',
+                    'email'           => 'cliente@estudiante.com',
+                    'hashed_password' => Hash::make('cliente'),
+                    'first_log'       => true,
                     'user_type'       => 'student',
                     'created_at'      => Carbon::now('Europe/Madrid')
                 ],
                 [
-                    'first_name'      => 'Test',
-                    'last_name'       => 'Teacher',
-                    'email'           => 'test.teacher@test.com',
-                    'hashed_password' => Hash::make('test'),
-                    'first_log'       => false,
+                    'first_name'      => 'Cliente',
+                    'last_name'       => 'Profesor',
+                    'email'           => 'cliente@profesor.com',
+                    'hashed_password' => Hash::make('cliente'),
+                    'first_log'       => true,
                     'user_type'       => 'teacher',
                     'created_at'      => Carbon::now('Europe/Madrid')
                 ],
                 [
-                    'first_name'      => 'Test',
+                    'first_name'      => 'Cliente',
                     'last_name'       => 'Admin',
-                    'email'           => 'test.admin@test.com',
-                    'hashed_password' => Hash::make('test'),
-                    'first_log'       => false,
+                    'email'           => 'cliente@admin.com',
+                    'hashed_password' => Hash::make('cliente'),
+                    'first_log'       => true,
                     'user_type'       => 'admin',
                     'created_at'      => Carbon::now('Europe/Madrid')
                 ],
