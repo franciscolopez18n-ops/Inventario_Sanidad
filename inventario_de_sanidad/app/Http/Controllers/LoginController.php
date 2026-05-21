@@ -49,7 +49,7 @@ class LoginController extends Controller {
             
             return redirect()->intended(route('welcome'));
         } else {
-            return back()->withErrors(['login' => 'Usuario o contraseña incorrectos']);
+            return back()->withInput()->withErrors(['login' => 'Usuario o contraseña incorrectos']);
         }
     }
 
