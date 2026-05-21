@@ -6,9 +6,10 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
+use App\Constants\FlashType;
 
-class CheckTeacherCookie
-{
+class CheckRole {
     /**
      * Handle an incoming request.
      *
@@ -17,15 +18,12 @@ class CheckTeacherCookie
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
 
-    public function handle(Request $request, Closure $next)
-    {
-        if ($request->cookie('TYPE') != "teacher") {
-            // Si no existe la cookie, se puede redirigir o abortar
-            return redirect()->route('logout');
+    public function handle(Request $request, Closure $next, string ...$roles) {
+        if (!in_array(Auth::user()->user_type, $roles)) {
+            return redirect()->route('welcome')->with(FlashType::ERROR, 'No tienes permisos para acceder a esta página');
         }
         
         return $next($request);
-
     }
 }
 

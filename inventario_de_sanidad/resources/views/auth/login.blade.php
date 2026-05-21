@@ -27,7 +27,7 @@
                     @csrf
                     
                     <div class="input-group">
-                        <input type="text" name="user" placeholder="Correo electónico">
+                        <input type="text" name="user" placeholder="Correo electrónico" value="{{ old('user') }}">
                         @error('user')
                             <div class="error-messages">{{ $message }}</div>
                         @enderror

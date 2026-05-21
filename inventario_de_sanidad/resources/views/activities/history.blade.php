@@ -32,9 +32,6 @@
             </div>
         </div>
 
-        {{-- Alertas flash --}}
-        <x-alerts />
-
         </div>
     </div>
 </div>

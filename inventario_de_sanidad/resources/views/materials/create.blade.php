@@ -54,7 +54,7 @@
                 <input type="number" name="min_units_use" placeholder="Cantidad mínima">
                 <input type="number" name="cabinet_use" placeholder="Armario">
                 <input type="number" name="shelf_use" placeholder="Balda">
-                <input type="number" name="drawer" placeholder="Cajón">
+                <input type="number" name="drawer_use" placeholder="Cajón">
             </div>
         </fieldset>
 
@@ -96,9 +96,6 @@
 
         
     </form>
-
-    {{-- Alertas flash --}}
-    <x-alerts />
 
     {{-- Cesta --}}
     <div class="basket-section hidden">

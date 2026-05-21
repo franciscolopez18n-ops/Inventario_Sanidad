@@ -17,7 +17,7 @@
                 @csrf
                 <div class="">
                     <label for="title"></label>
-                    <textarea name="title" placeholder="Título descriptivo de la actividad..." id="title" rows="4" cols="50" maxlength="100" required></textarea>
+                    <textarea name="title" placeholder="Título descriptivo de la actividad..." id="title" rows="4" cols="50" maxlength="100" required>{{ old('title') }}</textarea>
                     @error('title')
                         <div class="alert alert-error alert-form">{{ $message }}</div>
                     @enderror
@@ -25,18 +25,21 @@
 
                 <div class="">
                     <label for="activity_datetime">Fecha y hora:</label>
-                    <input type="datetime-local" id="activity_datetime" name="activity_datetime">
+                    <input type="datetime-local" id="activity_datetime" name="activity_datetime" value="{{ old('activity_datetime') }}">
                     @error('activity_datetime')
                         <div class="alert alert-error alert-form">{{ $message }}</div>
                     @enderror
                 </div>
+
                 <div class="">
                     <label for="teacher_id">Profesor:</label>
-
-                    <td data-label="Profesor" >
+                    <td data-label="Profesor">
                         <select name="teacher_id" id="teacher_id">
+                            <option value="" disabled {{ old('teacher_id') ? '' : 'selected' }}>Selecciona un profesor...</option>
                             @foreach ($teachers as $teacher)
-                                <option value="{{ $teacher->user_id }}">{{ $teacher->first_name }} {{ $teacher->last_name }}</option>
+                                <option value="{{ $teacher->user_id }}" {{ old('teacher_id') == $teacher->user_id ? 'selected' : '' }}>
+                                    {{ $teacher->first_name }} {{ $teacher->last_name }}
+                                </option>
                             @endforeach
                         </select>
                     </td>
@@ -75,13 +78,6 @@
                         </tbody>
                     </table>
                 </div>
-
-
-                <!-- Hidden que contendrá el JSON de la cesta -->
-                <input type="hidden" name="materialsBasketInput" id="materialsBasketInput">
-
-                {{-- Alertas flash --}}
-                <x-alerts />
 
                 <input type="submit" value="Crear" class="btn btn-primary">
             </form>
