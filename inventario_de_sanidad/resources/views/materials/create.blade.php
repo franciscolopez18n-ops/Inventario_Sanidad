@@ -12,7 +12,6 @@
 @section('content')
 <div class="material-form-wrapper">
     <h1>Alta de Materiales</h1>
-
     {{-- Boton de agregar a la cesta --}}
     <div class="basket-toggle">
         <button id="toggleBasketBtn" class="botonCarrito" type="button">
@@ -91,9 +90,7 @@
             </button>
         </div>
 
-        {{-- Mensaje de éxito --}}
-        <div id="success-message" class="success hidden"></div>
-
+      
         
     </form>
 

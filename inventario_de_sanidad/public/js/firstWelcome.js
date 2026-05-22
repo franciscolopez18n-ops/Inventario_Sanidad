@@ -65,16 +65,3 @@ function newPass(e) {
     dialog.style.display = "none";
 }
 
-// Mostrar el toast si está presente en el DOM
-function mostrarToastSuccess() {
-    const toast = document.getElementById("successToast");
-    if (toast) {
-        toast.classList.remove("hidden");
-        toast.classList.add("show");
-
-        setTimeout(() => {
-            toast.classList.remove("show");
-            setTimeout(() => toast.classList.add("hidden"), 300);
-        }, 3000);
-    }
-}

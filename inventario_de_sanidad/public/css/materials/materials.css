@@ -5,7 +5,41 @@
 .material-form-wrapper {
     position: relative;
 }
+/* Botón cuando está desactivado */
+#btn-submit-alta:disabled {
+    background-color: #d3d3d3;
+    border-color: #bcbcbc;
+    color: #888888;
+    cursor: not-allowed ;
+}
 
+/* Icono cuando está desactivado */
+#btn-submit-alta:disabled i {
+    opacity: 0.5;
+    transform: scale(0.9);
+}
+.alerts-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 9999;
+    text-align: center;
+}
+
+.alert {
+    margin: 0 !important;
+    border-radius: 0 !important;
+    width: 100%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+#btn-submit-alta:not(:disabled) i {
+    transition: transform 0.2s ease;
+}
+
+#btn-submit-alta:not(:disabled):hover i {
+    transform: scale(1.2); 
+}
 .material-form, .basket-section {
     flex: 1;
 }
