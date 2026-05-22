@@ -74,11 +74,16 @@ Route::middleware('auth')->group(function () {
             Route::get('/modificationsHistoricalData', [HistoricalManagementController::class, 'modificationsHistoricalData']);
         });
 
-        //Códigos QR
+        //Códigos QR    
         Route::prefix('qrcodes')->group(function () {
             Route::get('/', [QrController::class, 'index'])->name('qrcodes.index');
+            Route::get('/download-zip', [QrController::class, 'descargarZip'])
+                ->name('qrcodes.descargarZip');
+            Route::get('/qrcodes/print', [QrController::class, 'print'])
+                ->name('qrcodes.print');
             Route::get('/{file}', [QrController::class, 'show'])->name('qr.show');
         });
+        
     });
 
     /*
@@ -134,4 +139,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/use', [HistoricalManagementController::class, 'use'])->name('historical.use');
         Route::get('/historicalData', [HistoricalManagementController::class, 'historicalData']);
     });
+
+    
+
+    
 });
