@@ -34,8 +34,7 @@
         <nav>
             <ul>
                 <!-- Menú para Administrador -->
-                @if(Cookie::get('TYPE') === 'admin')
-                    <!-- Gestión de usuarios -->
+                @if(Auth::user()->user_type === 'admin')
                     <li class="has-submenu">
                         <a href="">
                             <i class="fa-solid fa-user"></i>
@@ -75,24 +74,10 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('materials.index') }}"
-                                class="{{ request()->routeIs('materials.index') ? 'active' : '' }}">
-                                    <i class="fa-solid fa-minus"></i>
-                                    <span class="link-text">Gestionar materiales</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('storages.updateView') }}"
-                                class="{{ request()->routeIs('storages.updateView') ? 'active' : '' }}">
+                                <a href="{{ route('materials.update.index') }}"
+                                class="{{ request()->routeIs('materials.update.index') ? 'active' : '' }}">
                                     <i class="fa-solid fa-box-archive"></i>
-                                    <span class="link-text">Gestionar almacenamiento</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('materials.index2') }}"
-                                class="{{ request()->routeIs('materials.index2') ? 'active' : '' }}">
-                                    <i class="fa-solid fa-box-archive"></i>
-                                    <span class="link-text">Gestionar material [Prueba]</span>
+                                    <span class="link-text">Gestionar material</span>
                                 </a>
                             </li>
                         </ul>
@@ -106,15 +91,15 @@
                         </a>
                         <ul class="submenu">
                             <li>
-                                <a href="{{ route('historical.type', ['type' => 'use']) }}"
-                                class="{{ request()->fullUrlIs(route('historical.type', ['type' => 'use'])) ? 'active' : '' }}">
+                                <a href="{{ route('historical.use') }}"
+                                class="{{ request()->fullUrlIs(route('historical.use')) ? 'active' : '' }}">
                                     <i class="fa-solid fa-book-open"></i>
                                     <span class="link-text">Materiales en uso</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('historical.type', ['type' => 'reserve']) }}"
-                                class="{{ request()->fullUrlIs(route('historical.type', ['type' => 'reserve'])) ? 'active' : '' }}">
+                                <a href="{{ route('historical.reserve') }}"
+                                class="{{ request()->fullUrlIs(route('historical.reserve')) ? 'active' : '' }}">
                                     <i class="fa-solid fa-boxes-packing"></i>
                                     <span class="link-text">Materiales en reserva</span>
                                 </a>
@@ -128,10 +113,18 @@
                             </li>
                         </ul>
                     </li>
+
+                    <li>
+                        <a href="{{ route('qrcodes.index') }}"
+                        class="{{ request()->routeIs('qrcodes.index') ? 'active' : '' }}">
+                            <i class="fa-solid fa-qrcode"></i>
+                            <span class="link-text">Códigos QR</span>
+                        </a>
+                    </li>
                 @endif
 
                 <!-- Menú para Estudiantes -->
-                @if(Cookie::get('TYPE') === 'student')
+                @if(Auth::user()->user_type === 'student')
 
                     <li>
                         <a href="{{ route('activities.create') }}"
@@ -148,8 +141,8 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('historical.type', ['type' => 'use']) }}"
-                        class="{{ request()->fullUrlIs(route('historical.type', ['type' => 'use'])) ? 'active' : '' }}">
+                        <a href="{{ route('historical.use') }}"
+                        class="{{ request()->fullUrlIs(route('historical.use')) ? 'active' : '' }}">
                             <i class="fa-solid fa-book-open"></i>
                             <span class="link-text">Materiales en uso</span>
                         </a>
@@ -157,7 +150,7 @@
                 @endif
 
                 <!-- Menú para Docentes -->
-                @if(Cookie::get('TYPE') === 'teacher')
+                @if(Auth::user()->user_type === 'teacher')
                     <li>
                         <a href="{{ route('storages.updateView') }}"
                         class="{{ request()->routeIs('storages.updateView') ? 'active' : '' }}">
@@ -166,8 +159,8 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('historical.type', ['type' => 'use']) }}"
-                        class="{{ request()->fullUrlIs(route('historical.type', ['type' => 'use'])) ? 'active' : '' }}">
+                        <a href="{{ route('historical.use') }}"
+                        class="{{ request()->fullUrlIs(route('historical.use')) ? 'active' : '' }}">
                             <i class="fa-solid fa-book-open"></i>
                             <span class="link-text">Materiales en uso</span>
                         </a>
@@ -197,26 +190,54 @@
 
                 <!-- Notificaciones de alerta -->
                 @php
-                    use App\Models\User;
-                    use App\Models\Storage;
-                    use Illuminate\Support\Facades\Cookie;
+                    use Illuminate\Support\Facades\Auth;
+                    use Illuminate\Support\Facades\DB;
 
-                    $user = User::where('user_id', Cookie::get('USERPASS'))->first();
-                    
-                    $notifications = collect();
+                    if (Auth::user()->user_type === 'admin') {
+                        $use = DB::table('storage_use as su')
+                            ->join('materials as m', 'm.material_id', '=', 'su.material_id')
+                            ->join('storages as st', function ($join) {
+                                $join->on('st.material_id', '=', 'su.material_id')
+                                    ->on('st.storage', '=', 'su.storage');
+                            })
+                            ->whereColumn('su.units', '<', 'su.min_units')
+                            ->select([
+                                'm.name',
+                                'su.material_id',
+                                'su.storage',
+                                DB::raw("'use' as type"),
+                                'su.units',
+                                'su.min_units'
+                            ]);
 
-                    if ($user && $user->user_type === 'admin') {
-                        $notifications = Storage::join('materials', 'storages.material_id', '=', 'materials.material_id')
-                            ->select('materials.name','storage', 'storages.units', 'storage_type')
-                            ->whereColumn('storages.units', '<', 'storages.min_units')
-                            ->orderBy('storage', "desc")
+                        $reserve = DB::table('storage_reserve as sr')
+                            ->join('materials as m', 'm.material_id', '=', 'sr.material_id')
+                            ->join('storages as st', function ($join) {
+                                $join->on('st.material_id', '=', 'sr.material_id')
+                                    ->on('st.storage', '=', 'sr.storage');
+                            })
+                            ->whereColumn('sr.units', '<', 'sr.min_units')
+                            ->select([
+                                'm.name',
+                                'sr.material_id',
+                                'sr.storage',
+                                DB::raw("'reserve' as type"),
+                                'sr.units',
+                                'sr.min_units'
+                            ]);
+
+                        $notifications = DB::query()
+                            ->fromSub($use->unionAll($reserve), 'notifications')
+                            ->orderBy('material_id')
+                            ->orderBy('storage')
+                            ->orderBy('type')
                             ->get();
                     }
                 @endphp
 
                 <!-- Notificaciones -->
 
-                @if(Cookie::get('TYPE') === 'admin')
+                @if(Auth::user()->user_type === 'admin')
                 <div>
                     <div class="notifications-alert">
                         <button id="btn-notifications" class="btn btn-primary btn-notifications">
@@ -231,8 +252,14 @@
                         @if($notifications->isNotEmpty())
                             <h3>Notificaciones</h3>
                             <hr>
+
                             @foreach ($notifications as $warning)
-                                <p>- ({{$warning->storage == "CAE" ? "CAE" : "ODONTOLOGÍA"}})  <strong>{{$warning->name}}</strong> tiene solo {{$warning->units}} unidad/es en {{$warning->storage_type ==  "use" ? "uso" : "reserva"}}.</p>
+                                <p>
+                                    - ({{ $warning->storage == "CAE" ? "CAE" : "ODONTOLOGÍA" }})
+                                    <strong>{{ $warning->name }}</strong>
+                                    tiene solo {{ $warning->units }} unidad/es en
+                                    {{ $warning->type == "use" ? "uso" : "reserva" }}.
+                                </p>
                             @endforeach
 
                         @else
@@ -247,15 +274,15 @@
                     <!-- Info del usuario -->
                     <div class="user-info btn btn-notifications" id="user-info-toggle">
                         <i class="fa-solid fa-user"></i>
-                        {{-- <span>{{ Cookie::get('NAME') }}</span> --}}
+                        {{-- Auth::user()->full_name --}}
                     </div>
 
                     <!-- Logout oculto por defecto -->
                     <div class="logout fade-in" id="logout-section" style="display: none;">
                         <div class="user-details">
-                            <p class="user-name">{{ Cookie::get('NAME') }}</p>
-                            <p class="user-email">{{ Cookie::get('EMAIL') }}</p>
-                            <p class="user-role">{{ Cookie::get('TYPE') }}</p>
+                            <p class="user-name">{{ Auth::user()->full_name }}</p>
+                            <p class="user-email">{{ Auth::user()->email }}</p>
+                            <p class="user-role">{{ Auth::user()->user_type }}</p>
                         </div>
 
                         <hr>
@@ -271,6 +298,9 @@
         <!-- Contenido principal (cambia según la ruta) -->
         <main class="main-content">
             <div class="container">
+                {{-- Alertas flash --}}
+                <x-alerts />
+
                 @yield('content')
             </div>
         </main>

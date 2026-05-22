@@ -3,10 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Model
-{
+class User extends Authenticatable {
     use HasFactory;
     protected $table = 'users';
     public $timestamps = false;
@@ -27,13 +26,15 @@ class User extends Model
         'created_at'
     ];
 
-    public function modifications()
-    {
+    public function modifications() {
         return $this->hasMany(Modification::class, 'user_id', 'user_id');
     }
 
-    public function activities()
-    {
+    public function activities() {
         return $this->hasMany(Activity::class, 'user_id', 'user_id');
+    }
+
+    public function getFullNameAttribute(): string {
+        return $this->first_name . ' ' . $this->last_name;
     }
 }

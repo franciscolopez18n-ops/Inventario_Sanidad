@@ -18,10 +18,8 @@ function inicio() {
         }
     }
 
-    // Si existe un elemento con id "materialsBasketInput", se actualiza la tabla de materiales.
-    if (document.getElementById("materialsBasketInput")) {
-        updateTable();
-    }
+    // Carga los datos de la cookie en el formulario, si hay
+    updateTable();
 }
 
 // Función para obtener el valor de una cookie a partir de su nombre.
@@ -110,8 +108,6 @@ function updateTable() {
     // Limpiar los campos de texto de ingreso de datos del material.
     document.getElementById("materialName").value = "";
     document.getElementById("units").value = "";
-    // Se actualiza el valor del input oculto con el contenido actualizado de la cesta.
-    document.getElementById("materialsBasketInput").value = JSON.stringify(basket);
 }
 
 /*

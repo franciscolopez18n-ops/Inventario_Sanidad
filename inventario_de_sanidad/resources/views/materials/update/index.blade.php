@@ -1,29 +1,31 @@
 @extends('layout.app')
 
-@section('title', 'Gestión de materiales')
+@section('title', 'Gestión de material')
 
 @push('styles')
-
     <link rel="stylesheet" href="{{ asset('css/tables.css') }}">
     <link rel="stylesheet" href="{{ asset('css/loader.css') }}">
     <link rel="stylesheet" href="{{ asset('css/dialog.css') }}">
 @endpush
 
 @section('content')
+
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <div id="loader-overlay">
     <div class="spinner"></div>
 </div> 
-<div>
-<!-- Dialogo para confirmar eliminación de material -->
 
-<dialog  id="confirmacion">
-    <p>¿Estás seguro de que deseas eliminar el material seleccionado?</p>
-    <input type="button" class="btn btn-success" value="Aceptar" id="aceptar">
-    <input type="button" class="btn btn-danger" value="Cancelar" id="cancelar">
-</dialog>
+<div>
+    <!-- Dialogo para confirmar eliminación de material -->
+
+    <dialog  id="confirmacion">
+        <p>¿Estás seguro de que deseas eliminar el material seleccionado?</p>
+        <input type="button" class="btn btn-success" value="Aceptar" id="aceptar">
+        <input type="button" class="btn btn-danger" value="Cancelar" id="cancelar">
+    </dialog>
+
     <div class="content-wrapper">
-        <h2>Gestión de materiales</h2>
+        <h2>Gestión de material</h2>
         <form class="search-form">
             <!-- Buscador -->
             <div class="search-container">
@@ -76,9 +78,6 @@
             </div>
         </div>
 
-        <!-- Alertas flash -->
-        <x-alerts />
-
         <div id="paginacion" class="pagination-controls">
             <!-- Aquí se inyectarán los botones de paginación desde JS -->
         </div>
@@ -93,4 +92,3 @@
     <script src="{{ asset('js/tableMaterial.js') }}"></script>
     <script src="{{ asset('js/filterToggle.js') }}"></script> 
 @endpush
-

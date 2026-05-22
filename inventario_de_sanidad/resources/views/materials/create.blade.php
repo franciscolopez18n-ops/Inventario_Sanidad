@@ -12,10 +12,6 @@
 @section('content')
 <div class="material-form-wrapper">
     <h1>Alta de Materiales</h1>
-    <div class="alerts-container">
-        <div id="success-message" class="success hidden"></div>
-        <x-alerts />
-    </div>
     {{-- Boton de agregar a la cesta --}}
     <div class="basket-toggle">
         <button id="toggleBasketBtn" class="botonCarrito" type="button">
@@ -57,7 +53,7 @@
                 <input type="number" name="min_units_use" placeholder="Cantidad mínima">
                 <input type="number" name="cabinet_use" placeholder="Armario">
                 <input type="number" name="shelf_use" placeholder="Balda">
-                <input type="number" name="drawer" placeholder="Cajón">
+                <input type="number" name="drawer_use" placeholder="Cajón">
             </div>
         </fieldset>
 
@@ -97,8 +93,6 @@
       
         
     </form>
-
-    
 
     {{-- Cesta --}}
     <div class="basket-section hidden">

@@ -28,16 +28,16 @@
                     <label><input type="radio" name="filtro" value="3">Localización</label>
                     <label><input type="radio" name="filtro" value="4">Armario</label>
                     <label><input type="radio" name="filtro" value="5">Balda</label>
-                    @if(Cookie::get('TYPE') != 'student')
-                        <label><input type="radio" name="filtro" value="6">Unidades</label>
-                        <label><input type="radio" name="filtro" value="7">Unidades Mínimas</label>
+                    <label><input type="radio" name="filtro" value="6">Cajón</label>
+                    @if(Auth::user()->user_type !== 'student')
+                        <label><input type="radio" name="filtro" value="7">Unidades</label>
+                        <label><input type="radio" name="filtro" value="8">Unidades Mínimas</label>
                     @endif
-
                 </div>
             </div>
         </div>
     </form>
-        @if(Cookie::get('TYPE') != 'student')
+        @if(Auth::user()->user_type !== 'student')
             <div class="view-toggle">
                 <button id="cardViewBtn" class="btn btn-outline btn-notifications active"><i class="fa-solid fa-list-ul"></i> </button>
                 <button id="tableViewBtn" class="btn btn-outline btn-notifications"><i class="fa-solid fa-table"></i> </button>
@@ -58,6 +58,7 @@
                         <th>Localización</th>
                         <th>Armario</th>
                         <th>Balda</th>
+                        <th>Cajón</th>
                         <th>Unidades</th>
                         <th>Unidades Mínimas</th>
                     </tr>
@@ -103,7 +104,7 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/historicalFunctions.js') }}"></script>
+    <script src="{{ asset('js/historical.js') }}"></script>
     <script src="{{ asset('js/loader.js') }}"></script>
     <script src="{{ asset('js/tableFunctions.js') }}"></script>
     <script src="{{ asset('js/tableReserveUse.js') }}"></script>
