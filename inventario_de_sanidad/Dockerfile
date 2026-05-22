@@ -1,7 +1,9 @@
 FROM php:8.2-apache
 
+# Node + dependencias frontend
 RUN apt-get update && apt-get install -y \
-    git curl zip unzip libzip-dev libpng-dev libonig-dev libxml2-dev
+    git curl zip unzip libzip-dev libpng-dev libonig-dev libxml2-dev \
+    nodejs npm
 
 RUN docker-php-ext-install pdo pdo_mysql mbstring zip gd
 
@@ -13,7 +15,12 @@ WORKDIR /var/www/html
 
 COPY . .
 
+# Backend
 RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+
+# Frontend (ESTO ES LO QUE TE FALTA)
+RUN npm install
+RUN npm run build
 
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 775 storage bootstrap/cache
