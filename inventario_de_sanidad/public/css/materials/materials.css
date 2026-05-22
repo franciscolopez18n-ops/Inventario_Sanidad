@@ -207,3 +207,27 @@ input[type="text"], form select {
         margin: 1rem 0;
     }
 }
+
+.storage-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+/* Tablets */
+@media (max-width: 900px) {
+    .storage-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Móviles pequeños */
+@media (max-width: 600px) {
+    .storage-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+}
+.actualizar_reserva{
+    margin-top: 10px;
+}
