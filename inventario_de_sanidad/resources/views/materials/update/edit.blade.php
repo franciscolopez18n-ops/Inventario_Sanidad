@@ -47,7 +47,7 @@
             @enderror
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+        <div class="storage-grid">
             @foreach ($storages as $storage)
                 <fieldset>
                     <legend>{{ $storage->storage === 'CAE' ? 'CAE' : 'Odontología' }}</legend>
@@ -101,7 +101,7 @@
                                 @error("$s.reserve_min_units") <div class="alert alert-error alert-form">{{ $message }}</div> @enderror
                             </div>
                             <div>
-                                <label>Armario</label>
+                                <label>Armario</label><br>
                                 <input type="text" name="{{ $s }}[reserve_cabinet]" value="{{ old("$s.reserve_cabinet", $reserveRecord->cabinet ?? '') }}" required>
                                 @error("$s.reserve_cabinet") <div class="alert alert-error alert-form">{{ $message }}</div> @enderror
                             </div>
@@ -113,20 +113,22 @@
                         </div>
                     </div>
 
-                    <div>
+                    <div class="actualizar_reserva">
                         <input type="checkbox" id="onlyReserve_{{ $s }}" name="{{ $s }}[onlyReserve]" value="1" {{ old("$s.onlyReserve") ? 'checked' : '' }}>
                         <label for="onlyReserve_{{ $s }}">Actualizar solamente reserva</label>
                     </div>
 
                 </fieldset>
             @endforeach
+            
         </div>
 
         <div class="form-actions">
             <input type="submit" value="Actualizar" class="btn btn-success">
-            <br><br><br>
-            <a href="{{ route('materials.update.index') }}" class="btn btn-outline">Volver al listado</a>
+            <br><br>
+            <a href="{{ route('materials.update.index') }}" class="btn btn-outline">Volver al listado</a><br>
         </div>
+        <br>
     </form>
 </div>
 @endsection
