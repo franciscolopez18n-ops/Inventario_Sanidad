@@ -16,8 +16,12 @@ class CreateActivitiesTable extends Migration {
             $table->timestamp('created_at')->useCurrent();
 
             $table->foreign('user_id')
-                  ->references('user_id')->on('users')
-                  ->onDelete('cascade')->onUpdate('cascade');
+                ->references('user_id')->on('users')
+                ->onDelete('cascade')->onUpdate('cascade');
+
+            $table->foreign('teacher_id')
+                ->references('user_id')->on('users') // Apunta a la misma tabla 'users'
+                ->onDelete('cascade')->onUpdate('cascade');
 
             $table->index('created_at', 'idx_activities_created_at');
         });

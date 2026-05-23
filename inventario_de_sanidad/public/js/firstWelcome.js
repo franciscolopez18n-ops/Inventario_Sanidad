@@ -28,8 +28,6 @@ function inicio() {
         function (userdata) {
             let isFirstLogin = userdata && !userdata["first_log"];
             if (isFirstLogin) mostrarDialogInicio();
-
-            mostrarToastSuccess();
         });
 }
 
@@ -64,4 +62,3 @@ function newPass(e) {
     let dialog = document.getElementById("firstLogDialog");
     dialog.style.display = "none";
 }
-

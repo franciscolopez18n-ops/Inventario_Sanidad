@@ -43,10 +43,6 @@
         <h1>Bienvenido/a <span>{{ Auth::user()->full_name }}</span></h1>
         <p>Has iniciado sesión correctamente.</p>
     </div>
-
-    <div id="successToast" class="toast-success hidden">
-        <p>{{ session(FlashType::SUCCESS) }}</p>
-    </div>
 @endif
 
 <div class="watermark">Portal de Sanidad</div>
