@@ -91,7 +91,10 @@ input[type="text"], form select {
     max-height: 200px;
     overflow: auto;
 }
-
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
 /* Imagen dentro de celda */
 .table .cell-img {
     max-width: 60px;

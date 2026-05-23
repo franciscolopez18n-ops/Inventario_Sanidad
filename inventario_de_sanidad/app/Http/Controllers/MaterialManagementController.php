@@ -101,17 +101,19 @@ class MaterialManagementController extends Controller {
         
         $validated = $request->validate($rules, $messages);
 
-        $oldPath = $material->image_path; // Se guarda la ruta antigua de la imagen del material.
-        // Si se ha subido una nueva imagen del material, se guarda en el disco 'public' en la carpeta 'materials'.
+        $oldPath = $material->image_path; // Se guarda la ruta antigua de la imagen del material
+        // Si se ha subido una nueva imagen del material, se guarda en el disco 'public' en la carpeta 'materials'
         $newPath = ($request->hasFile('image'))
             ? $request->file('image')->store('materials','public')
             : null;
 
         try {
             $updated = false;
+            $hayCambios = false;
 
             DB::transaction(function () use (
                 &$updated,
+                &$hayCambios,
                 $material,
                 $validated,
                 $newPath,
@@ -124,7 +126,7 @@ class MaterialManagementController extends Controller {
                     $validated['description'] != $material->description ||
                     $newPath !== null
                 ) {
-                    $updated = true;
+                    $hayCambios = true;
 
                     $material->update([
                         'name'        => $validated['name'],
@@ -167,15 +169,13 @@ class MaterialManagementController extends Controller {
 
                     // Actualizar almacenamiento solo si cambió
                     if ($storageChanged) {
-                        $updated = true;
+                        $hayCambios = true;
 
                         if (!empty($validated[$storage]['onlyReserve'])) {
-                            // Modo reposición: solo se actualiza reserva
-
-                            // Se calcula la diferencia de unidades para "reserve".
+                            // Se calcula la diferencia de unidades para "reserve"
                             $differenceReserve = $validated[$storage]['reserve_units'] - $reserveRecord->units;
                         
-                            // Actualiza el almacenamiento de reserva.
+                            // Actualiza el almacenamiento de reserva
                             StorageReserve::where('material_id', $material->material_id)
                                 ->where('storage', $storage)
                                 ->update([
@@ -191,45 +191,25 @@ class MaterialManagementController extends Controller {
                             }
                         } else {
                             // Modo de distribución
-
                             $newUseUnits = $validated[$storage]['use_units'];
                             $newReserveUnits = $validated[$storage]['reserve_units'];
 
-                            // Se calculan las diferencias en unidades para el almacenamiento de uso y reserva.
+                            // Diferencia
                             $differenceUse = $newUseUnits - $useRecord->units;
                             $differenceReserve = $newReserveUnits - $reserveRecord->units;
 
-                            // Si cambia ambas unidades, no se realiza el cambio.
-                            if ($differenceUse != 0 && $differenceReserve != 0) {
-                                throw new \Exception('Solo puedes modificar una de las dos cantidades; el otro valor se ajustará automáticamente.');
-                            }
-
-                            if ($differenceUse != 0) {
-                                // Si se modifica la cantidad de uso, se ajusta automáticamente la de reserva.
-                                $newReserveUnits = $reserveRecord->units - $differenceUse;
-                                if ($newReserveUnits < 0) {
-                                    throw new \Exception('No puedes transferir más unidades de las que hay en reserva.');
-                                }
-                            } else if ($differenceReserve != 0) {
-                                // Si se modifica la cantidad de reserva, se ajusta automáticamente la de uso.
-                                $newUseUnits = $useRecord->units - $differenceReserve;
-                                if ($newUseUnits < 0) {
-                                    throw new \Exception('No puedes transferir más unidades de las que hay en uso.');
-                                }
-                            }
-
-                            // Actualiza el almacenamiento de uso.
+                            // Actualiza uso
                             StorageUse::where('material_id', $material->material_id)
                                 ->where('storage', $storage)
                                 ->update([
-                                    'units' => $newUseUnits,
+                                    'units'     => $newUseUnits,
                                     'min_units' => $validated[$storage]['use_min_units'],
-                                    'cabinet' => $validated[$storage]['use_cabinet'],
-                                    'shelf' => $validated[$storage]['use_shelf'],
-                                    'drawer' => $validated[$storage]['use_drawer']
+                                    'cabinet'   => $validated[$storage]['use_cabinet'],
+                                    'shelf'     => $validated[$storage]['use_shelf'],
+                                    'drawer'    => $validated[$storage]['use_drawer']
                                 ]);
-                
-                            // Actualiza el almacenamiento de reserva.
+
+                            // Actualiza reserva
                             StorageReserve::where('material_id', $material->material_id)
                                 ->where('storage', $storage)
                                 ->update([
@@ -238,37 +218,43 @@ class MaterialManagementController extends Controller {
                                     'cabinet'   => $validated[$storage]['reserve_cabinet'],
                                     'shelf'     => $validated[$storage]['reserve_shelf'],
                                 ]);
-                    
-                            // Registra las modificaciones correspondientes según cuál de las cantidades haya cambiado.
+
+                            // Registra cambios si hay diferencias
                             if ($differenceUse != 0) {
-                                // Si se modificó la cantidad de uso, se registra la diferencia positiva en "use"
                                 $this->storeEditInModification($useRecord->getAssignment(), $differenceUse);
-                                // y la diferencia negativa en "reserve" para mantener el balance.
-                                $this->storeEditInModification($reserveRecord->getAssignment(), -$differenceUse);
-                            } else if ($differenceReserve != 0) {
-                                // Si se modificó la cantidad de reserva, se registra la diferencia positiva en "reserve"
-                                $this->storeEditInModification($reserveRecord->getAssignment(), $differenceReserve);
-                                // y la diferencia negativa en "use" para mantener el balance.
-                                $this->storeEditInModification($useRecord->getAssignment(), -$differenceReserve);
                             }
+
+                            if ($differenceReserve != 0) {
+                                $this->storeEditInModification($reserveRecord->getAssignment(), $differenceReserve);
+                            }
+                    
+                            
                         }
                     }
                 }
             });
 
-            if ($updated) {
+            if (!$hayCambios) {
+                return back()->with(FlashType::INFO, 'No hay nada que actualizar.');
+            }
+            
+            if ($hayCambios) {
                 foreach ($storageKeys as $storage) {
-                    // Nota: no es un capricho volver a recuperar los registros, porque refresh() no funciona con clave compuesta
-                    $useRecord = StorageUse::where('material_id', $material->material_id)->where('storage', $storage)->first();
-                    $reserveRecord = StorageReserve::where('material_id', $material->material_id)->where('storage', $storage)->first();
-                    
-                    // Una vez la transacción finalizó, se comprueba que las unidades actualizadas no sean menores que el mínimo de unidades.
-                    // Sino, se envía un correo a los administradores avisándoles.
-                    if ($useRecord) $this->checkUnits($useRecord);
-                    if ($reserveRecord) $this->checkUnits($reserveRecord);
+            
+                    $useRecord = StorageUse::where('material_id', $material->material_id)
+                        ->where('storage', $storage)
+                        ->first();
+            
+                    $reserveRecord = StorageReserve::where('material_id', $material->material_id)
+                        ->where('storage', $storage)
+                        ->first();
+            
+                    try {
+                        if ($useRecord) $this->checkUnits($useRecord);
+                        if ($reserveRecord) $this->checkUnits($reserveRecord);
+                    } catch (\Exception $e) {
+                    }
                 }
-            } else {
-                return back()->with(FlashType::INFO, 'Nada que actualizar.');
             }
 
             return back()->with(FlashType::SUCCESS, 'Material actualizado correctamente.');
@@ -285,19 +271,19 @@ class MaterialManagementController extends Controller {
     // Elimina un material y su almacenamiento
     public function updateDestroy(Material $material) {
         try {
-            // Verifica si el material aún existe en la base de datos mediante su ID.
+            // Verifica si el material aún existe en la base de datos mediante su ID
             if (!Material::find($material->material_id)) {
-                // Si no existe (puede haber sido eliminado previamente), muestra advertencia.
+                // Si no existe (puede haber sido eliminado previamente), muestra advertencia
                 return back()->with(FlashType::WARNING, 'El material no existe o ya ha sido eliminado.');
             }
 
-            // Elimina la imagen del material.
+            // Elimina la imagen del material
             $path = $material->image_path;
             if (!empty($path)) {
                 StorageFacades::disk('public')->delete($path);
             }
 
-            // Elimina las imágenes de los QR asociados al material.
+            // Elimina las imágenes de los QR asociados al material
             foreach ($material->storages as $storage) {
                 if ($storage->qr_path) {
                     StorageFacades::disk('local')->delete($storage->qr_path);
@@ -314,7 +300,7 @@ class MaterialManagementController extends Controller {
     }
 
     /**
-     * Muestra la vista para crear (dar de alta) nuevos materiales.
+     * Muestra la vista para crear (dar de alta) nuevos materiales
      *
      * @return \Illuminate\View\View
      */
@@ -323,7 +309,7 @@ class MaterialManagementController extends Controller {
     }
 
     /**
-     * Devuelve en JSON la lista de todos los materiales ordenados por ID.
+     * Devuelve en JSON la lista de todos los materiales ordenados por ID
      *
      * @return \Illuminate\Http\JsonResponse
      */

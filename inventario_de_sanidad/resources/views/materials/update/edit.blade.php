@@ -59,11 +59,13 @@
                     @endphp
 
                     <div class="storage-block">
+                        <!-- USO -->
                         <p><strong>Uso</strong></p>
                         <div class="form-grid">
+                            <!-- SOLO LECTURA -->
                             <div>
                                 <label>Cantidad</label>
-                                <input type="number" name="{{ $s }}[use_units]" value="{{ old("$s.use_units", $useRecord->units ?? 0) }}" min="0" required>
+                                <input  class="soloLectura" type="number" name="{{ $s }}[use_units]" value="{{ old("$s.use_units", $useRecord->units ?? 0) }}" readonly>
                                 @error("$s.use_units") <div class="alert alert-error alert-form">{{ $message }}</div> @enderror
                             </div>
 
@@ -90,11 +92,43 @@
                             </div>
                         </div>
 
+                        <!-- BOTONES PARA TRANSFERIR -->
+                        <div class="transferir-stock">
+    
+                            <div class="tituloTransferir">
+                                Transferir unidades
+                            </div>
+
+                            <div class="contenedorTransferir">
+
+                                <button type="button"
+                                        class="transferir-btn down"
+                                        onclick="moveStock('{{ $s }}', -1)">
+                                    <span>A reserva</span>
+                                    <small>Uso → Reserva</small>
+                                </button>
+
+                                <div class="transfer-center">
+                                    <div class="transfer-icon">⇄</div>
+                                </div>
+
+                                <button type="button"
+                                        class="transferir-btn up"
+                                        onclick="moveStock('{{ $s }}', 1)">
+                                    <span>A uso</span>
+                                    <small>Uso ← Reserva</small>
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        <!-- RESERVA -->
                         <p><strong>Reserva</strong></p>
                         <div class="form-grid">
                             <div>
                                 <label>Cantidad</label>
-                                <input type="number" name="{{ $s }}[reserve_units]" value="{{ old("$s.reserve_units", $reserveRecord->units ?? 0) }}" min="0" required>
+                                <input class="soloLectura" type="number" name="{{ $s }}[reserve_units]" value="{{ old("$s.reserve_units", $reserveRecord->units ?? 0) }}" min="0" readonly>
                                 @error("$s.reserve_units") <div class="alert alert-error alert-form">{{ $message }}</div> @enderror
                             </div>
                             <div>
@@ -115,10 +149,7 @@
                         </div>
                     </div>
 
-                    <div class="actualizar_reserva">
-                        <input type="checkbox" id="onlyReserve_{{ $s }}" name="{{ $s }}[onlyReserve]" value="1" {{ old("$s.onlyReserve") ? 'checked' : '' }}>
-                        <label for="onlyReserve_{{ $s }}">Actualizar solamente reserva</label>
-                    </div>
+                    
 
                 </fieldset>
             @endforeach
@@ -137,4 +168,5 @@
 
 @push('scripts')
     <script src="{{ asset('js/previewImage.js') }}"></script>
+    <script src="{{ asset('js/transferirStock.js') }}"></script>
 @endpush

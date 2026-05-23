@@ -46,8 +46,6 @@
     </div>
     
 <div id="cardView"  class="card-grid"></div>
-       
-
         <div id="tableView" class="table-wrapper" style="display: none;">
             <table class="table">
                 <thead>
