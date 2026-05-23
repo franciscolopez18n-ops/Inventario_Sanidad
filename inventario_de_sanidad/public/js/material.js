@@ -198,14 +198,18 @@ async function getMaterialData() {
     let storage = form.storage.value;
     if (!storage) errorsMap.storage = "Debes seleccionar un almacenamiento.";
 
-    let units_use = form.units_use.value;
-    if (isNaN(units_use) || units_use < 0)
+    let units_use = Number(form.units_use.value);
+    if (form.units_use.value === "" || isNaN(units_use) || units_use < 0)
         errorsMap.units_use = "Debe ser un número ≥ 0";
 
-    let min_units_use = form.min_units_use.value;
-    if (isNaN(min_units_use) || min_units_use < 0)
+    let min_units_use = Number(form.min_units_use.value);
+    if (form.min_units_use.value === "" || isNaN(min_units_use) || min_units_use < 0)
         errorsMap.min_units_use = "Debe ser un número ≥ 0";
-   
+
+
+
+
+    
     let cabinet_use = form.cabinet_use.value;
     if (isNaN(cabinet_use) || cabinet_use <= 0)
         errorsMap.cabinet_use = "El armario es obligatorio";
@@ -218,13 +222,13 @@ async function getMaterialData() {
     if (isNaN(drawer_use) || drawer_use <= 0)
         errorsMap.drawer_use = "Debe ser > 0";
 
-    let units_reserve = form.units_reserve.value;
-    if (isNaN(units_reserve) || units_reserve < 0)
-        errorsMap.units_reserve = "Debe ser ≥ 0";
+    let units_reserve = Number(form.units_reserve.value);
+    if (form.units_reserve.value === "" || isNaN(units_reserve) || units_reserve < 0)
+        errorsMap.units_reserve = "Debe ser un número ≥ 0";
 
-    let min_units_reserve = form.min_units_reserve.value;
-    if (isNaN(min_units_reserve) || min_units_reserve < 0)
-        errorsMap.min_units_reserve = "Debe ser ≥ 0";
+    let min_units_reserve = Number(form.min_units_reserve.value);
+    if (form.min_units_reserve.value === "" || isNaN(min_units_reserve) || min_units_reserve < 0)
+        errorsMap.min_units_reserve = "Debe ser un número ≥ 0";
 
     let cabinet_reserve = form.cabinet_reserve.value.trim();
     if (!cabinet_reserve)
