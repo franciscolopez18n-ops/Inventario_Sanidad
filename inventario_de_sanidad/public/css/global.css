@@ -36,7 +36,9 @@
 
   --font-principal: 'Calibri', sans-serif;
 }
-
+.table td {
+  word-break: break-all;
+}
 .darkmode {
   --primary-100: #b3c7dc;
   --primary-200: #6ca0d1;
