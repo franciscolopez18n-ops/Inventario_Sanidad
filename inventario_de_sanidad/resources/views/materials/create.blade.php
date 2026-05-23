@@ -48,23 +48,54 @@
         {{-- Uso --}}
         <fieldset class="fieldset">
             <legend>Uso</legend>
+
             <div class="form-grid-5">
-                <input type="number" name="units_use" placeholder="Cantidad">
-                <input type="number" name="min_units_use" placeholder="Cantidad mínima">
-                <input type="number" name="cabinet_use" placeholder="Armario">
-                <input type="number" name="shelf_use" placeholder="Balda">
-                <input type="number" name="drawer_use" placeholder="Cajón">
+
+                <div class="field">
+                    <input type="number" name="units_use" placeholder="Cantidad">
+                </div>
+
+                <div class="field">
+                    <input type="number" name="min_units_use" placeholder="Cantidad mínima">
+                </div>
+
+                <div class="field">
+                    <input type="number" name="cabinet_use" placeholder="Armario">
+                </div>
+
+                <div class="field">
+                    <input type="number" name="shelf_use" placeholder="Balda">
+                </div>
+
+                <div class="field">
+                    <input type="number" name="drawer_use" placeholder="Cajón">
+                </div>
+
             </div>
         </fieldset>
 
         {{-- Reserva --}}
         <fieldset class="fieldset">
             <legend>Reserva</legend>
+
             <div class="form-grid-4">
-                <input type="number" name="units_reserve" placeholder="Cantidad">
-                <input type="number" name="min_units_reserve" placeholder="Cantidad mínima">
-                <input type="text" name="cabinet_reserve" placeholder="Armario">
-                <input type="number" name="shelf_reserve" placeholder="Balda">
+
+                <div class="field">
+                    <input type="number" name="units_reserve" placeholder="Cantidad">
+                </div>
+
+                <div class="field">
+                    <input type="number" name="min_units_reserve" placeholder="Cantidad mínima">
+                </div>
+
+                <div class="field">
+                    <input type="text" name="cabinet_reserve" placeholder="Armario">
+                </div>
+
+                <div class="field">
+                    <input type="number" name="shelf_reserve" placeholder="Balda">
+                </div>
+
             </div>
         </fieldset>
 
@@ -81,12 +112,12 @@
         <div class="form-actions-group">
             {{-- Botón de añadir --}}
             <button type="button" name="add" class="btn btn-primary">
-                <i class="fa-solid fa-plus mr-2"></i> Añadir
+                Añadir
             </button>
             
             {{-- Botón de alta (submit real) --}}
             <button type="submit" id="btn-submit-alta" value="Alta" class="btn btn-success">
-                <i class="fa-solid fa-check-double mr-2"></i> Alta
+                Alta
             </button>
         </div>
 
@@ -95,33 +126,41 @@
     </form>
 
     {{-- Cesta --}}
-    <div class="basket-section hidden">
-        <h4 class="basket-title">Cesta de Materiales</h4>
-        
-        <div class="table-wrapper">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th rowspan="2">Nombre</th>
-                        <th rowspan="2">Descripción</th>
-                        <th rowspan="2">Localización</th>
-                        <th colspan="5">Uso</th>
-                        <th colspan="4">Reserva</th>
-                        <th rowspan="2">Imagen</th>
-                        <th rowspan="2"></th>
-                    </tr>
-                    <tr>
-                        <th>Cant.</th><th>Mín</th><th>Armario</th><th>Balda</th><th>Cajón</th>
-                        <th>Cant.</th><th>Mín</th><th>Armario</th><th>Balda</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+    <div class="contenedor-tabla">
+        <div class="basket-section hidden">
+            <h4 class="basket-title">Cesta de Materiales</h4>
+            
+            <div class="table-wrapper">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Nombre</th>
+                            <th rowspan="2">Descripción</th>
+                            <th rowspan="2">Localización</th>
+                            <th colspan="5">Uso</th>
+                            <th colspan="4">Reserva</th>
+                            <th rowspan="2">Imagen</th>
+                            <th rowspan="2"></th>
+                        </tr>
+                        <tr>
+                            <th>Cant.</th><th>Mín</th><th>Armario</th><th>Balda</th><th>Cajón</th>
+                            <th>Cant.</th><th>Mín</th><th>Armario</th><th>Balda</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
         </div>
     </div>
+</div>
 @endsection
 
 @push('scripts')
     <script src="{{ asset('js/previewImage.js') }}"></script>
+
+    {{-- IMPORTANTE: primero alerts.js --}}
+    <script src="{{ asset('js/alerts.js') }}"></script>
+
+    {{-- luego el resto --}}
     <script src="{{ asset('js/material.js') }}"></script>
 @endpush

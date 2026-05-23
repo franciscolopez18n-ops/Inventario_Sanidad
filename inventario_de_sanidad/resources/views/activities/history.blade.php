@@ -31,7 +31,7 @@
                 <!-- Botones de paginación se insertarán aquí -->
             </div>
         </div>
-
+    
         </div>
     </div>
 </div>

@@ -101,6 +101,17 @@ function setCookieValue(basket, name) {
 
     return true;
 }
+function cortaCadena(text, maxLength = 50) {
+    if (!text) {
+        return "";
+    }
+    
+    if (text.length > maxLength) {
+        return text.substring(0, maxLength) + "...";
+    } else {
+        return text;
+    }
+}
 
 // Crea una celda <td> en una fila con contenido y etiqueta opcional.
 function createRow(content, trElement, label) {
@@ -133,18 +144,18 @@ function renderBasket() {
             let newTr = document.createElement("tr");
 
             // Añadir celdas con la información del material.
-            createRow(basket[i].name, newTr, "Nombre");
-            createRow(basket[i].description, newTr, "Descripción");
-            createRow(basket[i].storage, newTr, "Localización");
-            createRow(basket[i].units_use, newTr, "Cant. Uso");
-            createRow(basket[i].min_units_use, newTr, "Mín. Uso");
-            createRow(basket[i].cabinet_use, newTr, "Armario Uso");
-            createRow(basket[i].shelf_use, newTr, "Balda Uso");
-            createRow(basket[i].drawer_use, newTr, "Cajón Uso");
-            createRow(basket[i].units_reserve, newTr, "Cant. Reserva");
-            createRow(basket[i].min_units_reserve, newTr, "Mín. Reserva");
-            createRow(basket[i].cabinet_reserve, newTr, "Armario Reserva");
-            createRow(basket[i].shelf_reserve, newTr, "Balda Reserva");
+            createRow(cortaCadena(basket[i].name, 40), newTr, "Nombre");
+            createRow(cortaCadena(basket[i].description, 60), newTr, "Descripción");
+            createRow(cortaCadena(basket[i].storage, 40), newTr, "Localización");
+            createRow(cortaCadena(basket[i].units_use, 10), newTr, "Cant. Uso");
+            createRow(cortaCadena(basket[i].min_units_use, 10), newTr, "Mín. Uso");
+            createRow(cortaCadena(basket[i].cabinet_use, 20), newTr, "Armario Uso");
+            createRow(cortaCadena(basket[i].shelf_use, 20), newTr, "Balda Uso");
+            createRow(cortaCadena(basket[i].drawer_use, 20), newTr, "Cajón Uso");
+            createRow(cortaCadena(basket[i].units_reserve, 10), newTr, "Cant. Reserva");
+            createRow(cortaCadena(basket[i].min_units_reserve, 10), newTr, "Mín. Reserva");
+            createRow(cortaCadena(basket[i].cabinet_reserve, 20), newTr, "Armario Reserva");
+            createRow(cortaCadena(basket[i].shelf_reserve, 20), newTr, "Balda Reserva");
 
             // Imagen del material.
             let imageTd = document.createElement("td");
@@ -184,83 +195,83 @@ async function withDisabled(button, fn) {
 
 // Captura y valida los datos del formulario y añade el material al carrito.
 async function getMaterialData() {
-    let formErrors = [];
+    let errorsMap = {};
     let tempPath = null;
+    let form = document.form;
 
     // Validaciones del formulario.
-    let name = document.form.name.value.trim();
+    let name = form.name.value.trim();
     if (!name) {
-        formErrors.push("El nombre es obligatorio.");
+        errorsMap.name = "El nombre es obligatorio.";
+    } else if (name.length > 60) {
+        errorsMap.name = "El nombre no puede superar 60 caracteres.";
     }
 
-    let description = document.form.description.value.trim();
+    let description = form.description.value.trim();
     if (!description) {
-        formErrors.push("La descripción es obligatoria.");
+        errorsMap.description = "La descripción es obligatoria.";
+    } else if (description.length > 255) {
+        errorsMap.description = "La descripción no puede superar 255 caracteres.";
     }
+    
+    let storage = form.storage.value;
+    if (!storage) errorsMap.storage = "Debes seleccionar un almacenamiento.";
 
-    let storage = document.form.storage.value;
-    if (!storage) {
-        formErrors.push("Debes seleccionar un almacenamiento.");
-    }
+    let units_use = Number(form.units_use.value);
+    if (form.units_use.value === "" || isNaN(units_use) || units_use < 0)
+        errorsMap.units_use = "Debe ser un número ≥ 0";
 
-    let units_use = document.form.units_use.value;
-    if (isNaN(units_use) || units_use < 0) {
-        formErrors.push("La cantidad de unidades de uso debe ser un número igual o mayor a 0.");
-    }
+    let min_units_use = Number(form.min_units_use.value);
+    if (form.min_units_use.value === "" || isNaN(min_units_use) || min_units_use < 0)
+        errorsMap.min_units_use = "Debe ser un número ≥ 0";
 
-    let min_units_use = document.form.min_units_use.value;
-    if (isNaN(min_units_use) || min_units_use < 0) {
-        formErrors.push("La cantidad mínima de unidades de uso debe ser un número igual o mayor a 0.");
-    }
 
-    let cabinet_use = document.form.cabinet_use.value;
-    if (isNaN(cabinet_use) || cabinet_use <= 0) {
-        formErrors.push("El armario de uso debe ser un número mayor a 0.");
-    }
 
-    let shelf_use = document.form.shelf_use.value;
-    if (isNaN(shelf_use) || shelf_use <= 0) {
-        formErrors.push("La balda de uso debe ser un número mayor a 0.");
-    }
 
-    let drawer_use = document.form.drawer_use.value;
-    if (isNaN(drawer_use) || drawer_use <= 0) {
-        formErrors.push("El cajón de uso debe ser un número mayor a 0.");
-    }
+    
+    let cabinet_use = form.cabinet_use.value;
+    if (isNaN(cabinet_use) || cabinet_use <= 0)
+        errorsMap.cabinet_use = "El armario es obligatorio";
 
-    let units_reserve = document.form.units_reserve.value;
-    if (isNaN(units_reserve) || units_reserve < 0) {
-        formErrors.push("La cantidad de unidades de reserva debe ser un número igual o mayor a 0.");
-    }
+    let shelf_use = form.shelf_use.value;
+    if (isNaN(shelf_use) || shelf_use <= 0)
+        errorsMap.shelf_use = "Debe ser > 0";
 
-    let min_units_reserve = document.form.min_units_reserve.value;
-    if (isNaN(min_units_reserve) || min_units_reserve < 0) {
-        formErrors.push("La cantidad mínima de unidades de reserva debe ser un número igual o mayor a 0.");
-    }
+    let drawer_use = form.drawer_use.value;
+    if (isNaN(drawer_use) || drawer_use <= 0)
+        errorsMap.drawer_use = "Debe ser > 0";
 
-    let cabinet_reserve = document.form.cabinet_reserve.value.trim();
-    if (!cabinet_reserve) {
-        formErrors.push("El armario de reserva es obligatorio.");
-    }
+    let units_reserve = Number(form.units_reserve.value);
+    if (form.units_reserve.value === "" || isNaN(units_reserve) || units_reserve < 0)
+        errorsMap.units_reserve = "Debe ser un número ≥ 0";
 
-    let shelf_reserve = document.form.shelf_reserve.value;
-    if (isNaN(shelf_reserve) || shelf_reserve <= 0) {
-        formErrors.push("La balda de reserva debe ser un número mayor que 0.");
-    }
+    let min_units_reserve = Number(form.min_units_reserve.value);
+    if (form.min_units_reserve.value === "" || isNaN(min_units_reserve) || min_units_reserve < 0)
+        errorsMap.min_units_reserve = "Debe ser un número ≥ 0";
+
+    let cabinet_reserve = form.cabinet_reserve.value.trim();
+    if (!cabinet_reserve)
+        errorsMap.cabinet_reserve = "El armario es obligatorio";
+
+    let shelf_reserve = form.shelf_reserve.value;
+    if (isNaN(shelf_reserve) || shelf_reserve <= 0)
+        errorsMap.shelf_reserve = "Debe ser > 0";
 
     // Procesar imagen si existe.
-    let image = document.form.image.files[0];
+    let image = form.image.files[0];
     if (image) {
         let validTypes = ['image/jpeg', 'image/png'];
         if (!validTypes.includes(image.type)) {
-            formErrors.push('Formato de imagen inválido (solo JPG o PNG)');
+            errorsMap.image = "Solo JPG o PNG";
         } else {
             tempPath = await uploadTempImage(image);
         }
     }
 
-    if (formErrors.length > 0) {
-        displayErrors(formErrors);
+    let hasError = showInputErrors(form, errorsMap);
+
+    if (hasError) {
+        alertaError(); 
         return;
     }
 
@@ -302,32 +313,11 @@ async function getMaterialData() {
     document.getElementById("file-name").textContent = "Ningún archivo seleccionado";
 
     // Mostrar mensaje de éxito.
-    const alertsContainer = document.querySelector(".alerts-container");
-    const successMsg = document.createElement("p");
-    successMsg.className = "alert alert-success";
-    successMsg.textContent = "Material añadido al carrito.";
-    alertsContainer.appendChild(successMsg);
-    autoHideAlerts();
+    showGlobalAlert("success", "Material añadido al carrito.");
+
 }
 
-// Muestra los errores como un alert.
-function displayErrors(errors) {
-    let list = Array.isArray(errors) ? errors : [errors];
-    let alertsContainer = document.querySelector(".alerts-container");
 
-    if (!alertsContainer) return;
-
-    list.forEach(error => {
-        let alert = document.createElement("p");
-
-        alert.className = "alert alert-error";
-        alert.textContent = error;
-
-        alertsContainer.appendChild(alert);
-    });
-
-    autoHideAlerts();
-}
 
 // Sube la imagen al servidor y devuelve la ruta temporal.
 async function uploadTempImage(image) {
@@ -388,36 +378,4 @@ function deleteMaterialData(event) {
 // Borra una cookie estableciendo una fecha de expiración en el pasado.
 function deleteCookie(name) {
     document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
-}
-
-// Función para que los avisos desaparezcan solos
-function autoHideAlerts() {
-    const alerts = document.querySelectorAll('.alert, #success-message');
-
-    alerts.forEach(alert => {
-        setTimeout(() => {
-            alert.style.transition = "opacity 0.5s ease";
-            alert.style.opacity = "0";
-            
-            setTimeout(() => {
-                alert.remove();
-            }, 500);
-        }, 3000); // 3 segundos
-    });
-}
-window.addEventListener("load", autoHideAlerts);
-
-function showAlert(type, message) {
-    let alertsContainer = document.querySelector(".alerts-container");
-
-    if (!alertsContainer) return;
-
-    let alert = document.createElement("p");
-
-    alert.className = `alert alert-${type}`;
-    alert.textContent = message;
-
-    alertsContainer.appendChild(alert);
-
-    autoHideAlerts();
 }

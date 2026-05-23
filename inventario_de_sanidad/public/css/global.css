@@ -36,7 +36,9 @@
 
   --font-principal: 'Calibri', sans-serif;
 }
-
+.table td {
+  word-break: break-all;
+}
 .darkmode {
   --primary-100: #b3c7dc;
   --primary-200: #6ca0d1;
@@ -262,6 +264,34 @@ a {
   --alert-bg: #e7f3fe;
   --alert-border: #2196f3;
   --alert-text: #0b5ed7;
+}
+/* PARA LOS ERRORES */
+.input-error {
+  border: 2px solid #e74c3c !important;
+  background-color: #fff5f5;
+}
+
+.input-error-msg {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
+}
+
+.alerts-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+  text-align: center;
+}
+
+.alert {
+  margin: 0 !important;
+  border-radius: 0 !important;
+  width: 100%;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 
