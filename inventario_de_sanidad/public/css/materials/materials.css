@@ -18,21 +18,6 @@
     opacity: 0.5;
     transform: scale(0.9);
 }
-.alerts-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 9999;
-    text-align: center;
-}
-
-.alert {
-    margin: 0 !important;
-    border-radius: 0 !important;
-    width: 100%;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
 #btn-submit-alta:not(:disabled) i {
     transition: transform 0.2s ease;
 }
@@ -230,17 +215,5 @@ input[type="text"], form select {
 }
 .actualizar_reserva{
     margin-top: 10px;
-}
-/* PARA LOS ERRORES */
-.input-error {
-    border: 2px solid #e74c3c !important;
-    background-color: #fff5f5;
-}
-
-.input-error-msg {
-    color: #e74c3c;
-    font-size: 12px;
-    margin-top: 4px;
-    display: block;
 }
 
