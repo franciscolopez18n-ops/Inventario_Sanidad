@@ -66,6 +66,8 @@
                                 <input type="number" name="{{ $s }}[use_units]" value="{{ old("$s.use_units", $useRecord->units ?? 0) }}" min="0" required>
                                 @error("$s.use_units") <div class="alert alert-error alert-form">{{ $message }}</div> @enderror
                             </div>
+
+                            
                             <div>
                                 <label>Cantidad Mínima</label>
                                 <input type="number" name="{{ $s }}[use_min_units]" value="{{ old("$s.use_min_units", $useRecord->min_units ?? 0) }}" min="0" required>
