@@ -201,11 +201,19 @@ async function getMaterialData() {
 
     // Validaciones del formulario.
     let name = form.name.value.trim();
-    if (!name) errorsMap.name = "El nombre es obligatorio.";
+    if (!name) {
+        errorsMap.name = "El nombre es obligatorio.";
+    } else if (name.length > 60) {
+        errorsMap.name = "El nombre no puede superar 60 caracteres.";
+    }
 
     let description = form.description.value.trim();
-    if (!description) errorsMap.description = "La descripción es obligatoria.";
-
+    if (!description) {
+        errorsMap.description = "La descripción es obligatoria.";
+    } else if (description.length > 255) {
+        errorsMap.description = "La descripción no puede superar 255 caracteres.";
+    }
+    
     let storage = form.storage.value;
     if (!storage) errorsMap.storage = "Debes seleccionar un almacenamiento.";
 
@@ -371,12 +379,3 @@ function deleteMaterialData(event) {
 function deleteCookie(name) {
     document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
 }
-// --------------------------------------------------------------------------------------------
-// Función para que los avisos desaparezcan solos
-
-// Muestra los errores como un alert.
-
-
-
-// --------------------------------------------------------------------------------------------
-// CREO Q PUEDO ELIMINAR ESTO

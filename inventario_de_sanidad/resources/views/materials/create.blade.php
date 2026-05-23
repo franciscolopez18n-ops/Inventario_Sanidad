@@ -126,30 +126,33 @@
     </form>
 
     {{-- Cesta --}}
-    <div class="basket-section hidden">
-        <h4 class="basket-title">Cesta de Materiales</h4>
-        
-        <div class="table-wrapper">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th rowspan="2">Nombre</th>
-                        <th rowspan="2">Descripción</th>
-                        <th rowspan="2">Localización</th>
-                        <th colspan="5">Uso</th>
-                        <th colspan="4">Reserva</th>
-                        <th rowspan="2">Imagen</th>
-                        <th rowspan="2"></th>
-                    </tr>
-                    <tr>
-                        <th>Cant.</th><th>Mín</th><th>Armario</th><th>Balda</th><th>Cajón</th>
-                        <th>Cant.</th><th>Mín</th><th>Armario</th><th>Balda</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+    <div class="contenedor-tabla">
+        <div class="basket-section hidden">
+            <h4 class="basket-title">Cesta de Materiales</h4>
+            
+            <div class="table-wrapper">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Nombre</th>
+                            <th rowspan="2">Descripción</th>
+                            <th rowspan="2">Localización</th>
+                            <th colspan="5">Uso</th>
+                            <th colspan="4">Reserva</th>
+                            <th rowspan="2">Imagen</th>
+                            <th rowspan="2"></th>
+                        </tr>
+                        <tr>
+                            <th>Cant.</th><th>Mín</th><th>Armario</th><th>Balda</th><th>Cajón</th>
+                            <th>Cant.</th><th>Mín</th><th>Armario</th><th>Balda</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
         </div>
     </div>
+</div>
 @endsection
 
 @push('scripts')
