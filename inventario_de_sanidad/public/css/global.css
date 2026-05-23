@@ -292,6 +292,7 @@ a {
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
+
 /* ANIMACIONES DE ENTRADA Y DE SALIDA */
 .fade-in {
   animation: fadeIn 0.4s ease forwards;

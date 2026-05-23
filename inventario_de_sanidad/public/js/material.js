@@ -101,6 +101,17 @@ function setCookieValue(basket, name) {
 
     return true;
 }
+function cortaCadena(text, maxLength = 50) {
+    if (!text) {
+        return "";
+    }
+    
+    if (text.length > maxLength) {
+        return text.substring(0, maxLength) + "...";
+    } else {
+        return text;
+    }
+}
 
 // Crea una celda <td> en una fila con contenido y etiqueta opcional.
 function createRow(content, trElement, label) {
@@ -133,18 +144,18 @@ function renderBasket() {
             let newTr = document.createElement("tr");
 
             // Añadir celdas con la información del material.
-            createRow(basket[i].name, newTr, "Nombre");
-            createRow(basket[i].description, newTr, "Descripción");
-            createRow(basket[i].storage, newTr, "Localización");
-            createRow(basket[i].units_use, newTr, "Cant. Uso");
-            createRow(basket[i].min_units_use, newTr, "Mín. Uso");
-            createRow(basket[i].cabinet_use, newTr, "Armario Uso");
-            createRow(basket[i].shelf_use, newTr, "Balda Uso");
-            createRow(basket[i].drawer_use, newTr, "Cajón Uso");
-            createRow(basket[i].units_reserve, newTr, "Cant. Reserva");
-            createRow(basket[i].min_units_reserve, newTr, "Mín. Reserva");
-            createRow(basket[i].cabinet_reserve, newTr, "Armario Reserva");
-            createRow(basket[i].shelf_reserve, newTr, "Balda Reserva");
+            createRow(cortaCadena(basket[i].name, 40), newTr, "Nombre");
+            createRow(cortaCadena(basket[i].description, 60), newTr, "Descripción");
+            createRow(cortaCadena(basket[i].storage, 40), newTr, "Localización");
+            createRow(cortaCadena(basket[i].units_use, 10), newTr, "Cant. Uso");
+            createRow(cortaCadena(basket[i].min_units_use, 10), newTr, "Mín. Uso");
+            createRow(cortaCadena(basket[i].cabinet_use, 20), newTr, "Armario Uso");
+            createRow(cortaCadena(basket[i].shelf_use, 20), newTr, "Balda Uso");
+            createRow(cortaCadena(basket[i].drawer_use, 20), newTr, "Cajón Uso");
+            createRow(cortaCadena(basket[i].units_reserve, 10), newTr, "Cant. Reserva");
+            createRow(cortaCadena(basket[i].min_units_reserve, 10), newTr, "Mín. Reserva");
+            createRow(cortaCadena(basket[i].cabinet_reserve, 20), newTr, "Armario Reserva");
+            createRow(cortaCadena(basket[i].shelf_reserve, 20), newTr, "Balda Reserva");
 
             // Imagen del material.
             let imageTd = document.createElement("td");
