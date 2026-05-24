@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Storage;
+use App\Constants\FlashType;
 use ZipArchive;
 
 class QrController extends Controller {
@@ -22,16 +23,16 @@ class QrController extends Controller {
         return response()->file($path, ['Content-Type' => 'image/svg+xml']);
     }
 
-    public function descargarZip()
-    {
+    public function downloadZip() {
         $storages = Storage::with('material')->get();
 
         $zip = new \ZipArchive;
-        $nombre = 'qrcodes.zip';
 
-        $zipPath = storage_path($nombre);
+        $zipName = 'qrcodes_' . time() . '_' . uniqid() . '.zip';
+        $zipPath = storage_path('app/' . $zipName); 
 
         if ($zip->open($zipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) === TRUE) {
+            $filesAdded = 0;
 
             foreach ($storages as $storage) {
                 if (!$storage->qr_path) continue;
@@ -40,20 +41,28 @@ class QrController extends Controller {
 
                 if (file_exists($path)) {
                     $zip->addFile($path, basename($path));
+                    $filesAdded++;
                 }
             }
 
             $zip->close();
+
+            if ($filesAdded === 0) {
+                if (file_exists($zipPath)) unlink($zipPath);
+                return back()->with(FlashType::ERROR, 'No hay códigos QR disponibles para descargar');
+            }
+
         } else {
-            abort(500, 'No se pudo crear el ZIP');
+            return back()->with(FlashType::ERROR, 'No se pudo crear el ZIP');
         }
 
-        return response()->download($zipPath)->deleteFileAfterSend(true);
+        return response()->download($zipPath, 'qrcodes.zip')->deleteFileAfterSend(true);
     }
 
-    public function print()
-    {
+
+    public function print() {
         $storages = Storage::with('material')->get();
+
         return view('qrcodes.print', compact('storages'));
     }
 }

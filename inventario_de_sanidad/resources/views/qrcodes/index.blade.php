@@ -9,7 +9,7 @@
 @section('content')
 <!-- PARA DESCARGAR UN ZIP CON TODO -->
 <div class="qr-zip">
-    <a href="{{ route('qrcodes.descargarZip') }}" class="btn btn-primary">
+    <a href="{{ route('qrcodes.downloadZip') }}" class="btn btn-primary">
         Descargar todos los QR (ZIP)
     </a>
     <a href="{{ route('qrcodes.print') }}" class="qr-print-btn" target="_blank">

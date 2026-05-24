@@ -77,10 +77,8 @@ Route::middleware('auth')->group(function () {
         //Códigos QR    
         Route::prefix('qrcodes')->group(function () {
             Route::get('/', [QrController::class, 'index'])->name('qrcodes.index');
-            Route::get('/download-zip', [QrController::class, 'descargarZip'])
-                ->name('qrcodes.descargarZip');
-            Route::get('/qrcodes/print', [QrController::class, 'print'])
-                ->name('qrcodes.print');
+            Route::get('/download-zip', [QrController::class, 'downloadZip'])->name('qrcodes.downloadZip');
+            Route::get('/qrcodes/print', [QrController::class, 'print'])->name('qrcodes.print');
             Route::get('/{file}', [QrController::class, 'show'])->name('qr.show');
         });
         
