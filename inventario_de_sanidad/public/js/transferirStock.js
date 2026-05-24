@@ -20,3 +20,14 @@ function moveStock(storageKey, direction) {
     useInput.value = use;
     reserveInput.value = reserve;
 }
+function applySupply(storage) {
+    const input = document.getElementById(`supply_units_${storage}`);
+    let value = parseInt(input.value || 0);
+
+    if (value <= 0) return;
+
+    const reserve = document.querySelector(`[name="${storage}[reserve_units]"]`);
+    reserve.value = parseInt(reserve.value || 0) + value;
+
+    input.value = 0;
+}

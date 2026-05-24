@@ -146,6 +146,12 @@
                                 <input type="number" name="{{ $s }}[reserve_shelf]" value="{{ old("$s.reserve_shelf", $reserveRecord->shelf ?? 0) }}" min="1" required>
                                 @error("$s.reserve_shelf") <div class="alert alert-error alert-form">{{ $message }}</div> @enderror
                             </div>
+                            <div class="supply-box">
+                                <label>Suministrar nuevas unidades</label>
+                                <input type="number" id="supply_units_{{ $s }}" min="0" value="0">
+                                <button type="button" onclick="applySupply('{{ $s }}')">Añadir</button>
+                            </div>
+
                         </div>
                     </div>
 
