@@ -28,10 +28,12 @@ function autoHideBackendAlerts() {
 // DESAPARECEN EN 3 SEGUNDOS
 function autoHideElement(element) {
     setTimeout(() => {
-        element.style.transition = "opacity 0.5s ease";
-        element.style.opacity = "0";
+        element.classList.add("hide");
 
-        setTimeout(() => element.remove(), 500);
+        setTimeout(() => {
+            element.remove();
+        }, 350);
+
     }, 3000);
 }
 
@@ -79,9 +81,4 @@ function showInputErrors(form, errorsMap) {
     });
 
     return hasError;
-}
-
-// ALERTA GENERAL DE VALIDACIÓN
-function alertaError() {
-    showGlobalAlert("error", "ERROR: revisa los campos del formulario");
 }

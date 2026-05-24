@@ -157,10 +157,5 @@
 
 @push('scripts')
     <script src="{{ asset('js/previewImage.js') }}"></script>
-
-    {{-- IMPORTANTE: primero alerts.js --}}
-    <script src="{{ asset('js/alerts.js') }}"></script>
-
-    {{-- luego el resto --}}
     <script src="{{ asset('js/material.js') }}"></script>
 @endpush

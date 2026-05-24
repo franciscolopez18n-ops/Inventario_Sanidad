@@ -36,8 +36,8 @@ class LoginController extends Controller {
             'user' => 'required',
             'password' => 'required'
         ], [
-            'user.required' => 'Debe introducir su número de usuario.',
-            'password.required' => 'Debe introducir su contraseña.',
+            'user.required' => 'Debe introducir su correo electrónico',
+            'password.required' => 'Debe introducir su contraseña',
         ]);
 
         // Buscar usuario por su ID (user_id)

@@ -140,7 +140,7 @@ function addMaterialDataCookie() {
     
         // Si no se encontró el material en la lista, se muestra un mensaje de error.
         if (!materialId) {
-            showAlert("error", "Material no encontrado");
+            showGlobalAlert("error", "Material no encontrado");
         } else {
             // Se crea un objeto con los datos del material.
             let materialData = {
@@ -155,7 +155,7 @@ function addMaterialDataCookie() {
             // Se verifica si el material ya existe en la cesta.
             let exists = basket.some(item => item.material_id === materialId);
             if (exists) {
-                showAlert("warning", "El material ya está añadido");
+                showGlobalAlert("warning", "El material ya está añadido");
             } else {
                 // Si no existe, se añade el material a la cesta.
                 basket.push(materialData);
@@ -205,21 +205,4 @@ function deleteMaterialDataCookie(event) {
         // Se actualiza la cookie con la cesta actualizada.
         setCookieValue(basket);
     }
-}
-
-function showAlert(type, message) {
-    let alertsContainer = document.querySelector(".alerts-container");
-
-    if (!alertsContainer) return;
-
-    let alert = document.createElement("p");
-
-    alert.className = `alert alert-${type}`;
-    alert.textContent = message;
-
-    alertsContainer.appendChild(alert);
-
-    setTimeout(() => {
-        alert.remove();
-    }, 5000);
 }

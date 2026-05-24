@@ -47,12 +47,6 @@
     max-width: 400px;
 }
 
-.is-invalid {
-    border: 2px solid #dc3545 !important;
-    background-color: #fff0f1;
-    color: #842029 !important;
-}
-
 @media (min-width: 768px) {
     .alta-usuarios-container {
         padding: 3rem;
