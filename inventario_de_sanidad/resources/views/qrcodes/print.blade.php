@@ -86,13 +86,9 @@
         <div class="qr-item">
             <img src="{{ route('qr.show', basename($storage->qr_path)) }}">
             <div class="name">{{ $storage->material->name }}</div>
-            @php
-                $count = $storages->where('material_id', $storage->material_id)->count();
-            @endphp
+         
             <div class="lugar">
-                @if($count === 2)
-                    CAE + Odontología
-                @elseif($storage->storage === 'CAE')
+                @if($storage->storage === 'CAE')
                     CAE
                 @elseif($storage->storage === 'odontology')
                     Odontología

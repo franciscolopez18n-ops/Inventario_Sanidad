@@ -25,14 +25,10 @@
                  style="width: 80px; height: 80px;"><br>
             
             <p style="margin: 4px 0 0; font-size: 12px; font-weight: bold;">{{ $storage->material->name }}</p>
-            @php
-                $count = $storages->where('material_id', $storage->material_id)->count();
-            @endphp
+           
 
             <p style="margin: 2px 0 0; font-size: 11px; color: #666;">
-                @if($count === 2)
-                    CAE + Odontología
-                @elseif($storage->storage === 'CAE')
+                @if($storage->storage === 'CAE')
                     CAE
                 @elseif($storage->storage === 'odontology')
                     Odontología
