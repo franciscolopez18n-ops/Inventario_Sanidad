@@ -300,22 +300,3 @@ input[type="text"], form select {
     font-size: 20px;
     color: #64748b;
 }
-.separacion-form{
-    margin-top: 10px;
-}
-
-.boton-añadir {
-    margin-top: 10px;
-    background: #2667f5;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.boton-añadir:hover {
-    background: #1b4bd1;
-}
-
