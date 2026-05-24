@@ -63,29 +63,29 @@
                         <p><strong>Uso</strong></p>
                         <div class="form-grid">
                             <!-- SOLO LECTURA -->
-                            <div>
+                            <div class="separacion-form">
                                 <label>Cantidad</label>
                                 <input  class="soloLectura" type="number" name="{{ $s }}[use_units]" value="{{ old("$s.use_units", $useRecord->units ?? 0) }}" readonly>
                                 @error("$s.use_units") <div class="alert alert-error alert-form">{{ $message }}</div> @enderror
                             </div>
 
                             
-                            <div>
+                            <div class="separacion-form">
                                 <label>Cantidad Mínima</label>
                                 <input type="number" name="{{ $s }}[use_min_units]" value="{{ old("$s.use_min_units", $useRecord->min_units ?? 0) }}" min="0" required>
                                 @error("$s.use_min_units") <div class="alert alert-error alert-form">{{ $message }}</div> @enderror
                             </div>
-                            <div>
+                            <div class="separacion-form">
                                 <label>Armario</label>
                                 <input type="number" name="{{ $s }}[use_cabinet]" value="{{ old("$s.use_cabinet", $useRecord->cabinet ?? 0) }}" min="1" required>
                                 @error("$s.use_cabinet") <div class="alert alert-error alert-form">{{ $message }}</div> @enderror
                             </div>
-                            <div>
+                            <div class="separacion-form">
                                 <label>Balda</label>
                                 <input type="number" name="{{ $s }}[use_shelf]" value="{{ old("$s.use_shelf", $useRecord->shelf ?? 0) }}" min="1" required>
                                 @error("$s.use_shelf") <div class="alert alert-error alert-form">{{ $message }}</div> @enderror
                             </div>
-                            <div>
+                            <div class="separacion-form">
                                 <label>Cajón</label>
                                 <input type="number" name="{{ $s }}[use_drawer]" value="{{ old("$s.use_drawer", $useRecord->drawer ?? 0) }}" min="1" required>
                                 @error("$s.use_drawer") <div class="alert alert-error alert-form">{{ $message }}</div> @enderror
@@ -126,30 +126,31 @@
                         <!-- RESERVA -->
                         <p><strong>Reserva</strong></p>
                         <div class="form-grid">
-                            <div>
+                            <div class="separacion-form">
                                 <label>Cantidad</label>
                                 <input class="soloLectura" type="number" name="{{ $s }}[reserve_units]" value="{{ old("$s.reserve_units", $reserveRecord->units ?? 0) }}" min="0" readonly>
                                 @error("$s.reserve_units") <div class="alert alert-error alert-form">{{ $message }}</div> @enderror
                             </div>
-                            <div>
+                            <div class="separacion-form">
                                 <label>Cantidad Mínima</label>
                                 <input type="number" name="{{ $s }}[reserve_min_units]" value="{{ old("$s.reserve_min_units", $reserveRecord->min_units ?? 0) }}" min="0" required>
                                 @error("$s.reserve_min_units") <div class="alert alert-error alert-form">{{ $message }}</div> @enderror
                             </div>
-                            <div>
+                            <div class="separacion-form">
                                 <label>Armario</label><br>
                                 <input type="text" name="{{ $s }}[reserve_cabinet]" value="{{ old("$s.reserve_cabinet", $reserveRecord->cabinet ?? '') }}" required>
                                 @error("$s.reserve_cabinet") <div class="alert alert-error alert-form">{{ $message }}</div> @enderror
                             </div>
-                            <div>
+                            <div class="separacion-form">
                                 <label>Balda</label>
                                 <input type="number" name="{{ $s }}[reserve_shelf]" value="{{ old("$s.reserve_shelf", $reserveRecord->shelf ?? 0) }}" min="1" required>
                                 @error("$s.reserve_shelf") <div class="alert alert-error alert-form">{{ $message }}</div> @enderror
                             </div>
-                            <div class="supply-box">
+                            <div class="supply-box separacion-form">
                                 <label>Suministrar nuevas unidades</label>
-                                <input type="number" id="supply_units_{{ $s }}" min="0" value="0">
-                                <button type="button" onclick="applySupply('{{ $s }}')">Añadir</button>
+                                <input type="number" id="supply_units_{{ $s }}" min="0">
+                                <span class="input-error-msg" id="supply_error_{{ $s }}" style="display:none;"></span>
+                                <button class="boton-añadir" type="button" onclick="añadirReserva('{{ $s }}')">Añadir</button>
                             </div>
 
                         </div>
