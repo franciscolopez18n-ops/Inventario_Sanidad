@@ -226,46 +226,112 @@ a {
   background-color: #dc2626;
 }
 
-/* === Mensajes flash === */
+/* =========================
+   CONTENEDOR DE ALERTAS
+========================= */
+.alerts-container {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 9999;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  width: 320px;
+  pointer-events: none;
+}
+
+/* =========================
+   ALERTAS
+========================= */
 .alert {
-  padding: 0.8rem 1.2rem;
-  border-left: 4px solid var(--alert-border);
-  background-color: var(--alert-bg);
+  position: relative;
+
+  padding: 14px 18px;
+  border-radius: 14px;
+
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.4;
+
+  border: 1px solid var(--alert-border);
+  border-left: 5px solid var(--alert-border);
+
+  background: var(--alert-bg);
   color: var(--alert-text);
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
+
+  box-shadow:
+      0 10px 25px rgba(0,0,0,0.08),
+      0 2px 6px rgba(0,0,0,0.05);
+
+  backdrop-filter: blur(6px);
+
+  pointer-events: auto;
+
+  animation: slideIn 0.35s ease;
 }
 
-.alert-form {
-  margin-top: 0.25rem;
-  width: 100%;
-  max-width: 400px;
-}
-
+/* =========================
+   TIPOS
+========================= */
 .alert-success {
-  --alert-bg: #e6f5ea;
-  --alert-border: #3bb54a;
-  --alert-text: #2e7d32;
+  --alert-bg: #ecfdf3;
+  --alert-border: #22c55e;
+  --alert-text: #166534;
 }
 
 .alert-error {
-  --alert-bg: #fdecea;
-  --alert-border: #e53935;
-  --alert-text: #c62828;
+  --alert-bg: #fef2f2;
+  --alert-border: #ef4444;
+  --alert-text: #991b1b;
 }
 
 .alert-warning {
-  --alert-bg: #fff4e5;
-  --alert-border: #f0a500;
-  --alert-text: #8a6d1d;
+  --alert-bg: #fff7ed;
+  --alert-border: #f59e0b;
+  --alert-text: #92400e;
 }
 
 .alert-info {
-  --alert-bg: #e7f3fe;
-  --alert-border: #2196f3;
-  --alert-text: #0b5ed7;
+  --alert-bg: #eff6ff;
+  --alert-border: #3b82f6;
+  --alert-text: #1d4ed8;
 }
-/* PARA LOS ERRORES */
+
+/* =========================
+  ANIMACIONES
+========================= */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-25px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.alert.hide {
+  animation: slideOut 0.35s ease forwards;
+}
+
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+}
+
+/* PARA LOS ERRORES DE FORMULARIO */
 .input-error {
   border: 2px solid #e74c3c !important;
   background-color: #fff5f5;
@@ -277,23 +343,6 @@ a {
   margin-top: 4px;
   display: block;
 }
-
-.alerts-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 9999;
-  text-align: center;
-}
-
-.alert {
-  margin: 0 !important;
-  border-radius: 0 !important;
-  width: 100%;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
 
 /* ANIMACIONES DE ENTRADA Y DE SALIDA */
 .fade-in {

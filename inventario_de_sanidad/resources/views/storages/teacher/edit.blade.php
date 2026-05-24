@@ -19,16 +19,16 @@
 
             <div class="form-group">
                 <label for="use_units">Unidades en Uso</label>
-                <input id="use_units" type="number" name="use_units" class="form-control input-gray" value="{{ $useRecord->units ?? '0' }}" readonly>
+                <input id="use_units" type="number" class="input-gray" value="{{ $useRecord->units ?? '0' }}" readonly>
             </div>
-            @error('use_units')
-                <div class="alert alert-error alert-form">{{ $message }}</div>
-            @enderror
 
             <div class="form-group">
                 <label for="subtract_units">Unidades a restar</label>
-                <input id="subtract_units" type="number" placeholder="Cantidad a restar" name="subtract_units" class="form-control" value="0" min="0" max="{{ $useRecord->units ?? '0' }}" required>
+                <input id="subtract_units" type="number" placeholder="Cantidad a restar" name="subtract_units" value="0" min="0" max="{{ $useRecord->units ?? '0' }}" class="@error('subtract_units') input-error @enderror">
             </div>
+            @error('subtract_units')
+                <small class="input-error-msg">{{ $message }}</small>
+            @enderror
             
             <br>
             <div class="form-actions">
@@ -37,10 +37,6 @@
             </div>
             <br>
         </form>
-
-        @error('subtract_units')
-            <p class="alert alert-error alert-form">{{ $message }}</p>
-        @enderror
     </div>
 </div>
 @endsection

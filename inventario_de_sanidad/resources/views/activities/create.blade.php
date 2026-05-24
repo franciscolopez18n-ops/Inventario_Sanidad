@@ -17,24 +17,24 @@
                 @csrf
                 <div class="">
                     <label for="title"></label>
-                    <textarea name="title" placeholder="Título descriptivo de la actividad..." id="title" rows="4" cols="50" maxlength="100" required>{{ old('title') }}</textarea>
+                    <textarea name="title" placeholder="Título descriptivo de la actividad..." id="title" rows="4" cols="50" maxlength="100" class="@error('title') input-error @enderror">{{ old('title') }}</textarea>
                     @error('title')
-                        <div class="alert alert-error alert-form">{{ $message }}</div>
+                        <small class="input-error-msg">{{ $message }}</small>
                     @enderror
                 </div>
 
                 <div class="">
                     <label for="activity_datetime">Fecha y hora:</label>
-                    <input type="datetime-local" id="activity_datetime" name="activity_datetime" value="{{ old('activity_datetime') }}">
+                    <input type="datetime-local" id="activity_datetime" name="activity_datetime" value="{{ old('activity_datetime') }}" class="@error('activity_datetime') input-error @enderror">
                     @error('activity_datetime')
-                        <div class="alert alert-error alert-form">{{ $message }}</div>
+                        <small class="input-error-msg">{{ $message }}</small>
                     @enderror
                 </div>
 
                 <div class="">
                     <label for="teacher_id">Profesor:</label>
                     <td data-label="Profesor">
-                        <select name="teacher_id" id="teacher_id">
+                        <select name="teacher_id" id="teacher_id" class="@error('teacher_id') input-error @enderror">
                             <option value="" disabled {{ old('teacher_id') ? '' : 'selected' }}>Selecciona un profesor...</option>
                             @foreach ($teachers as $teacher)
                                 <option value="{{ $teacher->user_id }}" {{ old('teacher_id') == $teacher->user_id ? 'selected' : '' }}>
@@ -44,7 +44,7 @@
                         </select>
                     </td>
                     @error('teacher_id')
-                        <div class="alert alert-error alert-form">{{ $message }}</div>
+                        <small class="input-error-msg">{{ $message }}</small>
                     @enderror
                 </div>
 

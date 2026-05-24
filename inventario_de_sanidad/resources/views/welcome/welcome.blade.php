@@ -19,19 +19,11 @@
         <p>En el primer ingreso a la página se ha de cambiar la contraseña.</p>
         <form id="FirstLogForm" action="{{ route('changePasswordFirstLog') }}" method="POST">
             @csrf
-            <input type="password" id="newPassword" name="newPassword" placeholder="Nueva contraseña">
-            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirma la nueva contraseña">
 
-            {{-- Mensajes de error --}}
-            @if ($errors->any())
-                <div class="alert alert-error">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+            <input type="password" id="newPassword" name="newPassword" placeholder="Nueva contraseña" class="@error('newPassword') input-error @enderror">
+            @error('newPassword') <small class="input-error-msg">{{ $message }}</small> @enderror
+            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirma la nueva contraseña" class="@error('confirmPassword') input-error @enderror">
+            @error('confirmPassword') <small class="input-error-msg">{{ $message }}</small> @enderror
 
             <button class="btn btn-primary" type="submit">Cambiar Contraseña</button>
         </form>

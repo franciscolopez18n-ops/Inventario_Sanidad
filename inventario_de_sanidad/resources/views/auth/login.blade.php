@@ -27,16 +27,16 @@
                     @csrf
                     
                     <div class="input-group">
-                        <input type="text" name="user" placeholder="Correo electrónico" value="{{ old('user') }}">
+                        <input type="text" name="user" placeholder="Correo electrónico" value="{{ old('user') }}" class="@error('user') input-error @enderror">
                         @error('user')
-                            <div class="error-messages">{{ $message }}</div>
+                            <small class="input-error-msg">{{ $message }}</small>
                         @enderror
                     </div>
 
                     <div class="input-group">
-                        <input type="password" name="password" placeholder="Contraseña">
+                        <input type="password" name="password" placeholder="Contraseña" class="@error('password') input-error @enderror">
                         @error('password')
-                            <div class="error-messages">{{ $message }}</div>
+                            <small class="input-error-msg">{{ $message }}</small>
                         @enderror
                     </div>
 
