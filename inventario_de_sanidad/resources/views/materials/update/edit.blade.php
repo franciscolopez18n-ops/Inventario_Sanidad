@@ -29,7 +29,7 @@
 
         <div class="form-group">
             <label for="description">Descripción</label>
-            <textarea name="description" id="description" rows="3" class="@error('name') input-error @enderror">{{ old('description', $material->description) }}</textarea>
+            <textarea name="description" id="description" rows="3" class="@error('description') input-error @enderror">{{ old('description', $material->description) }}</textarea>
             @error('description')
                 <small class="input-error-msg">{{ $message }}</small>
             @enderror
@@ -62,58 +62,45 @@
                         <!-- USO -->
                         <p><strong>Uso</strong></p>
                         <div class="form-grid">
-                            <!-- SOLO LECTURA -->
                             <div>
                                 <label>Cantidad</label>
-                                <input  class="soloLectura" type="number" name="{{ $s }}[use_units]" value="{{ old("$s.use_units", $useRecord->units ?? 0) }}" class="@error('name') input-error @enderror" readonly>
+                                <input type="number" name="{{ $s }}[use_units]" value="{{ old("$s.use_units", $useRecord->units ?? 0) }}" class="soloLectura @error("$s.use_units") input-error @enderror" readonly>
                                 @error("$s.use_units") <small class="input-error-msg">{{ $message }}</small> @enderror
                             </div>
-                            
                             <div>
                                 <label>Cantidad Mínima</label>
-                                <input type="number" name="{{ $s }}[use_min_units]" value="{{ old("$s.use_min_units", $useRecord->min_units ?? 0) }}" class="@error('name') input-error @enderror">
+                                <input type="number" name="{{ $s }}[use_min_units]" value="{{ old("$s.use_min_units", $useRecord->min_units ?? 0) }}" class="@error("$s.use_min_units") input-error @enderror">
                                 @error("$s.use_min_units") <small class="input-error-msg">{{ $message }}</small> @enderror
                             </div>
                             <div>
                                 <label>Armario</label>
-                                <input type="number" name="{{ $s }}[use_cabinet]" value="{{ old("$s.use_cabinet", $useRecord->cabinet ?? 0) }}" class="@error('name') input-error @enderror">
+                                <input type="number" name="{{ $s }}[use_cabinet]" value="{{ old("$s.use_cabinet", $useRecord->cabinet ?? 0) }}" class="@error("$s.use_cabinet") input-error @enderror">
                                 @error("$s.use_cabinet") <small class="input-error-msg">{{ $message }}</small> @enderror
                             </div>
                             <div>
                                 <label>Balda</label>
-                                <input type="number" name="{{ $s }}[use_shelf]" value="{{ old("$s.use_shelf", $useRecord->shelf ?? 0) }}" class="@error('name') input-error @enderror">
+                                <input type="number" name="{{ $s }}[use_shelf]" value="{{ old("$s.use_shelf", $useRecord->shelf ?? 0) }}" class="@error("$s.use_shelf") input-error @enderror">
                                 @error("$s.use_shelf") <small class="input-error-msg">{{ $message }}</small> @enderror
                             </div>
                             <div>
                                 <label>Cajón</label>
-                                <input type="number" name="{{ $s }}[use_drawer]" value="{{ old("$s.use_drawer", $useRecord->drawer ?? 0) }}" class="@error('name') input-error @enderror">
+                                <input type="number" name="{{ $s }}[use_drawer]" value="{{ old("$s.use_drawer", $useRecord->drawer ?? 0) }}" class="@error("$s.use_drawer") input-error @enderror">
                                 @error("$s.use_drawer") <small class="input-error-msg">{{ $message }}</small> @enderror
                             </div>
                         </div>
 
                         <!-- BOTONES PARA TRANSFERIR -->
                         <div class="transferir-stock">
-    
-                            <div class="tituloTransferir">
-                                Transferir unidades
-                            </div>
-
+                            <div class="tituloTransferir">Transferir unidades</div>
                             <div class="contenedorTransferir">
-
-                                <button type="button"
-                                        class="transferir-btn down"
-                                        onclick="moveStock('{{ $s }}', -1)">
+                                <button type="button" class="transferir-btn down" onclick="moveStock('{{ $s }}', -1)">
                                     <span>A reserva</span>
                                     <small>Uso → Reserva</small>
                                 </button>
-
                                 <div class="transfer-center">
                                     <div class="transfer-icon">⇄</div>
                                 </div>
-
-                                <button type="button"
-                                        class="transferir-btn up"
-                                        onclick="moveStock('{{ $s }}', 1)">
+                                <button type="button" class="transferir-btn up" onclick="moveStock('{{ $s }}', 1)">
                                     <span>A uso</span>
                                     <small>Uso ← Reserva</small>
                                 </button>
@@ -123,31 +110,36 @@
                         <!-- RESERVA -->
                         <p><strong>Reserva</strong></p>
                         <div class="form-grid">
+                            <label>Nuevas unidades en reserva</label>
+                            <div style="display:flex; gap:0.5rem;">
+                                <input type="number" name="{{ $s }}[suministro]" min="0" placeholder="Total de unidades"
+                                    onkeydown="if(event.key==='Enter'){event.preventDefault();suministrar('{{ $s }}');}">
+                                <button type="button" class="btn btn-primary" onclick="suministrar('{{ $s }}')">Establecer</button>
+                            </div>
                             <div>
                                 <label>Cantidad</label>
-                                <input class="soloLectura" type="number" name="{{ $s }}[reserve_units]" value="{{ old("$s.reserve_units", $reserveRecord->units ?? 0) }}" class="@error('name') input-error @enderror" readonly>
+                                <input type="number" name="{{ $s }}[reserve_units]" value="{{ old("$s.reserve_units", $reserveRecord->units ?? 0) }}" class="soloLectura @error("$s.reserve_units") input-error @enderror" readonly>
                                 @error("$s.reserve_units") <small class="input-error-msg">{{ $message }}</small> @enderror
                             </div>
                             <div>
                                 <label>Cantidad Mínima</label>
-                                <input type="number" name="{{ $s }}[reserve_min_units]" value="{{ old("$s.reserve_min_units", $reserveRecord->min_units ?? 0) }}" class="@error('name') input-error @enderror">
+                                <input type="number" name="{{ $s }}[reserve_min_units]" value="{{ old("$s.reserve_min_units", $reserveRecord->min_units ?? 0) }}" class="@error("$s.reserve_min_units") input-error @enderror">
                                 @error("$s.reserve_min_units") <small class="input-error-msg">{{ $message }}</small> @enderror
                             </div>
                             <div>
-                                <label>Armario</label><br>
-                                <input type="text" name="{{ $s }}[reserve_cabinet]" value="{{ old("$s.reserve_cabinet", $reserveRecord->cabinet ?? '') }}" class="@error('name') input-error @enderror">
+                                <label>Armario</label>
+                                <input type="text" name="{{ $s }}[reserve_cabinet]" value="{{ old("$s.reserve_cabinet", $reserveRecord->cabinet ?? '') }}" class="@error("$s.reserve_cabinet") input-error @enderror">
                                 @error("$s.reserve_cabinet") <small class="input-error-msg">{{ $message }}</small> @enderror
                             </div>
                             <div>
                                 <label>Balda</label>
-                                <input type="number" name="{{ $s }}[reserve_shelf]" value="{{ old("$s.reserve_shelf", $reserveRecord->shelf ?? 0) }}" class="@error('name') input-error @enderror">
+                                <input type="number" name="{{ $s }}[reserve_shelf]" value="{{ old("$s.reserve_shelf", $reserveRecord->shelf ?? 0) }}" class="@error("$s.reserve_shelf") input-error @enderror">
                                 @error("$s.reserve_shelf") <small class="input-error-msg">{{ $message }}</small> @enderror
                             </div>
                         </div>
                     </div>
                 </fieldset>
             @endforeach
-            
         </div>
 
         <div class="form-actions">
