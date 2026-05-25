@@ -235,7 +235,7 @@ class MaterialManagementController extends Controller {
             });
 
             if (!$hayCambios) {
-                return back()->with(FlashType::INFO, 'No hay nada que actualizar.');
+                return back()->with(FlashType::INFO, 'No hay nada que actualizar');
             }
             
             if ($hayCambios) {
