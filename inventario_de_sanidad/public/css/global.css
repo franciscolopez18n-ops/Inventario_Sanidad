@@ -193,10 +193,10 @@ a {
 
 /* === BOTÓN PRIMARIO === */
 .btn-primary {
-  background-color: var(--primary-300);
+  background-color: var(--primary-200);
 }
 .btn-primary:hover {
-  background-color: var(--primary-200);
+  background-color: var(--primary-100);
 }
 
 /* === BOTÓN SECUNDARIO (Outline) === */
