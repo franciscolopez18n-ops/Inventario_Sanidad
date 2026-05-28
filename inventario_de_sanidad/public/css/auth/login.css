@@ -71,11 +71,11 @@ button i {
   z-index: 100;
 }
 
-.login-box h3 {
+.login-box h1 {
   font-size: 1.5rem;
   font-weight: 600;
   color: var(--primary-100);
-  margin-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .input-group {

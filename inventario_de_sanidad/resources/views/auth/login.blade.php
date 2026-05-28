@@ -22,7 +22,7 @@
         </button>
         <div class="login-wrapper">
             <div class="login-box">
-                <h3>Portal de sanidad</h3>
+                <h1>Portal de sanidad</h1>
                 <form action="{{ route('login.process') }}" method="POST">
                     @csrf
                     
