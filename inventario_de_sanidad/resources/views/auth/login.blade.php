@@ -16,7 +16,7 @@
 <body>
     <div class="bg-login">
         <!-- DarkMode Toggle -->
-        <button class="btn btn-primary btn-notifications" id="theme-switch" type="button">
+        <button class="btn btn-primary btn-notifications" id="theme-switch" type="button" aria-label="Alterna el tema entre claro y oscuro">
             <i class="fa-solid fa-moon"></i>
             <i class="fa-solid fa-sun"></i>
         </button>
