@@ -2,7 +2,7 @@ window.addEventListener("load", inicio);
 
 // Función que retorna una promesa con los datos
 function updateDataRetrieve() {
-    return fetch('/materials/update/materialsData')
+    return fetch('/materials/manage/data')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Error al obtener datos');

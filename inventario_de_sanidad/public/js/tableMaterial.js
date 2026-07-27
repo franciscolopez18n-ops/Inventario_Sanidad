@@ -68,7 +68,7 @@ function renderTable(limit, paginaActual) {
         let tdAc = document.createElement("td");
 
         let linkEdit = document.createElement("a");
-        linkEdit.href = `/materials/update/edit/${item.material_id}`;
+        linkEdit.href = `/materials/manage/edit/${item.material_id}`;
         linkEdit.style.cssText = "color: inherit; text-decoration: none; cursor: pointer;";
 
         let iconEdit = document.createElement("i");
@@ -82,7 +82,7 @@ function renderTable(limit, paginaActual) {
         let tdDel = document.createElement("td");
         let formDel = document.createElement("form");
         formDel.method = "POST";
-        formDel.action = `/materials/update/destroy/${item.material_id}`;
+        formDel.action = `/materials/manage/destroy/${item.material_id}`;
         formDel.id = "btn-delete-" + item.material_id;
 
         let token = getHiddenToken(); // CSRF

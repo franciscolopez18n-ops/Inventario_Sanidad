@@ -17,30 +17,30 @@ use Illuminate\Support\Facades\Storage as StorageFacades;
 class MaterialManagementController extends Controller {
     use HasStorageOperations;
     
-    public function updateIndex() {
-        return view('materials.update.index');
+    public function manageIndex() {
+        return view('materials.manage.index');
     }
 
-    public function updateManualEdit(Material $material) {
+    public function manageManualEdit(Material $material) {
         $storages = Storage::where('material_id', $material->material_id)->get();
 
-        return view('materials.update.edit')
+        return view('materials.manage.edit')
             ->with('material', $material)
             ->with('storages', $storages);
     }
 
-    public function updateQrEdit(Material $material, string $storage) {
+    public function manageQrEdit(Material $material, string $storage) {
         $storageRecord = Storage::where('material_id', $material->material_id)
             ->where('storage', $storage)
             ->firstOrFail();
 
-        return view('materials.update.edit')
+        return view('materials.manage.edit')
             ->with('material', $material)
             ->with('storages', collect([$storageRecord]));
     }
 
     // Actualiza los datos de un material y/o su almacenamiento
-    public function updateSubmit(Material $material, Request $request) {
+    public function manageUpdate(Material $material, Request $request) {
         $storageKeys = array_keys($request->except(['name', 'description', 'image', '_token']));
     
         $rules = [
@@ -217,7 +217,7 @@ class MaterialManagementController extends Controller {
     }
 
     // Elimina un material y su almacenamiento
-    public function updateDestroy(Material $material) {
+    public function manageDestroy(Material $material) {
         try {
             // Verifica si el material aún existe en la base de datos mediante su ID
             if (!Material::find($material->material_id)) {

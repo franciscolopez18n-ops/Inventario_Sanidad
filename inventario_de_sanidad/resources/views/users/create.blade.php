@@ -9,7 +9,7 @@
 @section('content')
 
 <div class="alta-usuarios-container">
-    <form action="{{ route('altaUsers.process') }}" method="POST">
+    <form action="{{ route('users.store') }}" method="POST">
         @csrf
 
         <h1>Alta de usuarios</h1>

@@ -40,29 +40,34 @@ Route::middleware('auth')->group(function () {
 
         // Usuarios
         Route::prefix('users')->group(function () {
-            Route::get('/create', [UsersManagementController::class, 'showCreateUser'])->name('users.createUser');
-            Route::post('/create', [UsersManagementController::class, 'altaUsers'])->name('altaUsers.process');
-            Route::get('/management', [UsersManagementController::class, 'showUsersManagement'])->name('users.management');
-            Route::post('/management/delete', [UsersManagementController::class, 'bajaUsers'])->name('bajaUsers.process');
-            Route::post('/management/password', [UsersManagementController::class, 'changePasswordUser'])->name('password.process');
-            Route::get('/usersManagementData', [UsersManagementController::class, 'usersManagementData']);
+            // Alta de usuarios
+            Route::get('/create', [UsersManagementController::class, 'createForm'])->name('users.create');
+            Route::post('/store', [UsersManagementController::class, 'store'])->name('users.store');
+            
+            // Gestión de usuarios
+            Route::prefix('manage')->group(function () {
+                Route::get('/', [UsersManagementController::class, 'manageIndex'])->name('users.manage.index');
+                Route::get('/data', [UsersManagementController::class, 'usersData']);
+                Route::post('/destroy', [UsersManagementController::class, 'manageDestroy'])->name('users.manage.destroy');
+                Route::post('/password', [UsersManagementController::class, 'manageChangePassword'])->name('users.manage.password');
+            });
         });
 
         // Materiales
         Route::prefix('materials')->group(function () {
-            // Alta de Material
+            // Alta de materiales
             Route::get('/create', [MaterialManagementController::class, 'createForm'])->name('materials.create');
             Route::post('/store', [MaterialManagementController::class, 'storeBatch'])->name('materials.store');
             Route::post('/upload-temp', [MaterialManagementController::class, 'uploadTemp'])->name('materials.uploadTemp');
 
-            // Gestionar material
-            Route::prefix('update')->group(function () {
-                Route::get('/', [MaterialManagementController::class, 'updateIndex'])->name('materials.update.index');
-                Route::get('/materialsData', [MaterialManagementController::class, 'materialsData']);
-                Route::get('/edit/{material}', [MaterialManagementController::class, 'updateManualEdit'])->name('materials.update.manual');
-                Route::post('/submit/{material}', [MaterialManagementController::class, 'updateSubmit'])->name('materials.update.submit');
-                Route::get('/edit/{material}/storage/{storage}', [MaterialManagementController::class, 'updateQrEdit'])->name('materials.update.qr');
-                Route::post('/destroy/{material}', [MaterialManagementController::class, 'updateDestroy'])->name('materials.update.destroy');
+            // Gestión de materiales
+            Route::prefix('manage')->group(function () {
+                Route::get('/', [MaterialManagementController::class, 'manageIndex'])->name('materials.manage.index');
+                Route::get('/data', [MaterialManagementController::class, 'materialsData']);
+                Route::get('/edit/{material}', [MaterialManagementController::class, 'manageManualEdit'])->name('materials.manage.manual');
+                Route::get('/edit/{material}/storage/{storage}', [MaterialManagementController::class, 'manageQrEdit'])->name('materials.manage.qr');
+                Route::post('/update/{material}', [MaterialManagementController::class, 'manageUpdate'])->name('materials.manage.update');
+                Route::post('/destroy/{material}', [MaterialManagementController::class, 'manageDestroy'])->name('materials.manage.destroy');
             });
         });
 

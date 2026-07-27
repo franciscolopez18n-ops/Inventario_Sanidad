@@ -44,15 +44,15 @@
                         </a>
                         <ul class="submenu">
                             <li>
-                                <a href="{{ route('users.createUser') }}"
-                                class="{{ request()->routeIs('users.createUser') ? 'active' : '' }}">
+                                <a href="{{ route('users.create') }}"
+                                class="{{ request()->routeIs('users.create') ? 'active' : '' }}">
                                     <i class="fa-solid fa-user-plus"></i>
                                     <span class="link-text">Alta de usuario</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('users.management') }}"
-                                class="{{ request()->routeIs('users.management') ? 'active' : '' }}">
+                                <a href="{{ route('users.manage.index') }}"
+                                class="{{ request()->routeIs('users.manage.index') ? 'active' : '' }}">
                                     <i class="fa-solid fa-users-gear"></i>
                                     <span class="link-text">Gestión de usuarios</span>
                                 </a>
@@ -75,8 +75,8 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('materials.update.index') }}"
-                                class="{{ request()->routeIs('materials.update.index') ? 'active' : '' }}">
+                                <a href="{{ route('materials.manage.index') }}"
+                                class="{{ request()->routeIs('materials.manage.index') ? 'active' : '' }}">
                                     <i class="fa-solid fa-box-archive"></i>
                                     <span class="link-text">Gestionar material</span>
                                 </a>

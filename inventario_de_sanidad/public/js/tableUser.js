@@ -55,7 +55,7 @@ function renderTable(limit, paginaActual) {
         let tdAc = document.createElement("td");
         let formAc = document.createElement("form");
         formAc.method = "POST";
-        formAc.action = "/users/management/password";
+        formAc.action = "/users/manage/password";
         formAc.id = `btn-ver-${usuario.user_id}`;
 
         let formToken = getHiddenToken(); // Token CSRF oculto
@@ -80,7 +80,7 @@ function renderTable(limit, paginaActual) {
         if ((usuario.first_name + " " + usuario.last_name) != document.getElementsByClassName("user-name")[0].textContent) {
             let formDel = document.createElement("form");
             formDel.method = "POST";
-            formDel.action = "/users/management/delete";
+            formDel.action = "/users/manage/destroy";
             formDel.id = `btn-delete-${usuario.user_id}`;
 
             let formToken = getHiddenToken(); // Token CSRF oculto

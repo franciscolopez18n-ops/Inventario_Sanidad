@@ -44,7 +44,7 @@ class Storage extends Model {
         }
 
         QrCode::size(200)->generate(
-            route('materials.update.qr', [
+            route('materials.manage.qr', [
                 'material' => $materialId,
                 'storage'  => $storage
             ]),

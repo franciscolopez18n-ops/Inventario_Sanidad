@@ -2,7 +2,7 @@ window.addEventListener("load", inicio);
 
 // Función asíncrona que obtiene los datos de usuario del servidor
 async function userDataRetrieve() {
-    return fetch('/users/usersManagementData') // Realiza una solicitud al backend
+    return fetch('/users/manage/data') // Realiza una solicitud al backend
         .then(response => {
             // Verifica que la respuesta sea exitosa
             if (!response.ok) {

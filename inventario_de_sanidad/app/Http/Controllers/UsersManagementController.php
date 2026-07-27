@@ -11,16 +11,14 @@ use App\Mail\ChangePassword;
 use App\Mail\UserCreation;
 use Illuminate\Support\Facades\Mail;
 
-class UsersManagementController extends Controller
-{
+class UsersManagementController extends Controller {
     /**
      * Muestra la vista para crear un nuevo usuario.
      *
      * @return \Illuminate\View\View
      */
-    public function showCreateUser()
-    {
-        return view('users.createUser');
+    public function createForm() {
+        return view('users.create');
     }
 
 
@@ -29,9 +27,8 @@ class UsersManagementController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function showUsersManagement()
-    {
-        return view('users.usersManagement',);
+    public function manageIndex() {
+        return view('users.manage.index',);
     }
 
     /**
@@ -39,8 +36,7 @@ class UsersManagementController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function usersManagementData()
-    {
+    public function usersData() {
         return response()->json(User::orderBy('created_at','desc')->get());
     } 
 
@@ -50,8 +46,7 @@ class UsersManagementController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function altaUsers(Request $request)
-    {
+    public function store(Request $request) {
         // Generar contraseña aleatoria de 8 caracteres
         $password = $this->generateRandomPassword(8);
 
@@ -81,18 +76,19 @@ class UsersManagementController extends Controller
             'first_log'        => false,
             'created_at'       => Carbon::now('Europe/Madrid'),
         ]);
+
         Mail::to($credentials["email"])->send(new UserCreation($password,$credentials["nombre"],$credentials["apellidos"],$credentials["email"]));
 
         return back()->with(FlashType::SUCCESS, 'Usuario ' . $credentials["nombre"] . ' ' . $credentials["apellidos"] . ' creado con éxito.');
     }
 
-    public function generateRandomPassword($length)
-    {
+    public function generateRandomPassword($length) {
         $caracteres = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+[]{}|;:,.<>?';
         $password = '';
         for ($i = 0; $i < $length; $i++) {
             $password .= $caracteres[rand(0, strlen($caracteres) - 1)];
         }
+
         return $password;
     }
     
@@ -102,8 +98,7 @@ class UsersManagementController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function bajaUsers(Request $request)
-    {
+    public function manageDestroy(Request $request) {
         $user = $request["user_id"];
 
         User::where('user_id', $user)->delete();
@@ -111,8 +106,7 @@ class UsersManagementController extends Controller
         return back()->with(FlashType::SUCCESS, 'Usuario dado de baja con éxito.');
     }
 
-    public function changePasswordUser(Request $request)
-    {
+    public function manageChangePassword(Request $request) {
         $user = $request["user_id"];
         $password = $this->generateRandomPassword(8);
         $userInfo = User::where('user_id', $user)->first();

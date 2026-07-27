@@ -12,7 +12,7 @@
     <h1>Editar Material</h1>
 
     <form
-        action="{{ route('materials.update.submit', $material->material_id) }}" 
+        action="{{ route('materials.manage.update', $material->material_id) }}" 
         method="POST"
         enctype="multipart/form-data" 
         class="material-form"
@@ -145,7 +145,7 @@
         <div class="form-actions">
             <input type="submit" value="Actualizar" class="btn btn-success">
             <br><br>
-            <a href="{{ route('materials.update.index') }}" class="btn btn-outline">Volver al listado</a><br>
+            <a href="{{ route('materials.manage.index') }}" class="btn btn-outline">Volver al listado</a><br>
         </div>
         <br>
     </form>
