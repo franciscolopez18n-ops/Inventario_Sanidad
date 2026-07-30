@@ -12,15 +12,14 @@
 @section('content')
 <div class="material-form-wrapper">
     <h1>Alta de Materiales</h1>
-    {{-- Boton de agregar a la cesta --}}
-    <div class="basket-toggle">
-        <button id="toggleBasketBtn" class="botonCarrito" type="button">
-            <i class="fa-solid fa-cart-shopping"></i>
-            <span id="cart-text">Ver carrito</span>
+    {{-- Boton de agregar al lote --}}
+    <div class="batch-toggle">
+        <button id="toggleBatchBtn" class="btn btn-primary" type="button">
+            <span id="batch-text">Ver lote de materiales</span>
         </button>
     </div>
 
-    {{-- Formulario para agregar a la cesta --}}
+    {{-- Formulario para agregar al lote --}}
     <form action="{{ route('materials.store') }}" method="POST" enctype="multipart/form-data" class="material-form" name="form">
         @csrf
 
@@ -120,15 +119,12 @@
                 Alta
             </button>
         </div>
-
-      
-        
     </form>
 
-    {{-- Cesta --}}
+    {{-- Lote --}}
     <div class="contenedor-tabla">
-        <div class="basket-section hidden">
-            <h4 class="basket-title">Cesta de Materiales</h4>
+        <div class="batch-section hidden">
+            <h4 class="batch-title">Lote de materiales</h4>
             
             <div class="table-wrapper">
                 <table class="table">
@@ -157,5 +153,5 @@
 
 @push('scripts')
     <script src="{{ asset('js/previewImage.js') }}"></script>
-    <script src="{{ asset('js/material.js') }}"></script>
+    <script type="module" src="{{ asset('js/material.js') }}"></script>
 @endpush

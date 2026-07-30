@@ -78,28 +78,28 @@ class ActivityController extends Controller {
         ], [
             'title.required'  => 'Debe introducir la descripción de la actividad.',
             'activity_datetime.required' => 'Debe introducir la fecha y hora de la actividad.',
-            'teacher_id.required' =>'Debe introducir el nombre del profesor'
+            'teacher_id.required' =>'Debe introducir el nombre del profesor.'
         ]);
 
-        // Convierte la cadena JSON de la cesta a array asociativo.
+        // Convierte la cadena JSON del lote a array asociativo.
         // Los métodos de Laravel esperan cookies encriptadas por ellos mismos, por lo que hay que leerla en crudo
-        $basket = json_decode(urldecode($_COOKIE['materialsBasket'] ?? '[]'), true);
+        $batch = json_decode(urldecode($_COOKIE['activityFormBatch'] ?? '[]'), true);
 
-        // Si no hay datos válidos en la cesta, redirige con mensaje de error.
-        if (empty($basket)) {
-            return back()->withInput()->with(FlashType::ERROR, 'Debe introducir datos a la cesta.');
+        // Si no hay datos válidos en el lote, redirige con mensaje de error.
+        if (empty($batch)) {
+            return back()->withInput()->with(FlashType::ERROR, 'Debe introducir datos al lote.');
         }
 
         // Comprobaciones de seguridad por si el frontend fue manipulado.
-        foreach ($basket as $material) {
+        foreach ($batch as $material) {
             $validator = validator($material, [
-                'material_id' => 'exists:materials,material_id',
+                'id' => 'exists:materials,material_id',
                 'name' => 'required|string',
                 'units' => 'required|numeric|min:1',
             ]);
 
             if ($validator->fails()) {
-                return back()->withInput()->with(FlashType::ERROR, 'Los datos de la cesta no son válidos.');
+                return back()->withInput()->with(FlashType::ERROR, 'Los datos del lote no son válidos.');
             }
         }
 
@@ -107,7 +107,7 @@ class ActivityController extends Controller {
 
         try {
             // Inicia una transacción de base de datos para garantizar consistencia.
-            DB::transaction(function () use ($basket, $validated, $user_id) {
+            DB::transaction(function () use ($batch, $validated, $user_id) {
                 // Crea una nueva instancia de actividad.
                 $activity = new Activity();
                 $activity->user_id = $user_id;
@@ -117,14 +117,14 @@ class ActivityController extends Controller {
                 $activity->save();
 
                 // Llama a función auxiliar para asociar los materiales a la actividad
-                $this->storeMaterialsActivity($activity, $basket);
+                $this->storeMaterialsActivity($activity, $batch);
             });
 
-            // Limpia la cookie de la cesta después de completar la operación.
-            Cookie::queue(Cookie::forget('materialsBasket'));
+            // Limpia la cookie del lote después de completar la operación.
+            Cookie::queue(Cookie::forget('activityFormBatch'));
 
             // Redirige con mensaje de éxito.
-            return back()->with(FlashType::SUCCESS, 'Actividad insertada correctamente.');
+            return back()->with(FlashType::SUCCESS, 'Actividad registrada correctamente.');
         } catch (\Exception $e) {
             // Si algo falla, redirige con el mensaje de error.
             return back()->withInput()->with(FlashType::ERROR, 'Error al insertar la actividad: ' . $e->getMessage());
@@ -135,14 +135,14 @@ class ActivityController extends Controller {
      * Almacena la relación entre una actividad y los materiales utilizados.
      * 
      * @param \App\Models\Activity $activity    Instancia de la actividad recién creada.
-     * @param mixed $basket                     Lista de materiales con sus unidades.
+     * @param mixed $batch                     Lista de materiales con sus unidades.
      * @return void
      */
-    private function storeMaterialsActivity(Activity $activity, $basket) {
-        foreach ($basket as $data) {
+    private function storeMaterialsActivity(Activity $activity, $batch) {
+        foreach ($batch as $data) {
             MaterialActivity::create([
                 'activity_id' => $activity->activity_id,
-                'material_id' => $data['material_id'],
+                'material_id' => $data['id'],
                 'units'       => $data['units']
             ]);
         }

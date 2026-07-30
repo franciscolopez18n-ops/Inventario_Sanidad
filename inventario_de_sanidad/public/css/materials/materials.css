@@ -26,11 +26,11 @@
 #btn-submit-alta:not(:disabled):hover i {
     transform: scale(1.2); 
 }
-.material-form, .basket-section {
+.material-form, .batch-section {
     flex: 1;
 }
 
-.basket-toggle {
+.batch-toggle {
     position: absolute;
     top: 1rem;
     right: 0;
@@ -97,45 +97,18 @@
     max-width: 80px;
     height: auto;
 }
-/* Para la cesta */
-.basket-toggle {
+/* Para el lote */
+.batch-toggle {
     display: flex;
     justify-content: flex-end; 
     margin-bottom: 25px;
 }
-
-.botonCarrito {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px; 
-    padding: 12px 24px;
-    background-color: #ffffff;
-    color: #007bff;
-    border: 2px solid #007bff;
-    border-radius: 50px; 
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.botonCarrito:hover {
-    background-color: #007bff;
-    color: #ffffff;
-}
-
-.botonCarrito:hover i {
-    color: inherit;
-}
-
-.botonCarrito i {
-    font-size: 1.2rem;
-}
 /*-----------------------------------------------------------------------*/
-.basket-section {
+.batch-section {
     margin: 2rem 1rem;
 }
 
-.basket-title {
+.batch-title {
     font-size: 2rem;
     font-weight: bold;
     margin-bottom: 1rem;
@@ -163,7 +136,7 @@ input[type="text"], form select {
         width: 100%;
     }
 
-    .basket-toggle {
+    .batch-toggle {
         position: static;
         text-align: right;
         margin-bottom: 1rem;
@@ -192,7 +165,7 @@ input[type="text"], form select {
         margin-bottom: 1rem;
     }
 
-    .basket-section {
+    .batch-section {
         margin: 1rem 0;
     }
 }

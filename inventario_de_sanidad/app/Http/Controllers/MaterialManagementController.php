@@ -266,7 +266,7 @@ class MaterialManagementController extends Controller {
     }
 
     /**
-     * Da de alta (guarda) en batch los materiales almacenados temporalmente en la cookie 'materialsAddBasket'.
+     * Da de alta (guarda) en batch los materiales almacenados temporalmente en la cookie 'materialFormBatch'.
      * Realiza toda la operación en una transacción, si hay error no se inserta nada.
      *
      * @param Request $request
@@ -275,14 +275,14 @@ class MaterialManagementController extends Controller {
     public function storeBatch(Request $request) {
         // Decodifica la cookie desde JSON a un array asociativo. Si no es válido, usa un array vacío que será rechazado.
         // Los métodos de Laravel esperan cookies encriptadas por ellos mismos, por lo que hay que leerla en crudo
-        $basket = json_decode(urldecode($_COOKIE['materialsAddBasket'] ?? '[]'), true);
+        $batch = json_decode(urldecode($_COOKIE['materialFormBatch'] ?? '[]'), true);
         
-        if (empty($basket)) {
-            return back()->with(FlashType::ERROR, 'No hay materiales añadidos en la cesta para dar de alta.');
+        if (empty($batch)) {
+            return back()->with(FlashType::ERROR, 'No hay materiales añadidos en el lote para dar de alta.');
         }
 
         // Comprobaciones de seguridad por si el frontend fue manipulado.
-        foreach ($basket as $material) {
+        foreach ($batch as $material) {
             $validator = validator($material, [
                 'name' => 'required|string',
                 'description' => 'required|string',
@@ -302,7 +302,7 @@ class MaterialManagementController extends Controller {
             ]);
 
             if ($validator->fails()) {
-                return back()->with(FlashType::ERROR, 'Los datos de la cesta no son válidos.');
+                return back()->with(FlashType::ERROR, 'Los datos del lote no son válidos.');
             }
         }
 
@@ -311,9 +311,9 @@ class MaterialManagementController extends Controller {
 
         try {
             // Inicia una transacción de base de datos: si algo falla, se revierte todo.
-            DB::transaction(function () use ($basket, &$imagesMaterials) {
-                // Itera sobre cada material en la cesta.
-                foreach ($basket as $materialData) {
+            DB::transaction(function () use ($batch, &$imagesMaterials) {
+                // Itera sobre cada material en el lote.
+                foreach ($batch as $materialData) {
                     // Crea una nueva instancia del Material.
                     $material = new Material();
                     $material->name = $materialData["name"];
@@ -337,7 +337,7 @@ class MaterialManagementController extends Controller {
             });
 
             // Si la transacción fue exitosa, elimina la cookie con los materiales temporales.
-            Cookie::queue(Cookie::forget('materialsAddBasket'));
+            Cookie::queue(Cookie::forget('materialFormBatch'));
 
         } catch (\Exception $e) {
             // Si hay error en la transacción, muestra mensaje de error.

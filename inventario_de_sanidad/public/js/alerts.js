@@ -39,27 +39,20 @@ function autoHideElement(element) {
 
 // LIMPIAR ERRORES DE INPUTS
 function clearInputErrors(form) {
-    const inputs = form.querySelectorAll("input, textarea, select");
+    form.querySelectorAll(".input-error").forEach(input =>
+        input.classList.remove("input-error")
+    );
 
-    inputs.forEach(input => {
-        input.classList.remove("input-error");
-
-        const error = input.parentNode.querySelector(".input-error-msg");
-        if (error) error.remove();
-    });
+    form.querySelectorAll(".input-error-msg").forEach(error =>
+        error.remove()
+    );
 }
 
 // MOSTRAR ERRORES EN INPUTS 
 function showInputErrors(form, errorsMap) {
-    clearInputErrors(form);
-
-    let hasError = false;
-
     Object.keys(errorsMap).forEach(fieldName => {
         const input = form.querySelector(`[name="${fieldName}"]`);
         if (!input) return;
-
-        hasError = true;
 
         // Lo ponemos en rojo
         input.classList.add("input-error");
@@ -79,6 +72,4 @@ function showInputErrors(form, errorsMap) {
         // Insertar debajo del input
         wrapper.appendChild(msg);
     });
-
-    return hasError;
 }

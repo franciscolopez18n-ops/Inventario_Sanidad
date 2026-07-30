@@ -61,12 +61,15 @@
                         <tbody>
                             <tr>
                                 <td data-label="Material" class="cell-description custom-scroll">
-                                    <input list="materials" name="materialName" id="materialName">
-                                    <datalist id="materials">
-                                        @foreach ($materials as $material)
-                                            <option data-id="{{ $material->material_id }}" value="{{ $material->name }}">
+                                    <select name="material" id="material">
+                                        <option value="" selected disabled>--Selecciona un material--</option>
+
+                                        @foreach ($materials->sortBy('name') as $material)
+                                            <option value="{{ $material->material_id }}">
+                                                {{ $material->name }}
+                                            </option>
                                         @endforeach
-                                    </datalist>
+                                    </select>
                                 </td>
                                 <td data-label="Cantidad">
                                     <input type="number" name="units" id="units">
@@ -86,6 +89,6 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/activity.js') }}" type="text/javascript"></script>
+    <script type="module" src="{{ asset('js/activity.js') }}" type="text/javascript"></script>
 @endpush
 

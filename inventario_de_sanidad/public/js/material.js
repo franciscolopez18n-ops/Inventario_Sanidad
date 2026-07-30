@@ -1,184 +1,99 @@
-// Nombre de la cookie donde se almacenará el carrito de materiales.
-const COOKIE_NAME = "materialsAddBasket";
+import { getCookieValue } from './utils/cookies.js';
+import { BatchResult, removeBatchItem, addBatchItem } from './utils/batch.js';
+
+// Nombre de la cookie donde se almacenará el lote de materiales.
+const COOKIE_NAME = "materialFormBatch";
 // URL base para cargar imágenes desde el almacenamiento.
 const storageUrl = new URL('/storage/', window.location).href;
 
 // Al cargar la página, se ejecuta la función inicio()
 window.addEventListener("load", inicio);
 
-// Función que se ejecuta una vez carga la página.
+// Función que se ejecuta una vez carga la página
 function inicio() {
-    // Configura el botón para alternar entre el formulario y el carrito.
-    initToggleBasket();
-
-    // Botón de "Añadir material".
-    let addButton = document.form.add;
-
-    // Escuchar evento de clic del botón de Añadir
-    addButton.addEventListener("click", (event) => withDisabled(event.target, () => getMaterialData()));
-
-    // Muestra la cesta con los datos almacenados.
-    renderBasket();
+    initToggleBatch(); // Configura el botón para alternar entre el formulario y el lote
+    document.form.add.addEventListener("click", (event) => withDisabled(event.target, () => getMaterialData()));
+    renderBatch(); // Carga los datos de la cookie en la página, si hay
 }
 
-// Alterna la visibilidad entre el formulario y la sección del carrito.
-function initToggleBasket() {
-    const toggleBtn = document.getElementById("toggleBasketBtn");
-    const cartText = document.getElementById("cart-text"); // Para cambiar el texto
-    const icon = toggleBtn.querySelector("i"); // Para cambiar el icono
+// Alterna la visibilidad entre el formulario y la sección del lote.
+function initToggleBatch() {
+    const toggleBtn = document.getElementById("toggleBatchBtn");
+    const batchText = document.getElementById("batch-text"); // Para cambiar el texto
     
     const formSections = document.querySelectorAll(".material-form, .form-title, .form-group, fieldset, .form-actions");
-    const basketSection = document.querySelector(".basket-section");
+    const batchSection = document.querySelector(".batch-section");
     
-    let muestraSoloCesta = false;
-
-    // Al hacer click
+    let isBatchVisible = false;
     toggleBtn.addEventListener("click", function () {
-        muestraSoloCesta = !muestraSoloCesta;
+        isBatchVisible = !isBatchVisible;
 
-        formSections.forEach(el => el.classList.toggle("hidden", muestraSoloCesta)); // ocultamos-mostramos el formulario
+        formSections.forEach(el => el.classList.toggle("hidden", isBatchVisible)); // ocultamos-mostramos el formulario
+        batchSection.classList.toggle("hidden", !isBatchVisible); // ocultamos-mostramos el lote
 
-        if (basketSection) {
-            basketSection.classList.toggle("hidden", !muestraSoloCesta); // ocultamos-mostramos la cesta
-        }
-
-        // cambiamos el texto y el icono
-        if (muestraSoloCesta) {
-            cartText.textContent = "Volver al formulario";
-            icon.className = "fa-solid fa-arrow-left"; // Icono de volver  
-            toggleBtn.classList.add("active"); 
-        } else {
-            cartText.textContent = "Ver carrito";
-            icon.className = "fa-solid fa-cart-shopping"; // Icono de carrito
-            
-            toggleBtn.classList.remove("active");
-        }
+        batchText.textContent = (isBatchVisible) ? "Volver al formulario" : "Ver lote de materiales";
     });
 }
-// Recupera el valor de una cookie y lo convierte en objeto JS.
-function getCookieValue(name) {
-    let cookieString = document.cookie;
-    let cookies = cookieString.split(";");
-    let value;
-    let exist = false;
-    let index = 0;
 
-    while (!exist && index < cookies.length) {
-        let cookie = cookies[index].trim();
-        if (cookie.startsWith(name + '=')) {
-            try {
-                // Se decodifica y se parsea el valor JSON de la cookie.
-                value = JSON.parse(decodeURIComponent(cookie.substring(name.length + 1)));
-            } catch (error) {
-                console.error("Error al parsear la cookie:", error);
-                value = [];
-            }
-            exist = true;
-        }
-        index += 1;
-    }
-
-    // Si no existe la cookie o no pudo parsearse, retorna un array vacío.
-    return value ?? [];
-}
-
-function setCookieValue(basket, name) {
-    let dateExpiration = new Date();
-
-    // Se define la fecha de expiración en 2 días.
-    dateExpiration.setDate(dateExpiration.getDate() + 2);
-
-    // Se obtiene la fecha en formato UTC.
-    let expiration = dateExpiration.toUTCString();
-
-    let value = encodeURIComponent(JSON.stringify(basket));
-    if (value.length > 4096) {
-        return false;
-    }
-
-    // Se guarda la cookie codificada con el valor de la cesta.
-    document.cookie = name + "=" + value + "; expires=" + expiration + "; path=/";
-
-    return true;
-}
-function cortaCadena(text, maxLength = 50) {
-    if (!text) {
-        return "";
-    }
-    
-    if (text.length > maxLength) {
-        return text.substring(0, maxLength) + "...";
-    } else {
-        return text;
-    }
-}
-
-// Crea una celda <td> en una fila con contenido y etiqueta opcional.
-function createRow(content, trElement, label) {
-    let td = document.createElement("td");
-    td.textContent = content;
-    if (label) {
-        td.setAttribute("data-label", label);
-    }
-    trElement.appendChild(td);
-}
-
-// Dibuja el contenido la cesta en la tabla.
-function renderBasket() {
-    let basket = getCookieValue(COOKIE_NAME);
+// Dibuja el contenido del lote en la tabla.
+function renderBatch() {
+    let batch = getCookieValue(COOKIE_NAME);
     let tbody = document.querySelector("table tbody");
 
     const btnAlta = document.getElementById("btn-submit-alta");
     if (btnAlta) {
-        // Se desactiva si la cesta está vacía (length es 0)
-        btnAlta.disabled = (basket.length === 0);
+        // Se desactiva si el lote está vacío
+        btnAlta.disabled = (batch.length === 0);
     }
+
     // Limpia el contenido anterior de la tabla.
     while (tbody.rows.length > 0) {
         tbody.deleteRow(0);
     }
 
-    // Si hay materiales en el carrito, se renderizan en la tabla.
-    if (basket && basket.length > 0) {
-        for (let i = 0; i < basket.length; i++) {
+    // Si hay materiales en el lote, se renderizan en la tabla.
+    if (batch.length > 0) {
+        for (let i = 0; i < batch.length; i++) {
             let newTr = document.createElement("tr");
 
             // Añadir celdas con la información del material.
-            createRow(cortaCadena(basket[i].name, 40), newTr, "Nombre");
-            createRow(cortaCadena(basket[i].description, 60), newTr, "Descripción");
-            createRow(cortaCadena(basket[i].storage, 40), newTr, "Localización");
-            createRow(cortaCadena(basket[i].units_use, 10), newTr, "Cant. Uso");
-            createRow(cortaCadena(basket[i].min_units_use, 10), newTr, "Mín. Uso");
-            createRow(cortaCadena(basket[i].cabinet_use, 20), newTr, "Armario Uso");
-            createRow(cortaCadena(basket[i].shelf_use, 20), newTr, "Balda Uso");
-            createRow(cortaCadena(basket[i].drawer_use, 20), newTr, "Cajón Uso");
-            createRow(cortaCadena(basket[i].units_reserve, 10), newTr, "Cant. Reserva");
-            createRow(cortaCadena(basket[i].min_units_reserve, 10), newTr, "Mín. Reserva");
-            createRow(cortaCadena(basket[i].cabinet_reserve, 20), newTr, "Armario Reserva");
-            createRow(cortaCadena(basket[i].shelf_reserve, 20), newTr, "Balda Reserva");
+            createRow(truncateString(batch[i].name, 40), newTr, "Nombre");
+            createRow(truncateString(batch[i].description, 60), newTr, "Descripción");
+            createRow(truncateString(batch[i].storage, 40), newTr, "Localización");
+            createRow(truncateString(batch[i].units_use, 10), newTr, "Cant. Uso");
+            createRow(truncateString(batch[i].min_units_use, 10), newTr, "Mín. Uso");
+            createRow(truncateString(batch[i].cabinet_use, 20), newTr, "Armario Uso");
+            createRow(truncateString(batch[i].shelf_use, 20), newTr, "Balda Uso");
+            createRow(truncateString(batch[i].drawer_use, 20), newTr, "Cajón Uso");
+            createRow(truncateString(batch[i].units_reserve, 10), newTr, "Cant. Reserva");
+            createRow(truncateString(batch[i].min_units_reserve, 10), newTr, "Mín. Reserva");
+            createRow(truncateString(batch[i].cabinet_reserve, 20), newTr, "Armario Reserva");
+            createRow(truncateString(batch[i].shelf_reserve, 20), newTr, "Balda Reserva");
 
             // Imagen del material.
             let imageTd = document.createElement("td");
             let newImg = document.createElement("img");
             newImg.className = "cell-img";
-            newImg.src = basket[i].image_temp ? storageUrl + basket[i].image_temp : '/img/no_image.jpg';
-            newImg.alt = basket[i].name;
+            newImg.src = batch[i].image_temp ? storageUrl + batch[i].image_temp : '/img/no_image.jpg';
+            newImg.alt = batch[i].name;
             imageTd.appendChild(newImg);
             newTr.appendChild(imageTd);
 
             // Botón de eliminación.
             let buttonTd = document.createElement("td");
-            let newButton = document.createElement("button");
-            newButton.style.cssText = "background: none; border: none; cursor: pointer;";
+            let deleteButton = document.createElement("button");
+            deleteButton.style.cssText = "background: none; border: none; cursor: pointer;";
+            deleteButton.dataset.id = batch[i].id;
             let iconTrash = document.createElement("i");
             iconTrash.classList.add("fa", "fa-trash");
-            iconTrash.setAttribute("data-id", basket[i].id);
-            newButton.appendChild(iconTrash);
+            deleteButton.appendChild(iconTrash);
 
-            // Asignar evento al botón.
-            newButton.addEventListener("click", deleteMaterialData);
+            // Se añade el evento de click al botón para eliminar.
+            deleteButton.addEventListener("click", () => {
+                removeBatchItem(deleteButton.dataset.id, COOKIE_NAME, renderBatch);
+            });
 
-            buttonTd.appendChild(newButton);
+            buttonTd.appendChild(deleteButton);
             newTr.appendChild(buttonTd);
 
             tbody.appendChild(newTr);
@@ -186,81 +101,72 @@ function renderBasket() {
     }
 }
 
-// Wrapper pensado para desactivar automáticamente el botón asociado a un evento, para evitar doble envío.
-async function withDisabled(button, fn) {
-    button.disabled = true;
-    await fn();
-    button.disabled = false;
-}
-
-// Captura y valida los datos del formulario y añade el material al carrito.
+// Captura y valida los datos del formulario y añade el material al lote.
 async function getMaterialData() {
     let errorsMap = {};
     let tempPath = null;
-    let form = document.form;
+    const form = document.form;
+
+    clearInputErrors(form); // Limpiar posibles errores anteriores.
 
     // Validaciones del formulario.
-    let name = form.name.value.trim();
-    if (!name) {
+    const name = form.name.value.trim();
+    if (!name)
         errorsMap.name = "El nombre es obligatorio.";
-    } else if (name.length > 60) {
+    else if (name.length > 60)
         errorsMap.name = "El nombre no puede superar 60 caracteres.";
-    }
 
-    let description = form.description.value.trim();
-    if (!description) {
+    const description = form.description.value.trim();
+    if (!description)
         errorsMap.description = "La descripción es obligatoria.";
-    } else if (description.length > 255) {
+    else if (description.length > 255)
         errorsMap.description = "La descripción no puede superar 255 caracteres.";
-    }
     
-    let storage = form.storage.value;
+    const storage = form.storage.value;
     if (!storage) errorsMap.storage = "Debes seleccionar un almacenamiento.";
 
-    let units_use = Number(form.units_use.value);
-    if (form.units_use.value === "" || isNaN(units_use) || units_use < 0)
+    const units_use = form.units_use.value;
+    if (units_use === "" || isNaN(units_use) || units_use < 0)
         errorsMap.units_use = "Debe ser ≥ 0";
 
-    let min_units_use = Number(form.min_units_use.value);
-    if (form.min_units_use.value === "" || isNaN(min_units_use) || min_units_use < 0)
+    const min_units_use = form.min_units_use.value;
+    if (min_units_use === "" || isNaN(min_units_use) || min_units_use < 0)
         errorsMap.min_units_use = "Debe ser ≥ 0";
 
+    const cabinet_use = form.cabinet_use.value;
+    if (cabinet_use === "" || isNaN(cabinet_use) || cabinet_use <= 0)
+        errorsMap.cabinet_use = "El armario de uso es obligatorio";
 
-
-
-    
-    let cabinet_use = form.cabinet_use.value;
-    if (isNaN(cabinet_use) || cabinet_use <= 0)
-        errorsMap.cabinet_use = "El armario es obligatorio";
-
-    let shelf_use = form.shelf_use.value;
-    if (isNaN(shelf_use) || shelf_use <= 0)
+    const shelf_use = form.shelf_use.value;
+    if (shelf_use === "" || isNaN(shelf_use) || shelf_use <= 0)
         errorsMap.shelf_use = "Debe ser > 0";
 
-    let drawer_use = form.drawer_use.value;
-    if (isNaN(drawer_use) || drawer_use <= 0)
+    const drawer_use = form.drawer_use.value;
+    if (drawer_use === "" || isNaN(drawer_use) || drawer_use <= 0)
         errorsMap.drawer_use = "Debe ser > 0";
 
-    let units_reserve = Number(form.units_reserve.value);
-    if (form.units_reserve.value === "" || isNaN(units_reserve) || units_reserve < 0)
+    const units_reserve = form.units_reserve.value;
+    if (units_reserve === "" || isNaN(units_reserve) || units_reserve < 0)
         errorsMap.units_reserve = "Debe ser ≥ 0";
 
-    let min_units_reserve = Number(form.min_units_reserve.value);
-    if (form.min_units_reserve.value === "" || isNaN(min_units_reserve) || min_units_reserve < 0)
+    const min_units_reserve = form.min_units_reserve.value;
+    if (min_units_reserve === "" || isNaN(min_units_reserve) || min_units_reserve < 0)
         errorsMap.min_units_reserve = "Debe ser ≥ 0";
 
-    let cabinet_reserve = form.cabinet_reserve.value.trim();
+    const cabinet_reserve = form.cabinet_reserve.value.trim();
     if (!cabinet_reserve)
-        errorsMap.cabinet_reserve = "El armario es obligatorio";
+        errorsMap.cabinet_reserve = "El armario de reserva es obligatorio";
+    else if (cabinet_reserve.length > 30)
+        errorsMap.cabinet_reserve = "El armario de reserva no puede superar 30 caracteres.";
 
-    let shelf_reserve = form.shelf_reserve.value;
-    if (isNaN(shelf_reserve) || shelf_reserve <= 0)
+    const shelf_reserve = form.shelf_reserve.value;
+    if (shelf_reserve === "" || isNaN(shelf_reserve) || shelf_reserve <= 0)
         errorsMap.shelf_reserve = "Debe ser > 0";
 
     // Procesar imagen si existe.
-    let image = form.image.files[0];
+    const image = form.image.files[0];
     if (image) {
-        let validTypes = ['image/jpeg', 'image/png'];
+        const validTypes = ['image/jpeg', 'image/png'];
         if (!validTypes.includes(image.type)) {
             errorsMap.image = "Solo JPG o PNG";
         } else {
@@ -268,15 +174,13 @@ async function getMaterialData() {
         }
     }
 
-    let hasError = showInputErrors(form, errorsMap);
-
-    if (hasError) {
+    if (Object.keys(errorsMap).length > 0) {
+        showInputErrors(form, errorsMap);
         return;
     }
 
     // Se crea un objeto con los datos del material.
-    let newMaterial = {
-        id: Date.now(),
+    const newMaterial = {
         name: name,
         description: description,
         storage: storage,
@@ -294,17 +198,11 @@ async function getMaterialData() {
         shelf_reserve: shelf_reserve
     };
 
-    // Se obtiene la cesta actual desde la cookie.
-    let basket = getCookieValue(COOKIE_NAME);
-    // Se añade el material a la cesta.
-    basket.push(newMaterial);
-    // Se intenta guardar la cesta actualizada en la cookie.
-    if (!setCookieValue(basket, COOKIE_NAME)) {
-        displayErrors("La cesta es demasiado grande para ser almacenada.");
+    const result = addBatchItem(Date.now(), newMaterial, COOKIE_NAME, renderBatch);
+    if (result === BatchResult.COOKIE_LIMIT) {
+        showGlobalAlert("error", "El lote ha excedido su tamaño máximo.");
         return;
     }
-    // Se actualiza la tabla visual de la cesta.
-    renderBasket();
 
     // Limpiar formulario.
     document.form.reset();
@@ -312,11 +210,15 @@ async function getMaterialData() {
     document.getElementById("file-name").textContent = "Ningún archivo seleccionado";
 
     // Mostrar mensaje de éxito.
-    showGlobalAlert("success", "Material añadido al carrito.");
-
+    showGlobalAlert("success", "Material añadido al lote.");
 }
 
-
+// Wrapper pensado para desactivar automáticamente el botón asociado a un evento, para evitar doble envío.
+async function withDisabled(button, fn) {
+    button.disabled = true;
+    await fn();
+    button.disabled = false;
+}
 
 // Sube la imagen al servidor y devuelve la ruta temporal.
 async function uploadTempImage(image) {
@@ -340,41 +242,24 @@ async function uploadTempImage(image) {
     });
 }
 
-// Elimina un material de la cesta.
-function deleteMaterialData(event) {
-    let button = event.target;
-    let materialId = button.getAttribute("data-id");
-
-    if (!materialId) {
-        console.error("No se encontró material_id en el botón.");
-        return;
+function truncateString(text, maxLength = 50) {
+    if (!text) {
+        return "";
     }
-
-    let basket = getCookieValue(COOKIE_NAME);
-    let deleted = false;
-    let index = basket.length - 1;
-
-    // Buscar y eliminar el material por id.
-    while (!deleted && index >= 0) {
-        if (basket[index].id == materialId) {
-            basket.splice(index, 1);
-            deleted = true;
-        }
-
-        index--;
-    }
-
-    // Se guarda la cesta actualizada en la cookie.
-    if (basket.length > 0) {
-        setCookieValue(basket, COOKIE_NAME);
+    
+    if (text.length > maxLength) {
+        return text.substring(0, maxLength) + "...";
     } else {
-        deleteCookie(COOKIE_NAME);
+        return text;
     }
-
-    renderBasket();
 }
 
-// Borra una cookie estableciendo una fecha de expiración en el pasado.
-function deleteCookie(name) {
-    document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+// Crea una celda <td> en una fila con contenido y etiqueta opcional.
+function createRow(content, trElement, label) {
+    let td = document.createElement("td");
+    td.textContent = content;
+    if (label) {
+        td.setAttribute("data-label", label);
+    }
+    trElement.appendChild(td);
 }
