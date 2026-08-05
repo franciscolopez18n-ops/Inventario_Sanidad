@@ -135,7 +135,7 @@ async function getMaterialData() {
 
     const cabinet_use = form.cabinet_use.value;
     if (cabinet_use === "" || isNaN(cabinet_use) || cabinet_use <= 0)
-        errorsMap.cabinet_use = "El armario de uso es obligatorio";
+        errorsMap.cabinet_use = "Debe ser > 0";
 
     const shelf_use = form.shelf_use.value;
     if (shelf_use === "" || isNaN(shelf_use) || shelf_use <= 0)

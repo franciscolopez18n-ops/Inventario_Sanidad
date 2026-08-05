@@ -45,7 +45,7 @@ class MaterialManagementController extends Controller {
     
         $rules = [
             'name'        => 'required|string|max:60',
-            'description' => 'required|string|max:100',
+            'description' => 'required|string|max:255',
             'image'       => 'nullable|image|mimes:jpeg,png|max:4096',
         ];
     
@@ -53,7 +53,7 @@ class MaterialManagementController extends Controller {
             'name.required'        => 'Debes introducir el nombre del material.',
             'name.max'             => 'El nombre no puede superar 60 caracteres.',
             'description.required' => 'Debes introducir la descripción del material.',
-            'description.max'      => 'La descripción no puede superar 100 caracteres.',
+            'description.max'      => 'La descripción no puede superar 255 caracteres.',
             'image.image'          => 'El archivo debe ser una imagen.',
             'image.mimes'          => 'Solo se aceptan jpeg o png.',
             'image.max'            => 'La imagen no puede superar 4 MB.',
