@@ -1,5 +1,5 @@
-import { getCookieValue } from './utils/cookies.js';
-import { BatchResult, removeBatchItem, addBatchItem } from './utils/batch.js';
+import { getCookieValue } from '../utils/cookies.js';
+import { BatchResult, removeBatchItem, addBatchItem } from '../utils/batch.js';
 
 // Nombre de la cookie donde se almacenará el lote de materiales.
 const COOKIE_NAME = "materialFormBatch";
@@ -40,7 +40,7 @@ function renderBatch() {
     let batch = getCookieValue(COOKIE_NAME);
     let tbody = document.querySelector("table tbody");
 
-    const btnAlta = document.getElementById("btn-submit-alta");
+    const btnAlta = document.getElementById("btn-submit-create");
     if (btnAlta) {
         // Se desactiva si el lote está vacío
         btnAlta.disabled = (batch.length === 0);
@@ -57,18 +57,18 @@ function renderBatch() {
             let newTr = document.createElement("tr");
 
             // Añadir celdas con la información del material.
-            createRow(truncateString(batch[i].name, 40), newTr, "Nombre");
-            createRow(truncateString(batch[i].description, 60), newTr, "Descripción");
-            createRow(truncateString(batch[i].storage, 40), newTr, "Localización");
-            createRow(truncateString(batch[i].units_use, 10), newTr, "Cant. Uso");
-            createRow(truncateString(batch[i].min_units_use, 10), newTr, "Mín. Uso");
-            createRow(truncateString(batch[i].cabinet_use, 20), newTr, "Armario Uso");
-            createRow(truncateString(batch[i].shelf_use, 20), newTr, "Balda Uso");
-            createRow(truncateString(batch[i].drawer_use, 20), newTr, "Cajón Uso");
-            createRow(truncateString(batch[i].units_reserve, 10), newTr, "Cant. Reserva");
-            createRow(truncateString(batch[i].min_units_reserve, 10), newTr, "Mín. Reserva");
-            createRow(truncateString(batch[i].cabinet_reserve, 20), newTr, "Armario Reserva");
-            createRow(truncateString(batch[i].shelf_reserve, 20), newTr, "Balda Reserva");
+            createRow(batch[i].name, newTr, "Nombre");
+            createRow(batch[i].description, newTr, "Descripción");
+            createRow(batch[i].storage, newTr, "Localización");
+            createRow(batch[i].units_use, newTr, "Cant. Uso");
+            createRow(batch[i].min_units_use, newTr, "Mín. Uso");
+            createRow(batch[i].cabinet_use, newTr, "Armario Uso");
+            createRow(batch[i].shelf_use, newTr, "Balda Uso");
+            createRow(batch[i].drawer_use, newTr, "Cajón Uso");
+            createRow(batch[i].units_reserve, newTr, "Cant. Reserva");
+            createRow(batch[i].min_units_reserve, newTr, "Mín. Reserva");
+            createRow(batch[i].cabinet_reserve, newTr, "Armario Reserva");
+            createRow(batch[i].shelf_reserve, newTr, "Balda Reserva");
 
             // Imagen del material.
             let imageTd = document.createElement("td");
@@ -206,7 +206,7 @@ async function getMaterialData() {
 
     // Limpiar formulario.
     document.form.reset();
-    document.getElementById("imgPreview").src = "";
+    document.getElementById("img-preview").src = "";
     document.getElementById("file-name").textContent = "Ningún archivo seleccionado";
 
     // Mostrar mensaje de éxito.
@@ -240,18 +240,6 @@ async function uploadTempImage(image) {
         console.error('Error en la subida:', error);
         return null;
     });
-}
-
-function truncateString(text, maxLength = 50) {
-    if (!text) {
-        return "";
-    }
-    
-    if (text.length > maxLength) {
-        return text.substring(0, maxLength) + "...";
-    } else {
-        return text;
-    }
 }
 
 // Crea una celda <td> en una fila con contenido y etiqueta opcional.

@@ -26,15 +26,15 @@
 
 .form-group input {
   flex: 1;
-  color: var(--text-100);
+  --input-color: var(--text-100);
   font-size: 1.5em;
   font-weight: 600;
 }
 
-.form-group input.input-gray {
-  color: var(--text-200);
-  background-color: rgba(0, 0, 0, 0.15);
-  cursor: not-allowed;
+.form-group input:read-only {
+  --input-readonly-color: var(--text-200);
+  --input-readonly-bg: rgba(0, 0, 0, 0.15);
+  --input-readonly-border: transparent;
 }
 
 .form-actions {

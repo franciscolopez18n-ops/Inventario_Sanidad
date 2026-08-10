@@ -6,7 +6,8 @@
     
 <link rel="stylesheet" href="{{ asset('css/tables.css') }}">
 <link rel="stylesheet" href="{{ asset('css/materials/materials.css') }}">
-    
+<link rel="stylesheet" href="{{ asset('css/materials/create.css') }}">    
+
 @endpush
 
 @section('content')
@@ -101,10 +102,10 @@
         <div class="form-group file-upload">
             {{-- Botón de subir imagen --}}
             <label for="image" class="btn btn-primary">Subir Imagen</label>
-            <input type="file" name="image" id="image" class="btn btn-primary file-upload-input" onchange="previewImage(event, '#imgPreview')">
+            <input type="file" name="image" id="image" class="btn btn-primary file-upload-input" onchange="previewImage(event, '#img-preview')">
             
             {{-- Imagen previsualizada --}}
-            <img id="imgPreview" src="" alt="">
+            <img id="img-preview" src="" alt="">
             <span id="file-name" class="file-name-display">Ningún archivo seleccionado</span>
         </div>
 
@@ -115,43 +116,41 @@
             </button>
             
             {{-- Botón de alta (submit real) --}}
-            <button type="submit" id="btn-submit-alta" value="Alta" class="btn btn-success">
+            <button type="submit" id="btn-submit-create" value="Alta" class="btn btn-success">
                 Alta
             </button>
         </div>
     </form>
 
     {{-- Lote --}}
-    <div class="contenedor-tabla">
-        <div class="batch-section hidden">
-            <h4 class="batch-title">Lote de materiales</h4>
-            
-            <div class="table-wrapper">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th rowspan="2">Nombre</th>
-                            <th rowspan="2">Descripción</th>
-                            <th rowspan="2">Localización</th>
-                            <th colspan="5">Uso</th>
-                            <th colspan="4">Reserva</th>
-                            <th rowspan="2">Imagen</th>
-                            <th rowspan="2"></th>
-                        </tr>
-                        <tr>
-                            <th>Cant.</th><th>Mín</th><th>Armario</th><th>Balda</th><th>Cajón</th>
-                            <th>Cant.</th><th>Mín</th><th>Armario</th><th>Balda</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
+    <div class="batch-section hidden">
+        <h4 class="batch-title">Lote de materiales</h4>
+        
+        <div class="table-wrapper">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th rowspan="2">Nombre</th>
+                        <th rowspan="2">Descripción</th>
+                        <th rowspan="2">Localización</th>
+                        <th colspan="5">Uso</th>
+                        <th colspan="4">Reserva</th>
+                        <th rowspan="2">Imagen</th>
+                        <th rowspan="2"></th>
+                    </tr>
+                    <tr>
+                        <th>Cant.</th><th>Mín</th><th>Armario</th><th>Balda</th><th>Cajón</th>
+                        <th>Cant.</th><th>Mín</th><th>Armario</th><th>Balda</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div>
     </div>
 </div>
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/previewImage.js') }}"></script>
-    <script type="module" src="{{ asset('js/material.js') }}"></script>
+    <script src="{{ asset('js/materials/previewImage.js') }}"></script>
+    <script type="module" src="{{ asset('js/materials/create.js') }}"></script>
 @endpush

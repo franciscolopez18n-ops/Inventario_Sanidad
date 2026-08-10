@@ -109,26 +109,41 @@ legend {
 }
 
 /* === INPUTS Y CAMPOS DE TEXTO === */
-input[type="email"],
-input[type="password"],
-input[type="text"],
-input[type="number"],
+input:is(
+  [type="email"],
+  [type="password"],
+  [type="text"],
+  [type="number"]
+),
 textarea,
 select {
+  /* Estado normal */
+  --input-bg: var(--bg-300);
+  --input-border: var(--bg-300);
+  --input-color: var(--text-200);
+
+  /* Estado read-only */
+  --input-readonly-bg: #b0b8c2;
+  --input-readonly-border: #9aa2ae;
+  --input-readonly-color: #666060;
+
+  /* Estado focus */
+  --input-focus-border: var(--primary-400);
+
   width: 100%;
   font-size: 0.875rem;
   padding: 0.75rem 1rem;
-  background-color: var(--bg-300);
-  border: 1px solid var(--bg-300);
+  background-color: var(--input-bg);
+  border: 1px solid var(--input-border);
   border-radius: var(--border-radius-md);
-  font-size: 0.875rem;
-  color: var(--text-200);
+  color: var(--input-color);
   line-height: 1.25rem;
 
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-  -webkit-transition: background-color 0.3s ease, border-color 0.3s ease;
-  -moz-transition: background-color 0.3s ease, border-color 0.3s ease;
-  -o-transition: background-color 0.3s ease, border-color 0.3s ease;
+  font-family: inherit;
+  box-sizing: border-box;
+  height: auto;
+
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 
   position: relative;
 }
@@ -138,12 +153,24 @@ input:focus,
 textarea:focus,
 select:focus {
   outline: none;
-  border-color: var(--primary-400);
-  /* background-color: var(--bg-200); */
+  border-color: var(--input-focus-border);
   transition: background-color 0.3s ease, border-color 0.3s ease;
   -webkit-transition: background-color 0.3s ease, border-color 0.3s ease;
   -moz-transition: background-color 0.3s ease, border-color 0.3s ease;
   -o-transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+input:is(
+  [type="email"],
+  [type="password"],
+  [type="text"],
+  [type="number"]
+):read-only,
+textarea:read-only {
+  background-color: var(--input-readonly-bg);
+  color: var(--input-readonly-color);
+  border-color: var(--input-readonly-border);
+  cursor: not-allowed;
 }
 
 /* === COMPORTAMIENTO DEL PLACEHOLDER === */
@@ -230,6 +257,7 @@ a {
    CONTENEDOR DE ALERTAS
 ========================= */
 .alerts-container {
+  display: none;
   position: fixed;
   bottom: 24px;
   left: 24px;

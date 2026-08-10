@@ -19,7 +19,7 @@
 
             <div class="form-group">
                 <label for="use_units">Unidades en Uso</label>
-                <input id="use_units" type="number" class="input-gray" value="{{ $useRecord->units ?? '0' }}" readonly>
+                <input id="use_units" type="number" value="{{ $useRecord->units ?? '0' }}" readonly>
             </div>
 
             <div class="form-group">

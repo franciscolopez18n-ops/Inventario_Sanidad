@@ -3,8 +3,9 @@
 @section('title', 'Editar Material')
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/materials/materials.css') }}">
     <link rel="stylesheet" href="{{ asset('css/tables.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/materials/materials.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/materials/edit.css') }}">
 @endpush
 
 @section('content')
@@ -37,11 +38,10 @@
 
         <div class="form-group file-upload">
             <label for="image" class="btn btn-primary">Cambiar Imagen <i class="fa-solid fa-image"></i></label>
-            <input type="file" name="image" id="image" class="file-upload-input" onchange="previewImage(event, '#imgPreview')">
-            <img id="imgPreview"
+            <input type="file" name="image" id="image" class="file-upload-input" onchange="previewImage(event, '#img-preview')">
+            <img id="img-preview"
                 src="{{ asset($material->image_path ? 'storage/' . $material->image_path : 'img/no_image.jpg') }}"
-                alt="Previsualización"
-                style="max-width: 150px; display: block; margin-top: 10px;">
+                alt="Previsualización">
             @error('image')
                 <small class="input-error-msg">{{ $message }}</small>
             @enderror
@@ -61,10 +61,10 @@
                     <div class="storage-block">
                         <!-- USO -->
                         <p><strong>Uso</strong></p>
-                        <div class="form-grid">
+                        <div class="form-fields">
                             <div>
                                 <label>Cantidad</label>
-                                <input type="number" name="{{ $s }}[use_units]" value="{{ old("$s.use_units", $useRecord->units ?? 0) }}" class="soloLectura @error("$s.use_units") input-error @enderror" readonly>
+                                <input type="number" name="{{ $s }}[use_units]" value="{{ old("$s.use_units", $useRecord->units ?? 0) }}" class="@error("$s.use_units") input-error @enderror" readonly>
                                 @error("$s.use_units") <small class="input-error-msg">{{ $message }}</small> @enderror
                             </div>
                             <div>
@@ -90,17 +90,29 @@
                         </div>
 
                         <!-- BOTONES PARA TRANSFERIR -->
-                        <div class="transferir-stock">
-                            <div class="tituloTransferir">Transferir unidades</div>
-                            <div class="contenedorTransferir">
-                                <button type="button" class="transferir-btn down" onclick="moveStock('{{ $s }}', -1)">
+                        <div class="stock-transfer">
+                            <div class="transfer-title">Transferir unidades</div>
+                            <div class="transfer-container">
+                                <button
+                                    type="button"
+                                    class="transfer-btn to-reserve"
+                                    data-storage="{{ $s }}"
+                                    data-direction="to-reserve"
+                                    {{ $useRecord->units <= 0 ? 'disabled' : '' }}
+                                >
                                     <span>A reserva</span>
                                     <small>Uso → Reserva</small>
                                 </button>
                                 <div class="transfer-center">
                                     <div class="transfer-icon">⇄</div>
                                 </div>
-                                <button type="button" class="transferir-btn up" onclick="moveStock('{{ $s }}', 1)">
+                                <button
+                                    type="button"
+                                    class="transfer-btn to-use"
+                                    data-storage="{{ $s }}"
+                                    data-direction="to-use"
+                                    {{ $reserveRecord->units <= 0 ? 'disabled' : '' }}
+                                >
                                     <span>A uso</span>
                                     <small>Uso ← Reserva</small>
                                 </button>
@@ -109,16 +121,19 @@
 
                         <!-- RESERVA -->
                         <p><strong>Reserva</strong></p>
-                        <div class="form-grid">
-                            <label>Nuevas unidades en reserva</label>
-                            <div style="display:flex; gap:0.5rem;">
-                                <input type="number" name="{{ $s }}[suministro]" min="0" placeholder="Total de unidades"
-                                    onkeydown="if(event.key==='Enter'){event.preventDefault();suministrar('{{ $s }}');}">
-                                <button type="button" class="btn btn-primary" onclick="suministrar('{{ $s }}')">Establecer</button>
+                        <div class="form-fields">
+                            <label>Total de unidades en reserva</label>
+                            <div class="supply-container">
+                                <input type="number" id="{{ $s }}_supply" min="0" placeholder="Nuevo total de unidades">
+                                <button
+                                    type="button"
+                                    class="btn btn-primary supply-btn"
+                                    data-storage="{{ $s }}"
+                                >Establecer</button>
                             </div>
                             <div>
                                 <label>Cantidad</label>
-                                <input type="number" name="{{ $s }}[reserve_units]" value="{{ old("$s.reserve_units", $reserveRecord->units ?? 0) }}" class="soloLectura @error("$s.reserve_units") input-error @enderror" readonly>
+                                <input type="number" name="{{ $s }}[reserve_units]" value="{{ old("$s.reserve_units", $reserveRecord->units ?? 0) }}" class="@error("$s.reserve_units") input-error @enderror" readonly>
                                 @error("$s.reserve_units") <small class="input-error-msg">{{ $message }}</small> @enderror
                             </div>
                             <div>
@@ -153,6 +168,6 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/previewImage.js') }}"></script>
-    <script src="{{ asset('js/transferirStock.js') }}"></script>
+    <script src="{{ asset('js/materials/previewImage.js') }}"></script>
+    <script src="{{ asset('js/materials/edit.js') }}"></script>
 @endpush

@@ -87,8 +87,8 @@
 @push('scripts')
     <script src="{{ asset('js/loader.js') }}"></script>
     <script src="{{ asset('js/dialogFunctions.js') }}"></script>
-    <script src="{{ asset('js/materialEdit.js') }}"></script>
+    <script src="{{ asset('js/materials/loadData.js') }}"></script>
     <script src="{{ asset('js/tableFunctions.js') }}"></script>
-    <script src="{{ asset('js/tableMaterial.js') }}"></script>
+    <script src="{{ asset('js/materials/table.js') }}"></script>
     <script src="{{ asset('js/filterToggle.js') }}"></script> 
 @endpush

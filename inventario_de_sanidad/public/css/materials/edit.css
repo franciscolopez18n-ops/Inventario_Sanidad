@@ -1,0 +1,130 @@
+.storage-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr)); /* responsive */
+    gap: 1rem;
+}
+
+.form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form-fields label {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: 600;
+    color: var(--text-200);
+}
+
+.stock-transfer {
+    margin: 15px 0;
+    padding: 12px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.transfer-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 10px;
+}
+
+.transfer-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.transfer-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 10px 14px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    transition: all 0.2s ease;
+}
+
+.transfer-btn small {
+    font-size: 11px;
+    font-weight: 400;
+    margin-top: 4px;
+    opacity: 0.8;
+}
+
+.transfer-btn.to-use {
+    background: #e6fffa;
+    color: #0f766e;
+    border: 1px solid #99f6e4;
+}
+
+.transfer-btn.to-reserve {
+    background: #fff7ed;
+    color: #c2410c;
+    border: 1px solid #fed7aa;
+}
+
+.transfer-btn:hover {
+    border-color: currentColor;
+}
+
+.transfer-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.transfer-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.transfer-icon {
+    font-size: 20px;
+    color: #64748b;
+}
+
+fieldset {
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.supply-container {
+    display: flex;
+    gap: .5rem;
+}
+
+.supply-container input {
+    min-width: 0;
+    flex: 1;
+}
+
+/* Tablet */
+@media (max-width: 992px) { }
+
+/* Móvil */
+@media (max-width: 768px) { }
+
+/* Móvil pequeño */
+@media (max-width: 480px) {
+    .storage-grid {
+        gap: 0.75rem;
+    }
+
+    .transfer-container {
+        flex-direction: column;
+    }
+}
