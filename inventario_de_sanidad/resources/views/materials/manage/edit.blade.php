@@ -158,10 +158,8 @@
 
         <div class="form-actions">
             <input type="submit" value="Actualizar" class="btn btn-success">
-            <br><br>
-            <a href="{{ route('materials.manage.index') }}" class="btn btn-outline">Volver al listado</a><br>
+            <a href="{{ route('materials.manage.index') }}" class="btn btn-outline">Volver al listado</a>
         </div>
-        <br>
     </form>
 </div>
 @endsection

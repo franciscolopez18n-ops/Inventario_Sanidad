@@ -109,7 +109,7 @@
             <span id="file-name" class="file-name-display">Ningún archivo seleccionado</span>
         </div>
 
-        <div class="form-actions-group">
+        <div class="form-actions">
             {{-- Botón de añadir --}}
             <button type="button" name="add" class="btn btn-primary">
                 Añadir
