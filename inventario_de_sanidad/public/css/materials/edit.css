@@ -86,14 +86,8 @@
     pointer-events: none;
 }
 
-.transfer-center {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 .transfer-icon {
-    font-size: 20px;
+    font-size: 14px;
     color: #64748b;
 }
 

@@ -72,7 +72,7 @@ function renderTable(limit, paginaActual) {
         linkEdit.style.cssText = "color: inherit; text-decoration: none; cursor: pointer;";
 
         let iconEdit = document.createElement("i");
-        iconEdit.classList.add("fa", "fa-pencil");
+        iconEdit.classList.add("fa", "fa-pencil", "table-icon-interactive");
 
         linkEdit.appendChild(iconEdit);
         tdAc.appendChild(linkEdit);
@@ -92,7 +92,7 @@ function renderTable(limit, paginaActual) {
         btn.type = "submit";
         btn.style.cssText = "background: none; border: none; cursor: pointer;";
         let iconTrash = document.createElement("i");
-        iconTrash.classList.add("fa", "fa-trash");
+        iconTrash.classList.add("fa", "fa-trash", "table-icon-interactive");
         btn.appendChild(iconTrash);
 
         formDel.appendChild(token);

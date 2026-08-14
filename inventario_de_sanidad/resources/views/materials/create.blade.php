@@ -101,7 +101,7 @@
 
         <div class="form-group file-upload">
             {{-- Botón de subir imagen --}}
-            <label for="image" class="btn btn-primary">Subir Imagen</label>
+            <label for="image" class="btn btn-primary">Subir Imagen <i class="fa-solid fa-image"></i></label>
             <input type="file" name="image" id="image" class="btn btn-primary file-upload-input" onchange="previewImage(event, '#img-preview')">
             
             {{-- Imagen previsualizada --}}

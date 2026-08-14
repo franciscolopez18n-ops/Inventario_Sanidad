@@ -85,7 +85,7 @@ function renderBatch() {
             deleteButton.style.cssText = "background: none; border: none; cursor: pointer;";
             deleteButton.dataset.id = batch[i].id;
             let iconTrash = document.createElement("i");
-            iconTrash.classList.add("fa", "fa-trash");
+            iconTrash.classList.add("fa", "fa-trash", "table-icon-interactive");
             deleteButton.appendChild(iconTrash);
 
             // Se añade el evento de click al botón para eliminar.

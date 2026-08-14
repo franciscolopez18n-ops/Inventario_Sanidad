@@ -37,6 +37,11 @@
     gap: 1rem;
 }
 
+.file-upload label i {
+    color: #fff;
+    margin-left: 6px;
+}
+
 .file-upload-input {
     display: none;
 }

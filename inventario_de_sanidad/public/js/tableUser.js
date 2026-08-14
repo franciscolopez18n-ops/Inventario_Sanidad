@@ -91,7 +91,7 @@ function renderTable(limit, paginaActual) {
             btn.style.cssText = "background: none; border: none; cursor: pointer;";
 
             let icon = document.createElement("i");
-            icon.classList.add("fa", "fa-trash");
+            icon.classList.add("fa", "fa-trash", "table-icon-interactive");
 
             btn.appendChild(icon);
             formDel.appendChild(formToken);

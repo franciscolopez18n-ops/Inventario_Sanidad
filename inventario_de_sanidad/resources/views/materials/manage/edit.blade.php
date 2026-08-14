@@ -2,8 +2,7 @@
 
 @section('title', 'Editar Material')
 
-@push('styles')
-    <link rel="stylesheet" href="{{ asset('css/tables.css') }}">
+@push('styles')    
     <link rel="stylesheet" href="{{ asset('css/materials/materials.css') }}">
     <link rel="stylesheet" href="{{ asset('css/materials/edit.css') }}">
 @endpush
@@ -103,9 +102,9 @@
                                     <span>A reserva</span>
                                     <small>Uso → Reserva</small>
                                 </button>
-                                <div class="transfer-center">
-                                    <div class="transfer-icon">⇄</div>
-                                </div>
+
+                                <i class="fa-solid fa-arrow-right-arrow-left transfer-icon"></i>
+                                
                                 <button
                                     type="button"
                                     class="transfer-btn to-use"
