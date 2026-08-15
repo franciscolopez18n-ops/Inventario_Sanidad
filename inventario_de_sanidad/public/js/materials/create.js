@@ -200,7 +200,7 @@ async function getMaterialData() {
 
     const result = addBatchItem(Date.now(), newMaterial, COOKIE_NAME, renderBatch);
     if (result === BatchResult.COOKIE_LIMIT) {
-        showGlobalAlert("error", "El lote ha excedido su tamaño máximo.");
+        showAlert("alert-error", "El lote ha excedido su tamaño máximo.");
         return;
     }
 
@@ -210,7 +210,7 @@ async function getMaterialData() {
     document.getElementById("file-name").textContent = "Ningún archivo seleccionado";
 
     // Mostrar mensaje de éxito.
-    showGlobalAlert("success", "Material añadido al lote.");
+    showAlert("alert-success", "Material añadido al lote.");
 }
 
 // Wrapper pensado para desactivar automáticamente el botón asociado a un evento, para evitar doble envío.

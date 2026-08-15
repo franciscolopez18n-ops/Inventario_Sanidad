@@ -20,7 +20,7 @@
 
     <script src="{{ asset('js/darkmode.js') }}" defer></script>
     <script src="{{ asset('js/app.js') }}" defer></script>
-    <script src="{{ asset('js/alerts.js') }}" defer></script>
+    <script src="{{ asset('js/messages.js') }}" defer></script>
 </head>
 <body>
 <div class="layout">

@@ -82,8 +82,8 @@ function addMaterialDataCookie() {
 
         let result = addBatchItem(materialId, materialData, COOKIE_NAME, updateTable);
         if (result === BatchResult.DUPLICATE)
-            showGlobalAlert("warning", "El material ya está añadido.");
+            showAlert("alert-warning", "El material ya está añadido.");
         if (result === BatchResult.COOKIE_LIMIT)
-            showGlobalAlert("error", "El lote ha excedido su tamaño máximo.");
+            showAlert("alert-error", "El lote ha excedido su tamaño máximo.");
     }
 }

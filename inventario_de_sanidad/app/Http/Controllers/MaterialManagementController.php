@@ -194,7 +194,7 @@ class MaterialManagementController extends Controller {
             });
     
             if (!$updated) {
-                return back()->with(FlashType::INFO, 'No hay nada que actualizar');
+                return back()->with(FlashType::INFO, 'No hay nada que actualizar.');
             }
     
             foreach ($storageKeys as $storage) {

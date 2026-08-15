@@ -108,6 +108,10 @@ legend {
   color: var(--primary-300);
 }
 
+.hidden {
+  display: none;
+}
+
 /* === INPUTS Y CAMPOS DE TEXTO === */
 input:is(
   [type="email"],
@@ -301,6 +305,10 @@ a {
   animation: slideIn 0.35s ease;
 }
 
+.alert.hide {
+  animation: slideOut 0.35s ease forwards;
+}
+
 /* =========================
    TIPOS
 ========================= */
@@ -341,10 +349,6 @@ a {
     opacity: 1;
     transform: translateX(0);
   }
-}
-
-.alert.hide {
-  animation: slideOut 0.35s ease forwards;
 }
 
 @keyframes slideOut {

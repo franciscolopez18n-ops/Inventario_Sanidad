@@ -11,10 +11,6 @@
   padding: 2rem 1rem;
 }
 
-.hidden {
-    display: none;
-}
-
 .modal-overlay {
   position: fixed;
   top: 0;

@@ -48,10 +48,6 @@
     color: var(--primary-100);
 }
 
-.hidden {
-    display: none !important;
-}
-
 /* Tablet */
 @media (max-width: 992px) { }
 
