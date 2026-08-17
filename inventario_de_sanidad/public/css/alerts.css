@@ -1,0 +1,105 @@
+/* =========================
+    CONTENEDOR DE ALERTAS
+========================= */
+.alerts-container {
+    display: none;
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    z-index: 9999;
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    width: min(320px, calc(100vw - 48px));
+    pointer-events: none;
+}
+
+/* =========================
+    ALERTAS
+========================= */
+.alert {
+    position: relative;
+
+    padding: 14px 18px;
+    border-radius: 14px;
+
+    font-size: 0.95rem;
+    font-weight: 500;
+    line-height: 1.4;
+
+    border: 1px solid var(--alert-border);
+    border-left: 5px solid var(--alert-border);
+
+    background: var(--alert-bg);
+    color: var(--alert-text);
+
+    box-shadow:
+        0 10px 25px rgba(0,0,0,0.08),
+        0 2px 6px rgba(0,0,0,0.05);
+
+    backdrop-filter: blur(6px);
+
+    pointer-events: auto;
+
+    animation: slideIn 0.35s ease;
+}
+
+.alert.hide {
+    animation: slideOut 0.35s ease forwards;
+}
+
+/* =========================
+    TIPOS
+========================= */
+.alert-success {
+    --alert-bg: #ecfdf3;
+    --alert-border: #22c55e;
+    --alert-text: #166534;
+}
+
+.alert-error {
+    --alert-bg: #fef2f2;
+    --alert-border: #ef4444;
+    --alert-text: #991b1b;
+}
+
+.alert-warning {
+    --alert-bg: #fff7ed;
+    --alert-border: #f59e0b;
+    --alert-text: #92400e;
+}
+
+.alert-info {
+    --alert-bg: #eff6ff;
+    --alert-border: #3b82f6;
+    --alert-text: #1d4ed8;
+}
+
+/* =========================
+    ANIMACIONES
+========================= */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-25px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOut {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateX(-40px);
+    }
+}
