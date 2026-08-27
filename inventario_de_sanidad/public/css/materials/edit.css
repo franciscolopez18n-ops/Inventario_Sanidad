@@ -66,6 +66,8 @@
     font-weight: 400;
     margin-top: 4px;
     opacity: 0.8;
+    touch-action: none;
+    user-select: none;
 }
 
 .transfer-btn.to-use {
