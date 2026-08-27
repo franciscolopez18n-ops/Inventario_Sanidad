@@ -20,7 +20,7 @@ class CheckRole {
 
     public function handle(Request $request, Closure $next, string ...$roles) {
         if (!in_array(Auth::user()->user_type, $roles)) {
-            return redirect()->route('welcome')->with(FlashType::ERROR, 'No tienes permisos para acceder a esta página');
+            return redirect()->route('welcome')->withPush(FlashType::ERROR, 'No tienes permisos para acceder a esta página');
         }
         
         return $next($request);

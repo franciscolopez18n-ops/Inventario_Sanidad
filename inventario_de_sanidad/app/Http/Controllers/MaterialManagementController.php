@@ -243,7 +243,7 @@ class MaterialManagementController extends Controller {
             // Verifica si el material aún existe en la base de datos mediante su ID
             if (!Material::find($material->material_id)) {
                 // Si no existe (puede haber sido eliminado previamente), muestra advertencia
-                return back()->with(FlashType::WARNING, 'El material no existe o ya ha sido eliminado.');
+                return back()->withPush(FlashType::WARNING, 'El material no existe o ya ha sido eliminado.');
             }
 
             // Elimina la imagen del material
@@ -261,10 +261,10 @@ class MaterialManagementController extends Controller {
 
             $material->delete();
 
-            return back()->with(FlashType::SUCCESS, 'Material eliminado correctamente.');
+            return back()->withPush(FlashType::SUCCESS, 'Material eliminado correctamente.');
 
         } catch (\Exception $e) {
-            return back()->with(FlashType::ERROR, 'Error al eliminar el material: ' . $e->getMessage());
+            return back()->withPush(FlashType::ERROR, 'Error al eliminar el material: ' . $e->getMessage());
         }
     }
 
@@ -299,7 +299,7 @@ class MaterialManagementController extends Controller {
         $batch = json_decode(urldecode($_COOKIE['materialFormBatch'] ?? '[]'), true);
         
         if (empty($batch)) {
-            return back()->with(FlashType::ERROR, 'No hay materiales añadidos en el lote para dar de alta.');
+            return back()->withPush(FlashType::ERROR, 'No hay materiales añadidos en el lote para dar de alta.');
         }
 
         // Comprobaciones de seguridad por si el frontend fue manipulado.
@@ -323,7 +323,7 @@ class MaterialManagementController extends Controller {
             ]);
 
             if ($validator->fails()) {
-                return back()->with(FlashType::ERROR, 'Los datos del lote no son válidos.');
+                return back()->withPush(FlashType::ERROR, 'Los datos del lote no son válidos.');
             }
         }
 
@@ -362,7 +362,7 @@ class MaterialManagementController extends Controller {
 
         } catch (\Exception $e) {
             // Si hay error en la transacción, muestra mensaje de error.
-            return back()->with(FlashType::ERROR, 'Error al insertar los materiales: ' . $e->getMessage());
+            return back()->withPush(FlashType::ERROR, 'Error al insertar los materiales: ' . $e->getMessage());
         }
 
         $failedMaterials = [];
@@ -391,11 +391,11 @@ class MaterialManagementController extends Controller {
 
         // Si no hubo errores al mover imágenes, muestra mensaje de éxito.
         if (empty($failedMaterials)) {
-            return back()->with(FlashType::SUCCESS, 'Materiales incorporados correctamente.');
+            return back()->withPush(FlashType::SUCCESS, 'Materiales incorporados correctamente.');
         } else {
             // Si hubo fallos al mover imágenes, muestra advertencia con los materiales afectados.
             $failedList = implode(', ', $failedMaterials);
-            return back()->with(FlashType::WARNING, "Error al mover imágenes para los siguientes materiales: $failedList. Los demás se incorporaron correctamente.");
+            return back()->withPush(FlashType::WARNING, "Error al mover imágenes para los siguientes materiales: $failedList. Los demás se incorporaron correctamente.");
         }
     }
 

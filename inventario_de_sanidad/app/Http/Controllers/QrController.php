@@ -49,11 +49,11 @@ class QrController extends Controller {
 
             if ($filesAdded === 0) {
                 if (file_exists($zipPath)) unlink($zipPath);
-                return back()->with(FlashType::ERROR, 'No hay códigos QR disponibles para descargar');
+                return back()->withPush(FlashType::ERROR, 'No hay códigos QR disponibles para descargar');
             }
 
         } else {
-            return back()->with(FlashType::ERROR, 'No se pudo crear el ZIP');
+            return back()->withPush(FlashType::ERROR, 'No se pudo crear el ZIP');
         }
 
         return response()->download($zipPath, 'qrcodes.zip')->deleteFileAfterSend(true);

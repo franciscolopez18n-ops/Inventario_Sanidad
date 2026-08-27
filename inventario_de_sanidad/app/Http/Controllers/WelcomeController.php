@@ -56,6 +56,6 @@ class WelcomeController extends Controller {
         $user->first_log = 1;
         $user->save();
 
-        return redirect()->route('welcome')->with(FlashType::SUCCESS, 'Contraseña actualizada con éxito.');
+        return redirect()->route('welcome')->withPush(FlashType::SUCCESS, 'Contraseña actualizada con éxito.');
     }
 }

@@ -87,7 +87,7 @@ class ActivityController extends Controller {
 
         // Si no hay datos válidos en el lote, redirige con mensaje de error.
         if (empty($batch)) {
-            return back()->withInput()->with(FlashType::ERROR, 'Debe introducir datos al lote.');
+            return back()->withInput()->withPush(FlashType::ERROR, 'Debe introducir datos al lote.');
         }
 
         // Comprobaciones de seguridad por si el frontend fue manipulado.
@@ -99,7 +99,7 @@ class ActivityController extends Controller {
             ]);
 
             if ($validator->fails()) {
-                return back()->withInput()->with(FlashType::ERROR, 'Los datos del lote no son válidos.');
+                return back()->withInput()->withPush(FlashType::ERROR, 'Los datos del lote no son válidos.');
             }
         }
 
@@ -124,10 +124,10 @@ class ActivityController extends Controller {
             Cookie::queue(Cookie::forget('activityFormBatch'));
 
             // Redirige con mensaje de éxito.
-            return back()->with(FlashType::SUCCESS, 'Actividad registrada correctamente.');
+            return back()->withPush(FlashType::SUCCESS, 'Actividad registrada correctamente.');
         } catch (\Exception $e) {
             // Si algo falla, redirige con el mensaje de error.
-            return back()->withInput()->with(FlashType::ERROR, 'Error al insertar la actividad: ' . $e->getMessage());
+            return back()->withInput()->withPush(FlashType::ERROR, 'Error al insertar la actividad: ' . $e->getMessage());
         }
     }
 

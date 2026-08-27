@@ -79,7 +79,7 @@ class UsersManagementController extends Controller {
 
         Mail::to($credentials["email"])->send(new UserCreation($password,$credentials["nombre"],$credentials["apellidos"],$credentials["email"]));
 
-        return back()->with(FlashType::SUCCESS, 'Usuario ' . $credentials["nombre"] . ' ' . $credentials["apellidos"] . ' creado con éxito.');
+        return back()->withPush(FlashType::SUCCESS, 'Usuario ' . $credentials["nombre"] . ' ' . $credentials["apellidos"] . ' creado con éxito.');
     }
 
     private static function generateRandomPassword($length) {
@@ -103,7 +103,7 @@ class UsersManagementController extends Controller {
 
         User::where('user_id', $user)->delete();
 
-        return back()->with(FlashType::SUCCESS, 'Usuario dado de baja con éxito.');
+        return back()->withPush(FlashType::SUCCESS, 'Usuario dado de baja con éxito.');
     }
 
     public function manageChangePassword(Request $request) {
@@ -117,6 +117,6 @@ class UsersManagementController extends Controller {
 
         Mail::to($userInfo->email)->send(new ChangePassword($password,$userInfo->first_name,$userInfo->last_name));
 
-        return back()->with(FlashType::SUCCESS, 'Contraseña cambiada con éxito y enviada por correo al usuario.');
+        return back()->withPush(FlashType::SUCCESS, 'Contraseña cambiada con éxito y enviada por correo al usuario.');
     }
 }
