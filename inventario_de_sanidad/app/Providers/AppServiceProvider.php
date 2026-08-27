@@ -5,6 +5,8 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Http\RedirectResponse;
 
 class AppServiceProvider extends ServiceProvider {
     /**
@@ -27,5 +29,11 @@ class AppServiceProvider extends ServiceProvider {
         if (config('app.env') === 'ngrok') {
             URL::forceScheme('https');
         }
+
+        RedirectResponse::macro('withPush', function (string $key, string ...$values) {
+            flash_push($key, ...$values);
+
+            return $this;
+        });
     }
 }

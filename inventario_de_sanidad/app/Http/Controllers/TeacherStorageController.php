@@ -75,7 +75,7 @@ class TeacherStorageController extends Controller {
                     ->decrement('units', $modifiedUnits);
 
                 // Registra la modificación con unidades negativas.
-                $this->storeEditInModification($useRecord->getAssignment(), -$modifiedUnits);
+                $this->logStockModification($useRecord->getAssignment(), -$modifiedUnits);
             });
 
             // Se comprueba que las unidades actualizadas no sean menores que el mínimo de unidades.

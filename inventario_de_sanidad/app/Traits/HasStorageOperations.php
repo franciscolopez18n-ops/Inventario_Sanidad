@@ -21,15 +21,19 @@ trait HasStorageOperations {
      * específico de almacenamiento (uso o reserva), junto con la ubicación y el usuario
      */
 
-    private function storeEditInModification(StorageAssignment $assignment, int $units) {
+    private function logStockModification(StorageAssignment $assignment, int $difference) {
+        if ($difference === 0) return false;
+
         Modification::create([
             'user_id'         => Auth::id(),
             'material_id'     => $assignment->material_id,
             'storage_type'    => $assignment->storage_type,
             'storage'         => $assignment->storage,
-            'units'           => $units,
+            'units'           => $difference,
             'action_datetime' => Carbon::now('Europe/Madrid'),
         ]);
+
+        return true;
     }
 
     /**

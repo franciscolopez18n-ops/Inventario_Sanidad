@@ -43,6 +43,7 @@ class MaterialManagementController extends Controller {
     public function manageUpdate(Material $material, Request $request) {
         $storageKeys = array_keys($request->except(['name', 'description', 'image', '_token']));
     
+        // Reglas y mensajes de validación de la información del material
         $rules = [
             'name'        => 'required|string|max:60',
             'description' => 'required|string|max:255',
@@ -59,6 +60,7 @@ class MaterialManagementController extends Controller {
             'image.max'            => 'La imagen no puede superar 4 MB.',
         ];
     
+        // Reglas y mensajes de validación de la información del almacenamiento
         foreach ($storageKeys as $storage) {
             $rules["$storage.use_units"]         = 'required|integer|min:0';
             $rules["$storage.use_min_units"]     = 'required|integer|min:0';
@@ -97,54 +99,55 @@ class MaterialManagementController extends Controller {
             $messages["$storage.reserve_shelf.min"]          = 'La balda de reserva debe ser mayor que 0.';
         }
     
+        // Validación
         $validated = $request->validate($rules, $messages);
     
-        $oldPath = $material->image_path;
-        $newPath = $request->hasFile('image')
-            ? $request->file('image')->store('materials', 'public')
-            : null;
+        $oldImagePath = $material->image_path;
+        $newImagePath = null;
     
         try {
             $updated = false;
+
+            // En caso de que se haya adjuntado una nueva imagen, la intentamos guardar y obtener su ruta para la BD
+            if ($request->hasFile('image')) {
+                $newImagePath = $request->file('image')->store('materials', 'public');
+
+                if ($newImagePath === false) {
+                    throw new \RuntimeException('No se pudo guardar la imagen.');
+                }
+            }
     
             DB::transaction(function () use (
                 &$updated,
                 $material,
                 $validated,
-                $newPath,
-                $oldPath,
+                $newImagePath,
+                $oldImagePath,
                 $storageKeys
             ) {
-                // Actualizar material solo si cambió
+                // Actualizar información del material solo si cambió
                 if (
-                    $validated['name'] != $material->name ||
-                    $validated['description'] != $material->description ||
-                    $newPath !== null
+                    $validated['name'] !== $material->name ||
+                    $validated['description'] !== $material->description ||
+                    $newImagePath !== null
                 ) {
                     $updated = true;
     
                     $material->update([
                         'name'        => $validated['name'],
                         'description' => $validated['description'],
-                        'image_path'  => $newPath ?? $oldPath,
+                        'image_path'  => $newImagePath ?? $oldImagePath,
                     ]);
-    
-                    if ($newPath && $oldPath) {
-                        if (!StorageFacades::disk('public')->delete($oldPath)) {
-                            throw new \Exception('No se pudo eliminar la imagen anterior del material.');
-                        }
-                    }
                 }
     
-                // Actualizar almacenamiento por cada almacén
+                // Actualizar la información del almacenamiento en cada almacén solo si cambió 
                 foreach ($storageKeys as $storage) {
                     $data = $validated[$storage] ?? null;
-                    if (!$data) continue;
     
                     $useRecord = StorageUse::where('material_id', $material->material_id)->where('storage', $storage)->first();
                     $reserveRecord = StorageReserve::where('material_id', $material->material_id)->where('storage', $storage)->first();
     
-                    if (!$useRecord || !$reserveRecord) continue;
+                    if (!$data || !$useRecord || !$reserveRecord) continue;
     
                     $storageChanged =
                         $data['use_units']         != $useRecord->units    ||
@@ -183,37 +186,55 @@ class MaterialManagementController extends Controller {
                             'shelf'     => $data['reserve_shelf'],
                         ]);
     
-                    if ($differenceUse != 0) {
-                        $this->storeEditInModification($useRecord->getAssignment(), $differenceUse);
-                    }
-    
-                    if ($differenceReserve != 0) {
-                        $this->storeEditInModification($reserveRecord->getAssignment(), $differenceReserve);
-                    }
+                    // Registrar cambios en el stock en el historial de modificaciones
+                    $this->logStockModification($useRecord->getAssignment(), $differenceUse);
+                    $this->logStockModification($reserveRecord->getAssignment(), $differenceReserve);
                 }
             });
     
             if (!$updated) {
-                return back()->with(FlashType::INFO, 'No hay nada que actualizar.');
+                return back()->withPush(FlashType::INFO, 'No hay nada que actualizar.');
             }
-    
-            foreach ($storageKeys as $storage) {
-                $useRecord    = StorageUse::where('material_id', $material->material_id)->where('storage', $storage)->first();
-                $reserveRecord = StorageReserve::where('material_id', $material->material_id)->where('storage', $storage)->first();
-    
-                if ($useRecord)    $this->checkUnits($useRecord);
-                if ($reserveRecord) $this->checkUnits($reserveRecord);
-            }
-    
-            return back()->with(FlashType::SUCCESS, 'Material actualizado correctamente');
     
         } catch (\Exception $e) {
-            if ($newPath && StorageFacades::disk('public')->exists($newPath)) {
-                StorageFacades::disk('public')->delete($newPath);
+            if ($newImagePath && StorageFacades::disk('public')->exists($newImagePath)) {
+                StorageFacades::disk('public')->delete($newImagePath);
             }
     
-            return back()->withInput()->with(FlashType::ERROR, 'Error al actualizar: ' . $e->getMessage());
+            return back()->withInput()->withPush(FlashType::ERROR, 'Error al actualizar: ' . $e->getMessage());
         }
+
+        // En caso de que las unidades bajen del umbral mínimo permitido, enviamos un aviso a los administradores
+        // Nota: es necesario repetir aquí el bucle de antes para leer los valores actualizados
+        foreach ($storageKeys as $storage) {
+            $useRecord    = StorageUse::where('material_id', $material->material_id)->where('storage', $storage)->first();
+            $reserveRecord = StorageReserve::where('material_id', $material->material_id)->where('storage', $storage)->first();
+
+            $storageName = $storage === "CAE" ? "CAE" : "Odontología";
+            try {
+                if ($useRecord) $this->checkUnits($useRecord);
+            } catch (\Swift_SwiftException $e) {
+                flash_push(
+                    FlashType::WARNING,
+                    "Stock bajo en {$storageName} USO, no se pudo enviar el correo de advertencia correspondiente a los administradores: {$e->getMessage()}."
+                );
+            }
+
+            try {
+                if ($reserveRecord) $this->checkUnits($reserveRecord);
+            } catch (\Swift_SwiftException $e) {
+                flash_push(
+                    FlashType::WARNING,
+                    "Stock bajo en {$storageName} RESERVA, no se pudo enviar el correo de advertencia correspondiente a los administradores: {$e->getMessage()}."
+                );
+            }
+        }
+
+        if ($newImagePath && $oldImagePath) {
+            StorageFacades::disk('public')->delete($oldImagePath);
+        }
+
+        return back()->withPush(FlashType::SUCCESS, 'Material actualizado correctamente.');
     }
 
     // Elimina un material y su almacenamiento
