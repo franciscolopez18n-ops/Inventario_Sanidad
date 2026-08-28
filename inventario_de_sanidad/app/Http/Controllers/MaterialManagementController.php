@@ -13,6 +13,7 @@ use App\Models\StorageReserve;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage as StorageFacades;
+use Illuminate\Validation\Rule;
 
 class MaterialManagementController extends Controller {
     use HasStorageOperations;
@@ -45,7 +46,10 @@ class MaterialManagementController extends Controller {
     
         // Reglas y mensajes de validación de la información del material
         $rules = [
-            'name'        => 'required|string|max:60',
+            'name' => [
+                'required', 'string', 'max:60',
+                Rule::unique('materials', 'name')->ignore($material->material_id, 'material_id'),
+            ],
             'description' => 'required|string|max:255',
             'image'       => 'nullable|image|mimes:jpeg,png|max:4096',
         ];
@@ -53,6 +57,7 @@ class MaterialManagementController extends Controller {
         $messages = [
             'name.required'        => 'Debes introducir el nombre del material.',
             'name.max'             => 'El nombre no puede superar 60 caracteres.',
+            'name.unique'          => 'Ya existe un material con ese nombre.',
             'description.required' => 'Debes introducir la descripción del material.',
             'description.max'      => 'La descripción no puede superar 255 caracteres.',
             'image.image'          => 'El archivo debe ser una imagen.',
@@ -66,7 +71,15 @@ class MaterialManagementController extends Controller {
             $rules["$storage.use_min_units"]     = 'required|integer|min:0';
             $rules["$storage.use_cabinet"]       = 'required|integer|min:1';
             $rules["$storage.use_shelf"]         = 'required|integer|min:1';
-            $rules["$storage.use_drawer"]        = 'required|integer|min:1';
+            $rules["$storage.use_drawer"]        = [
+                'required', 'integer', 'min:1',
+                Rule::unique('storage_use', 'drawer')
+                    ->where(fn ($query) => $query
+                        ->where('storage', $storage)
+                        ->where('cabinet', $request->input("$storage.use_cabinet"))
+                        ->where('shelf', $request->input("$storage.use_shelf")))
+                    ->ignore($material->material_id, 'material_id'),
+            ];
             $rules["$storage.reserve_units"]     = 'required|integer|min:0';
             $rules["$storage.reserve_min_units"] = 'required|integer|min:0';
             $rules["$storage.reserve_cabinet"]   = 'required|string';
@@ -87,6 +100,7 @@ class MaterialManagementController extends Controller {
             $messages["$storage.use_drawer.required"]        = 'El cajón de uso es obligatorio.';
             $messages["$storage.use_drawer.integer"]         = 'El cajón de uso debe ser un número entero.';
             $messages["$storage.use_drawer.min"]             = 'El cajón de uso debe ser mayor que 0.';
+            $messages["$storage.use_drawer.unique"]          = 'El cajón ya está ocupado por otro material.';
             $messages["$storage.reserve_units.required"]     = 'La cantidad de reserva es obligatoria.';
             $messages["$storage.reserve_units.integer"]      = 'La cantidad de reserva debe ser un número entero.';
             $messages["$storage.reserve_units.min"]          = 'La cantidad de reserva no puede ser negativa.';
@@ -302,10 +316,25 @@ class MaterialManagementController extends Controller {
             return back()->withPush(FlashType::ERROR, 'No hay materiales añadidos en el lote para dar de alta.');
         }
 
-        // Comprobaciones de seguridad por si el frontend fue manipulado.
+        // Comprobaciones de seguridad por si el frontend fue manipulado + validaciones adicionales.
+        $allMessages = [];
         foreach ($batch as $material) {
+            $storages = $material['storage'] === 'ambos'
+                ? ['CAE', 'odontology']
+                : [$material['storage']];
+
+            $duplicateMessages = [];
             $validator = validator($material, [
-                'name' => 'required|string',
+                'name' => [
+                    'required', 'string',
+                    function ($attribute, $value, $fail) use (&$duplicateMessages) {
+                        if (DB::table('materials')->where('name', $value)->exists()) {
+                            $message = "Ya existe un material con el nombre {$value}.";
+                            $duplicateMessages[] = $message;
+                            $fail($message);
+                        }
+                    },
+                ],
                 'description' => 'required|string',
                 'storage' => 'required|in:CAE,odontology,ambos',
                 'image_temp' => 'nullable|string',
@@ -314,7 +343,26 @@ class MaterialManagementController extends Controller {
                 'min_units_use' => 'required|numeric|min:0',
                 'cabinet_use' => 'required|numeric|min:1',
                 'shelf_use' => 'required|numeric|min:1',
-                'drawer_use' => 'required|numeric|min:1',
+                'drawer_use' => [
+                    'required', 'numeric', 'min:1',
+                    function ($attribute, $value, $fail) use ($material, $storages, &$duplicateMessages) {
+                        $conflictStorages = DB::table('storage_use')
+                            ->whereIn('storage', $storages)
+                            ->where('cabinet', $material['cabinet_use'])
+                            ->where('shelf', $material['shelf_use'])
+                            ->where('drawer', $value)
+                            ->pluck('storage');
+
+                        if ($conflictStorages->isNotEmpty()) {
+                            $names = $conflictStorages->map(fn ($storage) => $storage === 'CAE' ? 'CAE' : 'Odontología');
+                            $location = "{$material['cabinet_use']}-{$material['shelf_use']}-{$value}";
+                            $message = "El cajón {$location} está ocupado en " . $names->implode(' y ');
+
+                            $duplicateMessages[] = $message;
+                            $fail($message);
+                        }
+                    },
+                ],
 
                 'units_reserve' => 'required|numeric|min:0',
                 'min_units_reserve' => 'required|numeric|min:0',
@@ -323,8 +371,17 @@ class MaterialManagementController extends Controller {
             ]);
 
             if ($validator->fails()) {
-                return back()->withPush(FlashType::ERROR, 'Los datos del lote no son válidos.');
+                if (empty($duplicateMessages)) {
+                    // Respuesta genérica en caso de frontend manipulado.
+                    return back()->withPush(FlashType::ERROR, 'Los datos del lote no son válidos.');
+                }
+
+                array_push($allMessages, ...$duplicateMessages);
             }
+        }
+
+        if (!empty($allMessages)) {
+            return back()->withPush(FlashType::ERROR, ...array_unique($allMessages));
         }
 
         // Array para almacenar información de imágenes que deben moverse tras la transacción.
@@ -352,7 +409,7 @@ class MaterialManagementController extends Controller {
                         ];
                     }
 
-                    // Registra el almacenamiento del material (en uso o reserva).
+                    // Registra el almacenamiento del material (en uso y reserva).
                     $this->storeMaterialInStorage($material, $materialData);
                 }
             });

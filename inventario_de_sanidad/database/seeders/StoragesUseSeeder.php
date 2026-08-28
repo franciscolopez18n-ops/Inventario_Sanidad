@@ -11,7 +11,7 @@ class StoragesUseSeeder extends Seeder {
             ['material_id' => 1,  'storage' => 'odontology', 'units' => 7,  'min_units' => 8,  'cabinet' => 1, 'shelf' => 1,  'drawer' => 1],
             ['material_id' => 1,  'storage' => 'CAE',        'units' => 7,  'min_units' => 8,  'cabinet' => 1, 'shelf' => 1,  'drawer' => 1],
             ['material_id' => 2,  'storage' => 'CAE',        'units' => 11, 'min_units' => 6,  'cabinet' => 1, 'shelf' => 1,  'drawer' => 2],
-            ['material_id' => 3,  'storage' => 'odontology', 'units' => 15, 'min_units' => 13, 'cabinet' => 1, 'shelf' => 1,  'drawer' => 1],
+            ['material_id' => 3,  'storage' => 'odontology', 'units' => 15, 'min_units' => 13, 'cabinet' => 1, 'shelf' => 1,  'drawer' => 2],
             ['material_id' => 4,  'storage' => 'CAE',        'units' => 12, 'min_units' => 10, 'cabinet' => 2, 'shelf' => 2,  'drawer' => 1],
             ['material_id' => 5,  'storage' => 'CAE',        'units' => 14, 'min_units' => 16, 'cabinet' => 2, 'shelf' => 2,  'drawer' => 2],
             ['material_id' => 6,  'storage' => 'CAE',        'units' => 32, 'min_units' => 32, 'cabinet' => 2, 'shelf' => 2,  'drawer' => 3],

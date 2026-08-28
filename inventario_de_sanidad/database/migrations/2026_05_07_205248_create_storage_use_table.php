@@ -18,6 +18,8 @@ class CreateStorageUseTable extends Migration {
             $table->unsignedInteger('shelf');
             $table->unsignedInteger('drawer');
 
+            $table->unique(['storage', 'cabinet', 'shelf', 'drawer']);
+
             $table->primary(['material_id', 'storage']);
 
             $table->foreign(['material_id', 'storage'])
