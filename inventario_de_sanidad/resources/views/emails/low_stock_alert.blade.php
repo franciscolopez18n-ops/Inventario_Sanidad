@@ -34,8 +34,8 @@
                 El material <strong>{{ $assignment->material->name }}</strong> tiene una cantidad actual de 
                 <strong>{{ $assignment->storageRecord()->getUnits() }}</strong>, que está por debajo del mínimo permitido 
                 (<strong>{{ $assignment->storageRecord()->getMinUnits() }}</strong>) en el almacenamiento de 
-                <strong>{{ $assignment->storage_type === 'use' ? 'uso' : 'reserva' }}</strong>
-                en el almacen de <strong>{{ $assignment->storage === 'odontology' ? 'Odontología' : 'CAE' }}</strong>.
+                <strong>{{ display_name($assignment->storage_type, DisplayCategory::MODALITY) }}</strong>
+                en el almacen de <strong>{{ display_name($assignment->storage, DisplayCategory::STORAGE) }}</strong>.
               </p>
               <p style="margin:0 0 12px;">
                 Por favor, toma las medidas necesarias para reponer el stock.

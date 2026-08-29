@@ -15,7 +15,7 @@
         <form action="{{ route('storages.subtract.teacher', [$material->material_id, $currentLocation]) }}" method="POST">
             @csrf
 
-            <h1>Editar Almacenamiento para: {{ $material->name }} / {{ $currentLocation == "CAE" ? "CAE" : "Odontología" }}</h1>
+            <h1>Editar Almacenamiento para: {{ $material->name }} / {{ display_name($currentLocation, DisplayCategory::STORAGE) }}</h1>
 
             <div class="form-group">
                 <label for="use_units">Unidades en Uso</label>

@@ -140,7 +140,7 @@ function crearMaterialCard(material) {
     body.appendChild(p);
 
     let ul = document.createElement("ul");
-    ul.appendChild(crearLi("Localización", material.storage == "CAE" ? "CAE" : "Odontología"));
+    ul.appendChild(crearLi("Localización", displayName(material.storage, DisplayCategory.STORAGE)));
     ul.appendChild(crearLi("Armario", material.cabinet));
     ul.appendChild(crearLi("Balda", material.shelf));
     if (isUse) ul.appendChild(crearLi("Cajón", material.drawer));
@@ -186,7 +186,7 @@ function renderTable(limit, paginaActual) {
         // Columnas con datos y data-label para responsive
         tr.appendChild(crearDataLabel(crearTD(item.name ?? "-"), "Nombre"));
         tr.appendChild(crearDataLabel(crearTD(item.description ?? "-"), "Descripción"));
-        tr.appendChild(crearDataLabel(crearTD(item.storage == "CAE" ? "CAE" : "Odontología"), "Localización"));
+        tr.appendChild(crearDataLabel(crearTD(displayName(item.storage, DisplayCategory.STORAGE)), "Localización"));
         tr.appendChild(crearDataLabel(crearTD(item.cabinet ?? "-"), "Armario"));
         tr.appendChild(crearDataLabel(crearTD(item.shelf ?? "-"), "Balda"));
         if (isUse) tr.appendChild(crearDataLabel(crearTD(item.drawer ?? "-"), "Cajón"));

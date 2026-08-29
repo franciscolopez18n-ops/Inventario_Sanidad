@@ -58,11 +58,11 @@ function renderTable(limit, paginaActual) {
         tr.appendChild(crearDataLabel(crearTD(item.material_name ?? "-"), "Material"));
         tr.appendChild(crearDataLabel(crearTD(item.units ?? "-"), "Unidades modificadas"));
         tr.appendChild(crearDataLabel(
-            crearTD(item.storage == "CAE" ? "CAE" : "Odontología"),
+            crearTD(displayName(item.storage, DisplayCategory.STORAGE)),
             "Localización"
         ));
         tr.appendChild(crearDataLabel(
-            crearTD(item.storage_type == "reserve" ? "reserva" : "uso"),
+            crearTD(displayName(item.storage_type, DisplayCategory.MODALITY)),
             "Tipo de almacenamiento"
         ));
         tr.appendChild(crearDataLabel(crearTD(item.action_datetime ?? "-"), "Fecha de modificación"));

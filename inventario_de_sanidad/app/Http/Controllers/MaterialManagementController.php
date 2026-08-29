@@ -10,6 +10,7 @@ use App\Models\Storage;
 use App\Models\StorageAssignment;
 use App\Models\StorageUse;
 use App\Models\StorageReserve;
+use DisplayCategory;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage as StorageFacades;
@@ -224,7 +225,7 @@ class MaterialManagementController extends Controller {
             $useRecord    = StorageUse::where('material_id', $material->material_id)->where('storage', $storage)->first();
             $reserveRecord = StorageReserve::where('material_id', $material->material_id)->where('storage', $storage)->first();
 
-            $storageName = $storage === "CAE" ? "CAE" : "Odontología";
+            $storageName = display_name($storage, DisplayCategory::STORAGE);
             try {
                 if ($useRecord) $this->checkUnits($useRecord);
             } catch (\Swift_SwiftException $e) {
@@ -354,9 +355,9 @@ class MaterialManagementController extends Controller {
                             ->pluck('storage');
 
                         if ($conflictStorages->isNotEmpty()) {
-                            $names = $conflictStorages->map(fn ($storage) => $storage === 'CAE' ? 'CAE' : 'Odontología');
+                            $names = $conflictStorages->map(fn ($storage) => display_name($storage, DisplayCategory::STORAGE));
                             $location = "{$material['cabinet_use']}-{$material['shelf_use']}-{$value}";
-                            $message = "El cajón {$location} está ocupado en " . $names->implode(' y ');
+                            $message = "El cajón {$location} está ocupado en " . $names->implode(' y ') . ".";
 
                             $duplicateMessages[] = $message;
                             $fail($message);

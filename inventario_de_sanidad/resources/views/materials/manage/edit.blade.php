@@ -49,7 +49,7 @@
         <div class="storage-grid">
             @foreach ($storages as $storage)
                 <fieldset>
-                    <legend>{{ $storage->storage === 'CAE' ? 'CAE' : 'Odontología' }}</legend>
+                    <legend>{{ display_name($storage->storage, DisplayCategory::STORAGE) }}</legend>
 
                     @php
                         $useRecord = $storage->storageUse;

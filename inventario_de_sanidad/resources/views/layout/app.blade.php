@@ -19,6 +19,7 @@
     <!-- Sección para archivos CSS adicionales por página -->
     @stack('styles')
 
+    <script src="{{ asset('js/globals.js') }}" defer></script>
     <script src="{{ asset('js/darkmode.js') }}" defer></script>
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="{{ asset('js/messages.js') }}" defer></script>
@@ -257,10 +258,10 @@
 
                             @foreach ($notifications as $warning)
                                 <p>
-                                    - ({{ $warning->storage == "CAE" ? "CAE" : "ODONTOLOGÍA" }})
+                                    - ({{ display_name($warning->storage, DisplayCategory::STORAGE, TextCase::UPPERCASE) }})
                                     <strong>{{ $warning->name }}</strong>
                                     tiene solo {{ $warning->units }} unidad/es en
-                                    {{ $warning->type == "use" ? "uso" : "reserva" }}.
+                                    {{ display_name($warning->type, DisplayCategory::MODALITY) }}.
                                 </p>
                             @endforeach
 
