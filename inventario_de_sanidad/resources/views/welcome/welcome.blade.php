@@ -9,7 +9,7 @@
 @section('content')
 
 @php
-    use App\Constants\FlashType;
+    use App\Constants\AlertType;
 @endphp
 
 <!-- Dialog para cambiar contraseña -->
@@ -30,7 +30,7 @@
     </div>
 </dialog>
 
-@if (session(FlashType::SUCCESS))
+@if (session(AlertType::SUCCESS))
     <div class="con">
         <h1>Bienvenido/a <span>{{ Auth::user()->full_name }}</span></h1>
         <p>Has iniciado sesión correctamente.</p>

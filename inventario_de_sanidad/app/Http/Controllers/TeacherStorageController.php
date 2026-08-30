@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Constants\FlashType;
+use App\Constants\AlertType;
 use App\Traits\HasStorageOperations;
 use App\Models\StorageUse;
 use App\Models\Material;
@@ -49,7 +49,7 @@ class TeacherStorageController extends Controller {
 
         // Si no existe el registro se retorna un mensaje de error.
         if (empty($useRecord)) {
-            return back()->withPush(FlashType::ERROR, 'No se ha encontrado el almacenamiento de uso en esta ubicación.');
+            return back()->withPush(AlertType::ERROR, 'No se ha encontrado el almacenamiento de uso en esta ubicación.');
         }
 
         $currentUse = $useRecord->units;
@@ -82,10 +82,10 @@ class TeacherStorageController extends Controller {
             $this->checkUnits($useRecord);
 
             // Devuelve una respuesta de éxito al usuario.
-            return back()->withPush(FlashType::SUCCESS, "Se han restado {$modifiedUnits} unidades.");
+            return back()->withPush(AlertType::SUCCESS, "Se han restado {$modifiedUnits} unidades.");
         } catch (\Exception $e) {
             // Si ocurre algún error durante el proceso, muestra un mensaje de error.
-            return back()->withPush(FlashType::ERROR, 'Error al modificar el almacenamiento: ' . $e->getMessage());
+            return back()->withPush(AlertType::ERROR, 'Error al modificar el almacenamiento: ' . $e->getMessage());
         }
     }
 

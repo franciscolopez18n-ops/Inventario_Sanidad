@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Storage;
-use App\Constants\FlashType;
+use App\Constants\AlertType;
 use ZipArchive;
 
 class QrController extends Controller {
@@ -49,11 +49,11 @@ class QrController extends Controller {
 
             if ($filesAdded === 0) {
                 if (file_exists($zipPath)) unlink($zipPath);
-                return back()->withPush(FlashType::ERROR, 'No hay códigos QR disponibles para descargar');
+                return back()->withPush(AlertType::ERROR, 'No hay códigos QR disponibles para descargar');
             }
 
         } else {
-            return back()->withPush(FlashType::ERROR, 'No se pudo crear el ZIP');
+            return back()->withPush(AlertType::ERROR, 'No se pudo crear el ZIP');
         }
 
         return response()->download($zipPath, 'qrcodes.zip')->deleteFileAfterSend(true);

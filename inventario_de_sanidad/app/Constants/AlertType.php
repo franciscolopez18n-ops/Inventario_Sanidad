@@ -4,7 +4,7 @@ namespace App\Constants;
 
 use ReflectionClass;
 
-class FlashType {
+class AlertType {
     public const SUCCESS = 'success';
     public const ERROR = 'error';
     public const WARNING = 'warning';

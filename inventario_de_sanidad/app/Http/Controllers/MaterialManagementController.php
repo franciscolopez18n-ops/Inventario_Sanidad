@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Constants\FlashType;
+use App\Constants\AlertType;
 use App\Traits\HasStorageOperations;
 use App\Models\Material;
 use App\Models\Storage;
@@ -208,7 +208,7 @@ class MaterialManagementController extends Controller {
             });
     
             if (!$updated) {
-                return back()->withPush(FlashType::INFO, 'No hay nada que actualizar.');
+                return back()->withPush(AlertType::INFO, 'No hay nada que actualizar.');
             }
     
         } catch (\Exception $e) {
@@ -216,7 +216,7 @@ class MaterialManagementController extends Controller {
                 StorageFacades::disk('public')->delete($newImagePath);
             }
     
-            return back()->withInput()->withPush(FlashType::ERROR, 'Error al actualizar: ' . $e->getMessage());
+            return back()->withInput()->withPush(AlertType::ERROR, 'Error al actualizar: ' . $e->getMessage());
         }
 
         // En caso de que las unidades bajen del umbral mínimo permitido, enviamos un aviso a los administradores
@@ -230,7 +230,7 @@ class MaterialManagementController extends Controller {
                 if ($useRecord) $this->checkUnits($useRecord);
             } catch (\Swift_SwiftException $e) {
                 flash_push(
-                    FlashType::WARNING,
+                    AlertType::WARNING,
                     "Stock bajo en {$storageName} USO, no se pudo enviar el correo de advertencia correspondiente a los administradores: {$e->getMessage()}."
                 );
             }
@@ -239,7 +239,7 @@ class MaterialManagementController extends Controller {
                 if ($reserveRecord) $this->checkUnits($reserveRecord);
             } catch (\Swift_SwiftException $e) {
                 flash_push(
-                    FlashType::WARNING,
+                    AlertType::WARNING,
                     "Stock bajo en {$storageName} RESERVA, no se pudo enviar el correo de advertencia correspondiente a los administradores: {$e->getMessage()}."
                 );
             }
@@ -249,7 +249,7 @@ class MaterialManagementController extends Controller {
             StorageFacades::disk('public')->delete($oldImagePath);
         }
 
-        return back()->withPush(FlashType::SUCCESS, 'Material actualizado correctamente.');
+        return back()->withPush(AlertType::SUCCESS, 'Material actualizado correctamente.');
     }
 
     // Elimina un material y su almacenamiento
@@ -258,7 +258,7 @@ class MaterialManagementController extends Controller {
             // Verifica si el material aún existe en la base de datos mediante su ID
             if (!Material::find($material->material_id)) {
                 // Si no existe (puede haber sido eliminado previamente), muestra advertencia
-                return back()->withPush(FlashType::WARNING, 'El material no existe o ya ha sido eliminado.');
+                return back()->withPush(AlertType::WARNING, 'El material no existe o ya ha sido eliminado.');
             }
 
             // Elimina la imagen del material
@@ -276,10 +276,10 @@ class MaterialManagementController extends Controller {
 
             $material->delete();
 
-            return back()->withPush(FlashType::SUCCESS, 'Material eliminado correctamente.');
+            return back()->withPush(AlertType::SUCCESS, 'Material eliminado correctamente.');
 
         } catch (\Exception $e) {
-            return back()->withPush(FlashType::ERROR, 'Error al eliminar el material: ' . $e->getMessage());
+            return back()->withPush(AlertType::ERROR, 'Error al eliminar el material: ' . $e->getMessage());
         }
     }
 
@@ -314,7 +314,7 @@ class MaterialManagementController extends Controller {
         $batch = json_decode(urldecode($_COOKIE['materialFormBatch'] ?? '[]'), true);
         
         if (empty($batch)) {
-            return back()->withPush(FlashType::ERROR, 'No hay materiales añadidos en el lote para dar de alta.');
+            return back()->withPush(AlertType::ERROR, 'No hay materiales añadidos en el lote para dar de alta.');
         }
 
         // Comprobaciones de seguridad por si el frontend fue manipulado + validaciones adicionales.
@@ -374,7 +374,7 @@ class MaterialManagementController extends Controller {
             if ($validator->fails()) {
                 if (empty($duplicateMessages)) {
                     // Respuesta genérica en caso de frontend manipulado.
-                    return back()->withPush(FlashType::ERROR, 'Los datos del lote no son válidos.');
+                    return back()->withPush(AlertType::ERROR, 'Los datos del lote no son válidos.');
                 }
 
                 array_push($allMessages, ...$duplicateMessages);
@@ -382,7 +382,7 @@ class MaterialManagementController extends Controller {
         }
 
         if (!empty($allMessages)) {
-            return back()->withPush(FlashType::ERROR, ...array_unique($allMessages));
+            return back()->withPush(AlertType::ERROR, ...array_unique($allMessages));
         }
 
         // Array para almacenar información de imágenes que deben moverse tras la transacción.
@@ -420,7 +420,7 @@ class MaterialManagementController extends Controller {
 
         } catch (\Exception $e) {
             // Si hay error en la transacción, muestra mensaje de error.
-            return back()->withPush(FlashType::ERROR, 'Error al insertar los materiales: ' . $e->getMessage());
+            return back()->withPush(AlertType::ERROR, 'Error al insertar los materiales: ' . $e->getMessage());
         }
 
         $failedMaterials = [];
@@ -449,11 +449,11 @@ class MaterialManagementController extends Controller {
 
         // Si no hubo errores al mover imágenes, muestra mensaje de éxito.
         if (empty($failedMaterials)) {
-            return back()->withPush(FlashType::SUCCESS, 'Materiales incorporados correctamente.');
+            return back()->withPush(AlertType::SUCCESS, 'Materiales incorporados correctamente.');
         } else {
             // Si hubo fallos al mover imágenes, muestra advertencia con los materiales afectados.
             $failedList = implode(', ', $failedMaterials);
-            return back()->withPush(FlashType::WARNING, "Error al mover imágenes para los siguientes materiales: $failedList. Los demás se incorporaron correctamente.");
+            return back()->withPush(AlertType::WARNING, "Error al mover imágenes para los siguientes materiales: $failedList. Los demás se incorporaron correctamente.");
         }
     }
 
