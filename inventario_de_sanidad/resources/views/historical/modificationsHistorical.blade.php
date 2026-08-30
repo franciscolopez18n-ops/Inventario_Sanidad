@@ -79,9 +79,9 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/historicalModifications.js') }}"></script>
-    <script src="{{ asset('js/loader.js') }}"></script>
-    <script src="{{ asset('js/tableFunctions.js') }}"></script>
-    <script src="{{ asset('js/tableHistorical.js') }}"></script>
-    <script src="{{ asset('js/filterToggle.js') }}"></script> 
+    <script src="{{ asset('js/materials/history/modifications/load.js') }}"></script>
+    <script src="{{ asset('js/components/loader.js') }}"></script>
+    <script src="{{ asset('js/utils/tables.js') }}"></script>
+    <script src="{{ asset('js/materials/history/modifications/table.js') }}"></script>
+    <script src="{{ asset('js/components/filterToggle.js') }}"></script> 
 @endpush

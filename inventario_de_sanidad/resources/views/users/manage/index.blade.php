@@ -83,10 +83,10 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/loader.js') }}"></script>
-    <script src="{{ asset('js/dialogFunctions.js') }}"></script>
-    <script src="{{ asset('js/usersManagement.js') }}"></script>
-    <script src="{{ asset('js/tableFunctions.js') }}"></script>
-    <script src="{{ asset('js/tableUser.js') }}"></script>
-    <script src="{{ asset('js/filterToggle.js') }}"></script> 
+    <script src="{{ asset('js/components/loader.js') }}"></script>
+    <script src="{{ asset('js/components/confirmDialog.js') }}"></script>
+    <script src="{{ asset('js/users/load.js') }}"></script>
+    <script src="{{ asset('js/utils/tables.js') }}"></script>
+    <script src="{{ asset('js/users/manageTable.js') }}"></script>
+    <script src="{{ asset('js/components/filterToggle.js') }}"></script> 
 @endpush

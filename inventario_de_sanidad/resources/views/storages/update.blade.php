@@ -69,11 +69,11 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/storagesUpdate.js') }}" type="text/javascript"></script>
-    <script src="{{ asset('js/loader.js') }}"></script>
-    <script src="{{ asset('js/tableFunctions.js') }}"></script>
-    <script src="{{ asset('js/tableStorage.js') }}" type="text/javascript"></script>
-    <script src="{{ asset('js/filterToggle.js') }}"></script>
+    <script src="{{ asset('js/storages/load.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('js/components/loader.js') }}"></script>
+    <script src="{{ asset('js/utils/tables.js') }}"></script>
+    <script src="{{ asset('js/storages/manageTable.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('js/components/filterToggle.js') }}"></script>
     
 @endpush
 

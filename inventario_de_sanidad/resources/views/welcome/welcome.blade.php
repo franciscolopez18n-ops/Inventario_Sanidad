@@ -43,5 +43,5 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/firstWelcome.js') }}"></script>
+    <script src="{{ asset('js/welcome/firstLogin.js') }}"></script>
 @endpush

@@ -89,6 +89,6 @@
 @endsection
 
 @push('scripts')
-    <script type="module" src="{{ asset('js/activity.js') }}" type="text/javascript"></script>
+    <script type="module" src="{{ asset('js/activities/create.js') }}" type="text/javascript"></script>
 @endpush
 

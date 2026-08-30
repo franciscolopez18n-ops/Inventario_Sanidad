@@ -1,5 +1,6 @@
 import { getCookieValue } from '../utils/cookies.js';
 import { BatchResult, removeBatchItem, addBatchItem } from '../utils/batch.js';
+import { clearInputErrors, showInputErrors } from '../utils/inputErrors.js'; 
 
 // Nombre de la cookie donde se almacenará el lote de materiales.
 const COOKIE_NAME = "materialFormBatch";

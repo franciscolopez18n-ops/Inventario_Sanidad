@@ -102,9 +102,9 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/historical.js') }}"></script>
-    <script src="{{ asset('js/loader.js') }}"></script>
-    <script src="{{ asset('js/tableFunctions.js') }}"></script>
-    <script src="{{ asset('js/tableReserveUse.js') }}"></script>
-    <script src="{{ asset('js/filterToggle.js') }}"></script> 
+    <script src="{{ asset('js/materials/history/summary/load.js') }}"></script>
+    <script src="{{ asset('js/components/loader.js') }}"></script>
+    <script src="{{ asset('js/utils/tables.js') }}"></script>
+    <script src="{{ asset('js/materials/history/summary/table.js') }}"></script>
+    <script src="{{ asset('js/components/filterToggle.js') }}"></script> 
 @endpush

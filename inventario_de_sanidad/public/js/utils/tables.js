@@ -1,3 +1,21 @@
+// Nota: este script JS podría ser un módulo importable, lo que resultaría más limpio y mantenible. Sin embargo, 'allData'  y
+//      'currentLimit' son reasignados directamente por otros scripts pensados para compartir scope con este, y los módulos ES
+//      no le permiten eso a un importador con las variables que exporta. Convertir esto en módulo exige ese refactor
+// Nota: 'paginatual' parece un typo. Además, en los scripts de tablas que comparten scope con este script, se crea una
+//      variable global implícita llamada 'paginaActual', que muy probablemente quería referirse a esta variable
+// Nota: hay funciones definidas aquí que son redefinidas por otros scripts de tablas que comparten scope con este script
+
+/*
+Conclusión: esto parece realmente frágil y puede romperse en cualquier momento. Al momento de escribir esto, los scripts asociados
+    (los que se cargan debajo de este en las vistas) son los siguientes:
+	- /users/manageTable.js
+	- /storages/manageTable.js
+	- /materials/manageTable.js
+	- /materials/history/summary/table.js
+	- /materials/history/modifications/table.js
+	- /activities/history/table.js
+*/
+
 let allData = [];
 let currentLimit = 5;
 let paginatual = 0;   

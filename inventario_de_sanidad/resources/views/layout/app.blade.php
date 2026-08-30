@@ -20,9 +20,9 @@
     @stack('styles')
 
     <script src="{{ asset('js/globals.js') }}" defer></script>
-    <script src="{{ asset('js/darkmode.js') }}" defer></script>
+    <script src="{{ asset('js/components/darkmode.js') }}" defer></script>
     <script src="{{ asset('js/app.js') }}" defer></script>
-    <script src="{{ asset('js/messages.js') }}" defer></script>
+    <script src="{{ asset('js/components/alerts.js') }}" defer></script>
 </head>
 <body>
 <div class="layout">

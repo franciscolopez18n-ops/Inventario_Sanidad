@@ -1,5 +1,5 @@
-import { getCookieValue } from './utils/cookies.js';
-import { BatchResult, removeBatchItem, addBatchItem } from './utils/batch.js';
+import { getCookieValue } from '../utils/cookies.js';
+import { BatchResult, removeBatchItem, addBatchItem } from '../utils/batch.js';
 
 const COOKIE_NAME = "activityFormBatch";
 
