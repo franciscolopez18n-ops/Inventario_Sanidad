@@ -84,7 +84,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/', [QrController::class, 'index'])->name('qrcodes.index');
             Route::get('/download-zip', [QrController::class, 'downloadZip'])->name('qrcodes.downloadZip');
             Route::get('/qrcodes/print', [QrController::class, 'print'])->name('qrcodes.print');
-            Route::get('/{file}', [QrController::class, 'show'])->name('qr.show');
+            Route::get('/{file}', [QrController::class, 'show'])->name('qr.show'); // Códigos QR solo visibles por los administradores
         });
         
     });

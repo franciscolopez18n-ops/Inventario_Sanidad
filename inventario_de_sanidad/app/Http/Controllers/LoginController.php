@@ -62,10 +62,10 @@ class LoginController extends Controller {
     public function logout(Request $request) {
         if (Auth::user()->user_type === 'admin') {
             // Borra carpeta temporal y cookies del administrador.
-            StorageFacades::disk('public')->deleteDirectory('temp');
+            StorageFacades::disk('public')->deleteDirectory('temp/' . Auth::id());
             Cookie::queue(Cookie::forget('materialFormBatch'));
 
-        } if (Auth::user()->user_type === 'student') {
+        } elseif (Auth::user()->user_type === 'student') {
             Cookie::queue(Cookie::forget('activityFormBatch'));
         }
 

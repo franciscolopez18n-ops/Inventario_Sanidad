@@ -11,6 +11,7 @@ use App\Models\StorageAssignment;
 use App\Models\StorageUse;
 use App\Models\StorageReserve;
 use DisplayCategory;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage as StorageFacades;
@@ -445,7 +446,7 @@ class MaterialManagementController extends Controller {
         }
 
         // Limpia el directorio temporal de imágenes.
-        StorageFacades::disk('public')->deleteDirectory('temp');
+        StorageFacades::disk('public')->deleteDirectory('temp/' . Auth::id());
 
         // Si no hubo errores al mover imágenes, muestra mensaje de éxito.
         if (empty($failedMaterials)) {
@@ -532,8 +533,8 @@ class MaterialManagementController extends Controller {
             'image' => 'required|image|mimes:jpeg,png|max:4096'
         ]);
 
-        // Se almacena la imagen en la carpeta 'temp' del disco 'public' y devuelve la ruta relativa dentro del disco.
-        $tempPath = $request->file('image')->store('temp', 'public');
+        // Se almacena la imagen en la carpeta temporal del disco 'public' y devuelve la ruta relativa dentro del disco.
+        $tempPath = $request->file('image')->store('temp/' . Auth::id(), 'public');
 
         // Se retorna la ruta de la imagen temporal en una respuesta JSON
         // Si por alguna razón no se generó la ruta, se devuelve 'null'.
