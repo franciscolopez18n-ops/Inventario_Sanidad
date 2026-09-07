@@ -44,7 +44,7 @@ class MaterialManagementController extends Controller {
 
     // Actualiza los datos de un material y/o su almacenamiento
     public function manageUpdate(Material $material, Request $request) {
-        $storageKeys = array_keys($request->except(['name', 'description', 'image', '_token']));
+        $storageKeys = array_keys($request->except(['name', 'description', 'image', 'remove_image', '_token']));
     
         // Reglas y mensajes de validación de la información del material
         $rules = [
@@ -120,6 +120,7 @@ class MaterialManagementController extends Controller {
     
         $oldImagePath = $material->image_path;
         $newImagePath = null;
+        $shouldDeleteImage = false;
     
         try {
             $updated = false;
@@ -132,6 +133,9 @@ class MaterialManagementController extends Controller {
                     throw new \RuntimeException('No se pudo guardar la imagen.');
                 }
             }
+
+            $shouldDeleteImage = ($request->boolean('remove_image') && $oldImagePath)
+                || ($newImagePath && $oldImagePath); // protección en caso de manipulación de frontend: remove_image=false + newImagePath=!null -> nunca se borra la imagen antigua
     
             DB::transaction(function () use (
                 &$updated,
@@ -139,20 +143,22 @@ class MaterialManagementController extends Controller {
                 $validated,
                 $newImagePath,
                 $oldImagePath,
+                $shouldDeleteImage,
                 $storageKeys
             ) {
+                $imageWasUpdated = $newImagePath || $shouldDeleteImage; // nueva imagen de estreno o actualización de la imagen actual
                 // Actualizar información del material solo si cambió
                 if (
                     $validated['name'] !== $material->name ||
                     $validated['description'] !== $material->description ||
-                    $newImagePath !== null
+                    $imageWasUpdated
                 ) {
                     $updated = true;
     
                     $material->update([
                         'name'        => $validated['name'],
                         'description' => $validated['description'],
-                        'image_path'  => $newImagePath ?? $oldImagePath,
+                        'image_path'  => $imageWasUpdated ? $newImagePath : $oldImagePath,
                     ]);
                 }
     
@@ -246,7 +252,7 @@ class MaterialManagementController extends Controller {
             }
         }
 
-        if ($newImagePath && $oldImagePath) {
+        if ($shouldDeleteImage) {
             StorageFacades::disk('public')->delete($oldImagePath);
         }
 

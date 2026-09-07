@@ -11,13 +11,6 @@
     grid-template-columns: repeat(5, 1fr);
 }
 
-.file-name-display {
-    color: var(--text-200);
-    font-size: 0.875rem;
-    display: inline-block;
-    vertical-align: middle;
-}
-
 #btn-submit-create:disabled {
     background-color: #d3d3d3;
     border-color: #bcbcbc;

@@ -5,8 +5,9 @@
 @push('styles')
     
 <link rel="stylesheet" href="{{ asset('css/tables.css') }}">
+<link rel="stylesheet" href="{{ asset('css/image-preview.css') }}">
 <link rel="stylesheet" href="{{ asset('css/materials/materials.css') }}">
-<link rel="stylesheet" href="{{ asset('css/materials/create.css') }}">    
+<link rel="stylesheet" href="{{ asset('css/materials/create.css') }}">
 
 @endpush
 
@@ -100,13 +101,19 @@
         </fieldset>
 
         <div class="form-group file-upload">
-            {{-- Botón de subir imagen --}}
             <label for="image" class="btn btn-primary">Subir Imagen <i class="fa-solid fa-image"></i></label>
-            <input type="file" name="image" id="image" class="btn btn-primary file-upload-input" onchange="previewImage(event, '#img-preview')">
-            
-            {{-- Imagen previsualizada --}}
-            <img id="img-preview" src="" alt="">
-            <span id="file-name" class="file-name-display">Ningún archivo seleccionado</span>
+            <input type="file" name="image" id="image" accept="image/jpeg,image/png" class="file-upload-input">
+
+            <div class="image-preview-group">
+                <div class="image-preview-wrapper hidden">
+                    <img class="image-preview" src="" alt="">
+                    <button type="button" class="image-preview-remove">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <span class="file-name-display">Ningún archivo seleccionado</span>
+            </div>
         </div>
 
         <div class="form-actions">
@@ -151,6 +158,6 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/materials/previewImage.js') }}"></script>
+    <script src="{{ asset('js/components/imagePreview.js') }}"></script>
     <script type="module" src="{{ asset('js/materials/create.js') }}"></script>
 @endpush
