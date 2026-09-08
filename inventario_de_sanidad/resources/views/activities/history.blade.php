@@ -38,8 +38,8 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/activities/history/load.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('js/activities/history/dataLoad.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/components/loader.js') }}"></script>
-    <script src="{{ asset('js/utils/tables.js') }}"></script>
+    <script src="{{ asset('js/components/paginatedTable.js') }}"></script>
     <script src="{{ asset('js/activities/history/table.js') }}" type="text/javascript"></script>
 @endpush
