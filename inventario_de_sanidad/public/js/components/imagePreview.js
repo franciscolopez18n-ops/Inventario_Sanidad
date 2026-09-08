@@ -1,15 +1,34 @@
 document.querySelectorAll('input[type="file"].file-upload-input').forEach(input => {
-    const group = input.parentElement.querySelector('.image-preview-group');
-    const imgPreview = group.querySelector('.image-preview');
-    const removeBtn = group.querySelector('.image-preview-remove');
-    const removeFlag = group.querySelector('.remove-image-flag');
-    const fileNameDisplay = group.querySelector('.file-name-display');
+    const elements = getImagePreviewElements(input);
 
-    input.addEventListener('change', () => previewImageSelection(input, imgPreview, removeFlag, fileNameDisplay));
-    removeBtn.addEventListener('click', () => clearImageSelection(input, imgPreview, removeFlag, fileNameDisplay));
+    elements.input.addEventListener('change', () => previewImageSelection(
+        elements.input,
+        elements.imgPreview,
+        elements.removeFlag,
+        elements.fileNameDisplay
+    ));
+
+    elements.removeBtn.addEventListener('click', () => clearImageSelection(
+        elements.input,
+        elements.imgPreview,
+        elements.removeFlag,
+        elements.fileNameDisplay
+    ));
 });
 
-function discardCurrentImage(input, imgPreview, removeFlag) {
+function getImagePreviewElements(input) {
+    const group = input.parentElement.querySelector('.image-preview-group');
+
+    return {
+        input,
+        imgPreview: group.querySelector('.image-preview'),
+        removeBtn: group.querySelector('.image-preview-remove'),
+        removeFlag: group.querySelector('.remove-image-flag'),
+        fileNameDisplay: group.querySelector('.file-name-display')
+    };
+}
+
+function discardCurrentImage(imgPreview, removeFlag) {
     const src = imgPreview.getAttribute('src');
     if (!src) return;
 
@@ -24,10 +43,10 @@ function discardCurrentImage(input, imgPreview, removeFlag) {
 }
 
 function previewImageSelection(input, imgPreview, removeFlag, fileNameDisplay) {
+    discardCurrentImage(imgPreview, removeFlag); // borrado de la imagen anterior si el usuario la sustituye directamente
+    
     const file = input.files[0];
     const objectURL = URL.createObjectURL(file);
-
-    discardCurrentImage(input, imgPreview, removeFlag); // borrado de la imagen anterior si el usuario la sustituye directamente
 
     imgPreview.src = objectURL;
     imgPreview.alt = `Vista previa de ${file.name}`;
@@ -37,7 +56,7 @@ function previewImageSelection(input, imgPreview, removeFlag, fileNameDisplay) {
 }
 
 function clearImageSelection(input, imgPreview, removeFlag, fileNameDisplay) {
-    discardCurrentImage(input, imgPreview, removeFlag);
+    discardCurrentImage(imgPreview, removeFlag);
 
     input.value = "";
     imgPreview.src = "";

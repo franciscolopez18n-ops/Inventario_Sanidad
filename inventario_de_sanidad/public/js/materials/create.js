@@ -207,8 +207,8 @@ async function getMaterialData() {
 
     // Limpiar formulario.
     document.form.reset();
-    document.getElementById("img-preview").src = "";
-    document.getElementById("file-name").textContent = "Ningún archivo seleccionado";
+    const elements = getImagePreviewElements(form.image);
+    clearImageSelection(elements.input, elements.imgPreview, elements.removeFlag, elements.fileNameDisplay);
 
     // Mostrar mensaje de éxito.
     showAlert("alert-success", "Material añadido al lote.");
