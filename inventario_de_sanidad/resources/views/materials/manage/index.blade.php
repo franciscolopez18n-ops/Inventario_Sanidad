@@ -3,9 +3,9 @@
 @section('title', 'Gestión de material')
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/tables.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/loader.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/dialog.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/paginated-table.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/loader.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/confirm-dialog.css') }}">
 @endpush
 
 @section('content')

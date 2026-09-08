@@ -3,9 +3,9 @@
 @section('title', 'Materiales en reserva')
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/tables.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/historical/historical.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/loader.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/paginated-table.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/materials/history/summary.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/loader.css') }}">
     
 @endpush
 

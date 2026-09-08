@@ -4,8 +4,8 @@
 
 @push('styles')
     
-<link rel="stylesheet" href="{{ asset('css/tables.css') }}">
-<link rel="stylesheet" href="{{ asset('css/image-preview.css') }}">
+<link rel="stylesheet" href="{{ asset('css/components/paginated-table.css') }}">
+<link rel="stylesheet" href="{{ asset('css/components/image-preview.css') }}">
 <link rel="stylesheet" href="{{ asset('css/materials/materials.css') }}">
 <link rel="stylesheet" href="{{ asset('css/materials/create.css') }}">
 

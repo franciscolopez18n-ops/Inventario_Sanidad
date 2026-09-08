@@ -3,7 +3,7 @@
 @section('title', 'Edicion de materiales')
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/storages/editMaterialTeacher.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/storages/teacher-edit.css') }}">
 @endpush
 
 @section('content')
