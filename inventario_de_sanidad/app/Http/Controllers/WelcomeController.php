@@ -14,8 +14,8 @@ class WelcomeController extends Controller {
      *
      * @return \Illuminate\View\View
      */
-    public function welcome() {
-        return view('welcome.welcome');
+    public function index() {
+        return view('welcome.index');
     }
 
     /**
@@ -23,7 +23,7 @@ class WelcomeController extends Controller {
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function firstLogData() {
+    public function dataUser() {
         return response()->json(Auth::user());
     }
 

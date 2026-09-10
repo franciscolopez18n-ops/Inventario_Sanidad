@@ -55,7 +55,7 @@ function renderTable(limit, paginaActual) {
         let tdAc = document.createElement("td");
         let formAc = document.createElement("form");
         formAc.method = "POST";
-        formAc.action = "/users/manage/password";
+        formAc.action = "/users/manage/change-password";
         formAc.id = `btn-ver-${usuario.user_id}`;
 
         let formToken = getHiddenToken(); // Token CSRF oculto

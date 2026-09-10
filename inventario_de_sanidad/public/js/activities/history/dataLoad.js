@@ -2,11 +2,11 @@ window.addEventListener("load", inicio);
 
 // Función que retorna una promesa con los datos
 function updateDataRetrieve() {
-    let rute ="/activities/activityData";
+    let rute ="/activities/data-student-activities";
     let isTeacher = document.querySelector(".user-role").textContent.includes("teacher");
 
     if (isTeacher) {
-        rute ="/activities/activityTeacherData";
+        rute ="/activities/data-teacher-activities";
     }
     return fetch(rute)
         .then(response => {

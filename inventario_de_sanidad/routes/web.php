@@ -1,23 +1,23 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LoginController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\UsersManagementController;
 use App\Http\Controllers\MaterialManagementController;
 use App\Http\Controllers\TeacherStorageController;
-use App\Http\Controllers\HistoricalManagementController;
+use App\Http\Controllers\MaterialHistoryController;
 use App\Http\Controllers\ActivityController;
-use App\Http\Controllers\QrController;
+use App\Http\Controllers\MaterialQrController;
 
 /*
 |--------------------------------------------------------------------------
 | Autenticación
 |--------------------------------------------------------------------------
 */
-Route::get('/', [LoginController::class, 'showLoginForm'])->name('login.form');
-Route::post('/', [LoginController::class, 'login'])->name('login.process');
-Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::get('/', [AuthController::class, 'index'])->name('auth.login');
+Route::post('/', [AuthController::class, 'verify'])->name('auth.verify');
+Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
 /*
 |--------------------------------------------------------------------------
@@ -27,9 +27,11 @@ Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::middleware('auth')->group(function () {
 
     // Bienvenida / Primer Acceso
-    Route::get('/welcome', [WelcomeController::class, 'welcome'])->name('welcome');
-    Route::post('/welcome', [WelcomeController::class, 'changePasswordFirstLog'])->name('changePasswordFirstLog');
-    Route::get('/firstLogData', [WelcomeController::class, 'firstLogData']);
+    Route::prefix('welcome')->group(function () {
+        Route::get('/', [WelcomeController::class, 'index'])->name('welcome');
+        Route::post('/', [WelcomeController::class, 'changePasswordFirstLog'])->name('welcome.change-password');
+        Route::get('/data-user', [WelcomeController::class, 'dataUser']);
+    });
 
     /*
     |--------------------------------------------------------------------------
@@ -41,52 +43,50 @@ Route::middleware('auth')->group(function () {
         // Usuarios
         Route::prefix('users')->group(function () {
             // Alta de usuarios
-            Route::get('/create', [UsersManagementController::class, 'createForm'])->name('users.create');
+            Route::get('/create', [UsersManagementController::class, 'create'])->name('users.create');
             Route::post('/store', [UsersManagementController::class, 'store'])->name('users.store');
             
             // Gestión de usuarios
             Route::prefix('manage')->group(function () {
                 Route::get('/', [UsersManagementController::class, 'manageIndex'])->name('users.manage.index');
-                Route::get('/data', [UsersManagementController::class, 'usersData']);
-                Route::post('/destroy', [UsersManagementController::class, 'manageDestroy'])->name('users.manage.destroy');
-                Route::post('/password', [UsersManagementController::class, 'manageChangePassword'])->name('users.manage.password');
+                Route::get('/data-users', [UsersManagementController::class, 'dataUsers']);
+                Route::post('/destroy', [UsersManagementController::class, 'destroy'])->name('users.manage.destroy');
+                Route::post('/change-password', [UsersManagementController::class, 'changePassword'])->name('users.manage.change-password');
             });
         });
 
         // Materiales
         Route::prefix('materials')->group(function () {
             // Alta de materiales
-            Route::get('/create', [MaterialManagementController::class, 'createForm'])->name('materials.create');
-            Route::post('/store', [MaterialManagementController::class, 'storeBatch'])->name('materials.store');
-            Route::post('/upload-temp', [MaterialManagementController::class, 'uploadTemp'])->name('materials.uploadTemp');
+            Route::get('/create', [MaterialManagementController::class, 'create'])->name('materials.create');
+            Route::post('/store', [MaterialManagementController::class, 'store'])->name('materials.store');
+            Route::post('/upload-temp', [MaterialManagementController::class, 'uploadTemp'])->name('materials.upload-temp');
 
             // Gestión de materiales
             Route::prefix('manage')->group(function () {
                 Route::get('/', [MaterialManagementController::class, 'manageIndex'])->name('materials.manage.index');
-                Route::get('/data', [MaterialManagementController::class, 'materialsData']);
-                Route::get('/edit/{material}', [MaterialManagementController::class, 'manageManualEdit'])->name('materials.manage.manual');
-                Route::get('/edit/{material}/storage/{storage}', [MaterialManagementController::class, 'manageQrEdit'])->name('materials.manage.qr');
-                Route::post('/update/{material}', [MaterialManagementController::class, 'manageUpdate'])->name('materials.manage.update');
-                Route::post('/destroy/{material}', [MaterialManagementController::class, 'manageDestroy'])->name('materials.manage.destroy');
+                Route::get('/data-materials', [MaterialManagementController::class, 'dataMaterials']);
+                Route::get('/edit/{material}', [MaterialManagementController::class, 'edit'])->name('materials.manage.edit');
+                Route::get('/edit/{material}/storage/{storage}', [MaterialManagementController::class, 'editQr'])->name('materials.manage.edit-qr');
+                Route::post('/update/{material}', [MaterialManagementController::class, 'update'])->name('materials.manage.update');
+                Route::post('/destroy/{material}', [MaterialManagementController::class, 'destroy'])->name('materials.manage.destroy');
+            });
+
+            // Historial
+            Route::prefix('history')->group(function () {
+                Route::get('/reserve', [MaterialHistoryController::class, 'reserveSummary'])->name('materials.history.reserve');
+                Route::get('/modifications', [MaterialHistoryController::class, 'modifications'])->name('materials.history.modifications');
+                Route::get('/data-modifications', [MaterialHistoryController::class, 'dataModifications']);
+            });
+
+            // Códigos QR
+            Route::prefix('qrcodes')->group(function () {
+                Route::get('/', [MaterialQrController::class, 'index'])->name('materials.qrcodes.index');
+                Route::get('/download-zip', [MaterialQrController::class, 'downloadZip'])->name('materials.qrcodes.download-zip');
+                Route::get('/print', [MaterialQrController::class, 'print'])->name('materials.qrcodes.print');
+                Route::get('/{file}', [MaterialQrController::class, 'show'])->name('materials.qrcodes.show'); // Códigos QR solo visibles por los administradores
             });
         });
-
-        // Historial
-        Route::prefix('historical')->group(function () {
-            Route::get('/reserve', [HistoricalManagementController::class, 'reserve'])->name('historical.reserve');
-
-            Route::get('/historialModificaciones', [HistoricalManagementController::class, 'showModificationsHistorical'])->name('historical.modificationsHistorical');
-            Route::get('/modificationsHistoricalData', [HistoricalManagementController::class, 'modificationsHistoricalData']);
-        });
-
-        //Códigos QR    
-        Route::prefix('qrcodes')->group(function () {
-            Route::get('/', [QrController::class, 'index'])->name('qrcodes.index');
-            Route::get('/download-zip', [QrController::class, 'downloadZip'])->name('qrcodes.downloadZip');
-            Route::get('/qrcodes/print', [QrController::class, 'print'])->name('qrcodes.print');
-            Route::get('/{file}', [QrController::class, 'show'])->name('qr.show'); // Códigos QR solo visibles por los administradores
-        });
-        
     });
 
     /*
@@ -98,16 +98,17 @@ Route::middleware('auth')->group(function () {
 
         // Almacenamiento docente
         Route::prefix('storages')->group(function () {
-            Route::get('/update', [TeacherStorageController::class, 'updateView'])->name('storages.updateView');
-            Route::get('/updateData', [TeacherStorageController::class, 'updateData']); // Endpoint JSON para /update
-
-            Route::get('/update/{material}/{currentLocation}/edit', [TeacherStorageController::class, 'teacherEditView'])->name('storages.teacher.edit');
-            Route::post('/update/{material}/{currentLocation}/submit', [TeacherStorageController::class, 'subtractToUse'])->name('storages.subtract.teacher');
+            Route::prefix('manage')->group(function () {
+                Route::get('/', [TeacherStorageController::class, 'manageIndex'])->name('storages.manage.index');
+                Route::get('/data-use-storage', [TeacherStorageController::class, 'dataUseStorage']);
+                Route::get('/{material}/{currentLocation}/subtract', [TeacherStorageController::class, 'subtractForm'])->name('storages.manage.subtract.form');
+                Route::post('/{material}/{currentLocation}/subtract', [TeacherStorageController::class, 'subtract'])->name('storages.manage.subtract');
+            });
         });
 
         // Actividades
         Route::prefix('activities')->group(function () {
-            Route::get('/activityTeacherData', [ActivityController::class, 'activityTeacherData']);
+            Route::get('/data-teacher-activities', [ActivityController::class, 'dataTeacherActivities']);
         });
     });
 
@@ -120,9 +121,9 @@ Route::middleware('auth')->group(function () {
 
         // Actividades
         Route::prefix('activities')->group(function () {
-            Route::get('/create', [ActivityController::class, 'createForm'])->name('activities.create');
+            Route::get('/create', [ActivityController::class, 'create'])->name('activities.create');
             Route::post('/store', [ActivityController::class, 'store'])->name('activities.store');
-            Route::get('/activityData', [ActivityController::class, 'activityData']);
+            Route::get('/data-student-activities', [ActivityController::class, 'dataStudentActivities']);
         });
     });
 
@@ -134,16 +135,16 @@ Route::middleware('auth')->group(function () {
 
     // Actividades compartidas
     Route::middleware('check.role:student,teacher')->group(function () {
-        Route::get('/activities/history', [ActivityController::class, 'historyView'])->name('activities.history');
+        Route::prefix('activities')->group(function() {
+            Route::get('/history', [ActivityController::class, 'activitiesHistory'])->name('activities.history');
+        });
     });
 
-    // Historial compartido
-    Route::prefix('historical')->group(function () {
-        Route::get('/use', [HistoricalManagementController::class, 'use'])->name('historical.use');
-        Route::get('/historicalData', [HistoricalManagementController::class, 'historicalData']);
+    Route::prefix('materials')->group(function() {
+        // Sumario de uso compartido
+        Route::prefix('history')->group(function () {
+            Route::get('/use', [MaterialHistoryController::class, 'useSummary'])->name('materials.history.use');
+            Route::get('/data-summary', [MaterialHistoryController::class, 'dataSummary']);
+        });
     });
-
-    
-
-    
 });

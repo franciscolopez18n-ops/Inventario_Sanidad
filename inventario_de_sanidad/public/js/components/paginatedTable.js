@@ -8,9 +8,9 @@
 /*
 Conclusión: esto parece realmente frágil y puede romperse en cualquier momento. Al momento de escribir esto, los scripts asociados
     (los que se cargan debajo de este en las vistas) son los siguientes:
-	- /users/manageTable.js
-	- /storages/manageTable.js
-	- /materials/manageTable.js
+	- /users/manage/table.js
+	- /storages/manage/table.js
+	- /materials/manage/table.js
 	- /materials/history/summary/table.js
 	- /materials/history/modifications/table.js
 	- /activities/history/table.js

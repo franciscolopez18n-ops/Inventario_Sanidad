@@ -183,5 +183,5 @@
 
 @push('scripts')
     <script src="{{ asset('js/components/imagePreview.js') }}"></script>
-    <script src="{{ asset('js/materials/edit.js') }}"></script>
+    <script src="{{ asset('js/materials/manage/edit.js') }}"></script>
 @endpush

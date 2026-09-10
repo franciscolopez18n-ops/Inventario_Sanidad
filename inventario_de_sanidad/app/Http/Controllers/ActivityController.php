@@ -19,7 +19,7 @@ class ActivityController extends Controller {
      *
      * @return \Illuminate\View\View
      */
-    public function createForm() {
+    public function create() {
         $teachers = User::where('user_type', 'teacher')->get();
 
         return view('activities.create')->with('materials', Material::all())->with('teachers',$teachers);
@@ -29,7 +29,7 @@ class ActivityController extends Controller {
      * Devuelve todas las actividades de un alumno en formato JSON ordenados por fecha de creación descendente.
      * @return mixed|\Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
-    public function activityData() {
+    public function dataStudentActivities() {
         $activities = User::find(Auth::id())->activities()
             ->with('materials', 'teacher')
             ->orderBy('created_at', 'desc')
@@ -42,7 +42,7 @@ class ActivityController extends Controller {
      * Devuelve todas las actividades asignadas a un profesor en formato JSON ordenados por fecha de creación descendente.
      * @return mixed|\Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
-    public function activityTeacherData() {
+    public function dataTeacherActivities() {
         $activities = Activity::with('materials', 'teacher', 'user')
             ->where('teacher_id', Auth::id())
             ->orderBy('created_at', 'desc')
@@ -55,7 +55,7 @@ class ActivityController extends Controller {
      * Muestra el historial de actividades del usuario autenticado.
      * @return mixed|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function historyView() {
+    public function activitiesHistory() {
         $activities = User::find(Auth::id())->activities()
             ->with('materials')
             ->orderBy('created_at', 'desc')

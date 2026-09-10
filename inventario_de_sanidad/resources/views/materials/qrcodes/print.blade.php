@@ -83,7 +83,7 @@
 <div class="qr-grid">
     @foreach ($storages as $storage)
         <div class="qr-item">
-            <img src="{{ route('qr.show', basename($storage->qr_path)) }}">
+            <img src="{{ route('materials.qrcodes.show', basename($storage->qr_path)) }}">
             <div class="name">{{ $storage->material->name }}</div>
          
             <div class="lugar">

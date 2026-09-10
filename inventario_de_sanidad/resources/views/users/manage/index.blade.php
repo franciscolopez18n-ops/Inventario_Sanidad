@@ -85,8 +85,8 @@
 @push('scripts')
     <script src="{{ asset('js/components/loader.js') }}"></script>
     <script src="{{ asset('js/components/confirmDialog.js') }}"></script>
-    <script src="{{ asset('js/users/dataLoad.js') }}"></script>
+    <script src="{{ asset('js/users/manage/dataLoad.js') }}"></script>
     <script src="{{ asset('js/components/paginatedTable.js') }}"></script>
-    <script src="{{ asset('js/users/manageTable.js') }}"></script>
+    <script src="{{ asset('js/users/manage/table.js') }}"></script>
     <script src="{{ asset('js/components/filterToggle.js') }}"></script> 
 @endpush

@@ -7,10 +7,10 @@ use App\Models\Storage;
 use App\Constants\AlertType;
 use ZipArchive;
 
-class QrController extends Controller {
+class MaterialQrController extends Controller {
     public function index() {
         $storages = Storage::with('material')->get();
-        return view('qrcodes.index', compact('storages'));
+        return view('materials.qrcodes.index', compact('storages'));
     }
 
     public function show($file) {
@@ -63,7 +63,7 @@ class QrController extends Controller {
     public function print() {
         $storages = Storage::with('material')->get();
 
-        return view('qrcodes.print', compact('storages'));
+        return view('materials.qrcodes.print', compact('storages'));
     }
 }
 

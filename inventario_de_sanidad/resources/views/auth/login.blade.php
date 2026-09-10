@@ -23,7 +23,7 @@
         <div class="login-wrapper">
             <div class="login-box">
                 <h1>Portal de sanidad</h1>
-                <form action="{{ route('login.process') }}" method="POST">
+                <form action="{{ route('auth.verify') }}" method="POST">
                     @csrf
                     
                     <div class="input-group">

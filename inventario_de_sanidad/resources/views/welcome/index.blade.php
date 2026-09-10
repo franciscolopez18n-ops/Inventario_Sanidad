@@ -17,7 +17,7 @@
     <div class="modal-content">
         <h2>Cambiar Contraseña</h2>
         <p>En el primer ingreso a la página se ha de cambiar la contraseña.</p>
-        <form id="FirstLogForm" action="{{ route('changePasswordFirstLog') }}" method="POST">
+        <form id="FirstLogForm" action="{{ route('welcome.change-password') }}" method="POST">
             @csrf
 
             <input type="password" id="newPassword" name="newPassword" placeholder="Nueva contraseña" class="@error('newPassword') input-error @enderror">

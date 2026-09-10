@@ -6,28 +6,25 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class UserCreation extends Mailable {
+class PasswordChanged extends Mailable {
     use Queueable, SerializesModels;
 
     protected $password;
     protected $first_name;
     protected $last_name;
-    protected $email;
 
-    public function __construct($password, $first_name, $last_name, $email) {
+    public function __construct($password, $first_name, $last_name) {
         $this->password = $password;
         $this->first_name = $first_name;
         $this->last_name = $last_name;
-        $this->email = $email;
     }
 
     public function build() {
-        return $this->subject('Usuario creado en el portal de Sanidad')->view('emails.user-creation')
+        return $this->subject('🔐 Restablecimiento de contraseña')->view('emails.password-changed')
             ->with([
                 'password' => $this->password,
                 'first_name' => $this->first_name,
-                'last_name' =>$this->last_name ,
-                'email' => $this->email
+                'last_name' =>$this->last_name 
             ]);
     }
 }

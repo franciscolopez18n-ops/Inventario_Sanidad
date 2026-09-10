@@ -18,8 +18,8 @@ class TeacherStorageController extends Controller {
      * Si es docente vera el almacenamiento de uso.
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function updateView() {
-        return view('storages.update');
+    public function manageIndex() {
+        return view('storages.manage.index');
     }
 
     /**
@@ -27,8 +27,8 @@ class TeacherStorageController extends Controller {
      * @param \App\Models\Material $material
      * @return mixed|\Illuminate\Contracts\View\View
      */
-    public function teacherEditView(Material $material, $currentLocation) {
-        return view('storages.teacher.edit')->with('material', $material)->with('currentLocation', $currentLocation);
+    public function subtractForm(Material $material, $currentLocation) {
+        return view('storages.manage.subtract')->with('material', $material)->with('currentLocation', $currentLocation);
     }
 
     /**
@@ -43,7 +43,7 @@ class TeacherStorageController extends Controller {
      * @param mixed $currentLocation                Ubicación actual del almacenamiento ('CAE' u 'odontology').
      * @return \Illuminate\Http\RedirectResponse    Redirige de vuelta con mensaje de éxito o error.
      */
-    public function subtractToUse(Request $request, Material $material, $currentLocation) {
+    public function subtract(Request $request, Material $material, $currentLocation) {
         // Obtiene el registro del almacenamiento de tipo 'use' para la ubicación actual.
         $useRecord = $material->storageUse()->where('storage', $currentLocation)->first();
 
@@ -93,7 +93,7 @@ class TeacherStorageController extends Controller {
      * Devuelve todos los almacenamientos en formato JSON.
      * @return mixed|\Illuminate\Http\JsonResponse
      */
-    public function updateData() {
+    public function dataUseStorage() {
         $storages = DB::table('materials')
             ->join('storages', 'materials.material_id', '=', 'storages.material_id')
             ->join('storage_use', function ($join) {

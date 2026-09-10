@@ -24,7 +24,7 @@ class MaterialManagementController extends Controller {
         return view('materials.manage.index');
     }
 
-    public function manageManualEdit(Material $material) {
+    public function edit(Material $material) {
         $storages = Storage::where('material_id', $material->material_id)->get();
 
         return view('materials.manage.edit')
@@ -32,7 +32,7 @@ class MaterialManagementController extends Controller {
             ->with('storages', $storages);
     }
 
-    public function manageQrEdit(Material $material, string $storage) {
+    public function editQr(Material $material, string $storage) {
         $storageRecord = Storage::where('material_id', $material->material_id)
             ->where('storage', $storage)
             ->firstOrFail();
@@ -43,7 +43,7 @@ class MaterialManagementController extends Controller {
     }
 
     // Actualiza los datos de un material y/o su almacenamiento
-    public function manageUpdate(Material $material, Request $request) {
+    public function update(Material $material, Request $request) {
         $storageKeys = array_keys($request->except(['name', 'description', 'image', 'remove_image', '_token']));
     
         // Reglas y mensajes de validación de la información del material
@@ -260,7 +260,7 @@ class MaterialManagementController extends Controller {
     }
 
     // Elimina un material y su almacenamiento
-    public function manageDestroy(Material $material) {
+    public function destroy(Material $material) {
         try {
             // Verifica si el material aún existe en la base de datos mediante su ID
             if (!Material::find($material->material_id)) {
@@ -295,7 +295,7 @@ class MaterialManagementController extends Controller {
      *
      * @return \Illuminate\View\View
      */
-    public function createForm() {
+    public function create() {
         return view('materials.create');
     }
 
@@ -304,7 +304,7 @@ class MaterialManagementController extends Controller {
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function materialsData() {
+    public function dataMaterials() {
         return response()->json(Material::orderBy('material_id')->get());
     }
 
@@ -315,7 +315,7 @@ class MaterialManagementController extends Controller {
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function storeBatch(Request $request) {
+    public function store(Request $request) {
         // Decodifica la cookie desde JSON a un array asociativo. Si no es válido, usa un array vacío que será rechazado.
         // Los métodos de Laravel esperan cookies encriptadas por ellos mismos, por lo que hay que leerla en crudo
         $batch = json_decode(urldecode($_COOKIE['materialFormBatch'] ?? '[]'), true);

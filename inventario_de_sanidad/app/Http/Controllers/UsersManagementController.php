@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Constants\AlertType;
 use App\Models\User;
 use Carbon\Carbon;
-use App\Mail\ChangePassword;
+use App\Mail\PasswordChanged;
 use App\Mail\UserCreation;
 use Illuminate\Support\Facades\Mail;
 
@@ -17,7 +17,7 @@ class UsersManagementController extends Controller {
      *
      * @return \Illuminate\View\View
      */
-    public function createForm() {
+    public function create() {
         return view('users.create');
     }
 
@@ -36,7 +36,7 @@ class UsersManagementController extends Controller {
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function usersData() {
+    public function dataUsers() {
         return response()->json(User::orderBy('created_at','desc')->get());
     } 
 
@@ -98,7 +98,7 @@ class UsersManagementController extends Controller {
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function manageDestroy(Request $request) {
+    public function destroy(Request $request) {
         $user = $request["user_id"];
 
         User::where('user_id', $user)->delete();
@@ -106,7 +106,7 @@ class UsersManagementController extends Controller {
         return back()->withPush(AlertType::SUCCESS, 'Usuario dado de baja con éxito.');
     }
 
-    public function manageChangePassword(Request $request) {
+    public function changePassword(Request $request) {
         $user = $request["user_id"];
         $password = self::generateRandomPassword(8);
         $userInfo = User::where('user_id', $user)->first();
@@ -115,7 +115,7 @@ class UsersManagementController extends Controller {
         $userInfo->first_log = 0;
         $userInfo->save();
 
-        Mail::to($userInfo->email)->send(new ChangePassword($password,$userInfo->first_name,$userInfo->last_name));
+        Mail::to($userInfo->email)->send(new PasswordChanged($password,$userInfo->first_name,$userInfo->last_name));
 
         return back()->withPush(AlertType::SUCCESS, 'Contraseña cambiada con éxito y enviada por correo al usuario.');
     }

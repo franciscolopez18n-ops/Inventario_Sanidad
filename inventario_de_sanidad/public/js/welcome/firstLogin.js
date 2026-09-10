@@ -2,7 +2,7 @@ window.addEventListener("load", inicio);
 
 // Obtener datos del usuario (para saber si es primer login)
 function userDataRetrieve() {
-    let result = fetch('/firstLogData')
+    let result = fetch('/welcome/data-user')
         .then(function (response) {
             if (!response.ok) {
                 throw new Error("No se pudo obtener datos");

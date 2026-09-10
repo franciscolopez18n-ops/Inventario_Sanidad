@@ -10,13 +10,13 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 
-class LoginController extends Controller {
+class AuthController extends Controller {
     /**
      * Muestra el formulario de login.
      *
      * @return \Illuminate\View\View
      */
-    public function showLoginForm() {
+    public function index() {
         if (Auth::check()) {
             return redirect()->route('welcome');
         }
@@ -31,7 +31,7 @@ class LoginController extends Controller {
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function login(Request $request) {
+    public function verify(Request $request) {
         $credentials = $request->validate([
             'user' => 'required',
             'password' => 'required'
@@ -73,6 +73,6 @@ class LoginController extends Controller {
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login.form');
+        return redirect()->route('auth.login');
     }
 }

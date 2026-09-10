@@ -3,7 +3,7 @@
 @section('title', 'Edicion de materiales')
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/storages/teacher-edit.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/storages/subtract.css') }}">
 @endpush
 
 @section('content')
@@ -12,7 +12,7 @@
         @php
             $useRecord = $material->storageUse()->where('storage', $currentLocation)->first();
         @endphp
-        <form action="{{ route('storages.subtract.teacher', [$material->material_id, $currentLocation]) }}" method="POST">
+        <form action="{{ route('storages.manage.subtract', [$material->material_id, $currentLocation]) }}" method="POST">
             @csrf
 
             <h1>Editar Almacenamiento para: {{ $material->name }} / {{ display_name($currentLocation, DisplayCategory::STORAGE) }}</h1>
@@ -33,7 +33,7 @@
             <br>
             <div class="form-actions">
                 <input type="submit" value="Actualizar" class="btn btn-success">
-                <a href="{{ route('storages.updateView') }}" class="btn btn-outline"><i class="fa-solid fa-arrow-left"></i> Volver al listado </a>
+                <a href="{{ route('storages.manage.index') }}" class="btn btn-outline"><i class="fa-solid fa-arrow-left"></i> Volver al listado </a>
             </div>
             <br>
         </form>

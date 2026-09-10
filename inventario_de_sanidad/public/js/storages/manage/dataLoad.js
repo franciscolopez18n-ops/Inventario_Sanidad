@@ -1,7 +1,7 @@
 window.addEventListener("load", inicio);
 
 function updateDataRetrieve() {
-    return fetch('/storages/updateData')
+    return fetch('/storages/manage/data-use-storage')
         .then(function(response) {
             if (!response.ok) {
                 throw new Error("Error al obtener datos");

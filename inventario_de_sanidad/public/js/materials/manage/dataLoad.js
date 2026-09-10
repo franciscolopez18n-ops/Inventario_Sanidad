@@ -1,5 +1,5 @@
 window.addEventListener("load", () => {
-    fetch('/materials/manage/data')
+    fetch('/materials/manage/data-materials')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Error al obtener datos');

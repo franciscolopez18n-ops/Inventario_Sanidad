@@ -6,13 +6,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 
-class HistoricalManagementController extends Controller {
+class MaterialHistoryController extends Controller {
     /**
      * Devuelve un JSON con el historial de modificaciones en los materiales.
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function modificationsHistoricalData() {
+    public function dataModifications() {
         $modifications = DB::table('modifications')
             ->join('users', 'modifications.user_id', '=', 'users.user_id')
             ->join('materials', 'modifications.material_id', '=', 'materials.material_id')
@@ -30,17 +30,17 @@ class HistoricalManagementController extends Controller {
      *
      * @return \Illuminate\View\View
      */
-    public function showModificationsHistorical()
+    public function modifications()
     {
-        return view('historical.modificationsHistorical');
+        return view('materials.history.modifications');
     }
 
-    public function use() {
-        return view('historical.use');
+    public function useSummary() {
+        return view('materials.history.use');
     }
 
-    public function reserve() {
-        return view('historical.reserve');
+    public function reserveSummary() {
+        return view('materials.history.reserve');
     }
 
     /**
@@ -48,7 +48,7 @@ class HistoricalManagementController extends Controller {
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function historicalData() {
+    public function dataSummary() {
         $type = explode("=", URL::full())[1];
 
         $table = $type === 'use' ? 'storage_use' : 'storage_reserve';

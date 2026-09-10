@@ -85,31 +85,31 @@
                             </li>
                         </ul>
                     </li>
-                    <!-- Reservas de materiales -->
+                    <!-- Seguimiento de materiales -->
                     <li class="has-submenu">
                         <a href="">
                             <i class="fa-solid fa-book-bookmark"></i>
-                            <span class="link-text">Reservas de materiales</span>
+                            <span class="link-text">Seguimiento de materiales</span>
                             <i class="fa-solid fa-chevron-down arrow-icon"></i>
                         </a>
                         <ul class="submenu">
                             <li>
-                                <a href="{{ route('historical.use') }}"
-                                class="{{ request()->fullUrlIs(route('historical.use')) ? 'active' : '' }}">
+                                <a href="{{ route('materials.history.use') }}"
+                                class="{{ request()->fullUrlIs(route('materials.history.use')) ? 'active' : '' }}">
                                     <i class="fa-solid fa-book-open"></i>
                                     <span class="link-text">Materiales en uso</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('historical.reserve') }}"
-                                class="{{ request()->fullUrlIs(route('historical.reserve')) ? 'active' : '' }}">
+                                <a href="{{ route('materials.history.reserve') }}"
+                                class="{{ request()->fullUrlIs(route('materials.history.reserve')) ? 'active' : '' }}">
                                     <i class="fa-solid fa-boxes-packing"></i>
                                     <span class="link-text">Materiales en reserva</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('historical.modificationsHistorical') }}"
-                                class="{{ request()->routeIs('historical.modificationsHistorical') ? 'active' : '' }}">
+                                <a href="{{ route('materials.history.modifications') }}"
+                                class="{{ request()->routeIs('materials.history.modifications') ? 'active' : '' }}">
                                     <i class="fa-solid fa-clock-rotate-left"></i>
                                     <span class="link-text">Historial de modificaciones</span>
                                 </a>
@@ -118,8 +118,8 @@
                     </li>
 
                     <li>
-                        <a href="{{ route('qrcodes.index') }}"
-                        class="{{ request()->routeIs('qrcodes.index') ? 'active' : '' }}">
+                        <a href="{{ route('materials.qrcodes.index') }}"
+                        class="{{ request()->routeIs('materials.qrcodes.index') ? 'active' : '' }}">
                             <i class="fa-solid fa-qrcode"></i>
                             <span class="link-text">Códigos QR</span>
                         </a>
@@ -144,8 +144,8 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('historical.use') }}"
-                        class="{{ request()->fullUrlIs(route('historical.use')) ? 'active' : '' }}">
+                        <a href="{{ route('materials.history.use') }}"
+                        class="{{ request()->fullUrlIs(route('materials.history.use')) ? 'active' : '' }}">
                             <i class="fa-solid fa-book-open"></i>
                             <span class="link-text">Materiales en uso</span>
                         </a>
@@ -155,15 +155,15 @@
                 <!-- Menú para Docentes -->
                 @if(Auth::user()->user_type === 'teacher')
                     <li>
-                        <a href="{{ route('storages.updateView') }}"
-                        class="{{ request()->routeIs('storages.updateView') ? 'active' : '' }}">
+                        <a href="{{ route('storages.manage.index') }}"
+                        class="{{ request()->routeIs('storages.manage.index') ? 'active' : '' }}">
                             <i class="fa-solid fa-box-archive"></i>
                             <span class="link-text">Gestionar almacenamiento</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('historical.use') }}"
-                        class="{{ request()->fullUrlIs(route('historical.use')) ? 'active' : '' }}">
+                        <a href="{{ route('materials.history.use') }}"
+                        class="{{ request()->fullUrlIs(route('materials.history.use')) ? 'active' : '' }}">
                             <i class="fa-solid fa-book-open"></i>
                             <span class="link-text">Materiales en uso</span>
                         </a>
@@ -291,7 +291,7 @@
                         <hr>
 
                         <div class="logout-button">
-                            <a href="{{ route('logout') }}" class="btn btn-danger">Cerrar Sesión</a>
+                            <a href="{{ route('auth.logout') }}" class="btn btn-danger">Cerrar Sesión</a>
                         </div>
                     </div>
                 </div>
