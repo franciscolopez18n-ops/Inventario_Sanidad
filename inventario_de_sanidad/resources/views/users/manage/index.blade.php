@@ -16,10 +16,10 @@
     <div class="spinner"></div>
 </div>
 <div class="">
-    <dialog id="confirmacion">
+    <dialog id="confirmation">
         <p>¿Está seguro de que desea eliminar el usuario seleccionado?</p>
-        <input type="button" class="btn btn-success" value="Aceptar" id="aceptar">
-        <input type="button" class="btn btn-danger" value="Cancelar" id="cancelar">
+        <input type="button" class="btn btn-success" value="Aceptar" id="acept">
+        <input type="button" class="btn btn-danger" value="Cancelar" id="cancel">
     </dialog>
     <dialog id="confirmacionContra">
         <p>¿Está seguro de que desea generar una nueva contraseña?</p>
@@ -33,15 +33,15 @@
 
         <!-- Buscador -->
         <div class="search-container">
-            <input type="text" id="buscarId" placeholder="Buscar..." autocomplete="off">
+            <input type="text" id="search-input" placeholder="Buscar..." autocomplete="off">
             <div class="dropdown-container">
-                <button type="button" id="filterToggle"><i class="fa-solid fa-filter table-icon-interactive"></i></button>
-                <div id="filterOptions" class="filter-options fade-in">
-                    <label><input type="radio" name="filtro" value="1" checked>Nombre</label>
-                    <label><input type="radio" name="filtro" value="2">Apellidos</label>
-                    <label><input type="radio" name="filtro" value="3">Email</label>
-                    <label><input type="radio" name="filtro" value="4">Tipo de usuario</label>
-                    <label><input type="radio" name="filtro" value="5">Fecha de alta</label>
+                <button type="button" id="filter-toggle"><i class="fa-solid fa-filter table-icon-interactive"></i></button>
+                <div id="filter-options" class="filter-options fade-in">
+                    <label><input type="radio" name="filter" value="1" checked>Nombre</label>
+                    <label><input type="radio" name="filter" value="2">Apellidos</label>
+                    <label><input type="radio" name="filter" value="3">Email</label>
+                    <label><input type="radio" name="filter" value="4">Tipo de usuario</label>
+                    <label><input type="radio" name="filter" value="5">Fecha de alta</label>
                 </div>
             </div>
         </div>
@@ -65,8 +65,8 @@
         <!-- Paginación -->
         <div id="paginacion" class="pagination-controls">
             <div class="pagination-select">
-                <label for="regsPorPagina"></label>
-                <select id="regsPorPagina">
+                <label for="rows-per-page"></label>
+                <select id="rows-per-page">
                     <option value="5" selected>5</option>
                     <option value="10">10</option>
                     <option value="25">25</option>
@@ -87,6 +87,6 @@
     <script src="{{ asset('js/components/confirmDialog.js') }}"></script>
     <script src="{{ asset('js/users/manage/dataLoad.js') }}"></script>
     <script src="{{ asset('js/components/paginatedTable.js') }}"></script>
-    <script src="{{ asset('js/users/manage/table.js') }}"></script>
+    <script type="module" src="{{ asset('js/users/manage/table.js') }}"></script>
     <script src="{{ asset('js/components/filterToggle.js') }}"></script> 
 @endpush

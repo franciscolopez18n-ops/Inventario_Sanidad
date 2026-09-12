@@ -1,3 +1,5 @@
+import { createTextTD, createDataLabel, createLabeledLi } from '../../utils/elements.js';
+
 let isUse = window.location.href.split("/").pop() === 'use';
 
 /**
@@ -22,7 +24,7 @@ async function inicio() {
     allData = window.HISTORICALDATA; // Guarda los datos globalmente
     paginaActual = 0; // Página actual inicia en 0
     
-    initLoad(); // Inicializa eventos de búsqueda y paginación
+    initEvents(); // Inicializa eventos de búsqueda y paginación
 
     renderTable(currentLimit, paginaActual); // Renderiza tabla con paginación
     renderTableCards(currentLimit, paginaActual); // Renderiza tarjetas con paginación
@@ -91,13 +93,13 @@ function renderTableCards(limit, paginaActual) {
     while (container.firstChild) container.removeChild(container.firstChild);
     let isStudent = document.querySelector(".user-role").textContent.includes("student"); // Verifica si el usuario es admin
 
-    let filtro = ["name", "description", "storage", "cabinet", "shelf"];
+    let filter = ["name", "description", "storage", "cabinet", "shelf"];
 
-    if (isUse) filtro.push("drawer");
-    if (!isStudent) filtro.push("units", "min_units");
+    if (isUse) filter.push("drawer");
+    if (!isStudent) filter.push("units", "min_units");
 
     // Aplica filtro según campos relevantes
-    let filtrados = aplicarFiltro(filtro);
+    let filtrados = applyFilter(filter);
 
     let inicio = paginaActual * limit;
     let fin = inicio + limit;
@@ -140,13 +142,13 @@ function crearMaterialCard(material) {
     body.appendChild(p);
 
     let ul = document.createElement("ul");
-    ul.appendChild(crearLi("Localización", displayName(material.storage, DisplayCategory.STORAGE)));
-    ul.appendChild(crearLi("Armario", material.cabinet));
-    ul.appendChild(crearLi("Balda", material.shelf));
-    if (isUse) ul.appendChild(crearLi("Cajón", material.drawer));
+    ul.appendChild(createLabeledLi("Localización", displayName(material.storage, DisplayCategory.STORAGE)));
+    ul.appendChild(createLabeledLi("Armario", material.cabinet));
+    ul.appendChild(createLabeledLi("Balda", material.shelf));
+    if (isUse) ul.appendChild(createLabeledLi("Cajón", material.drawer));
     if (!isStudent) {
-        ul.appendChild(crearLi("Unidades", material.units));
-        ul.appendChild(crearLi("Unidades mínimas", material.min_units));
+        ul.appendChild(createLabeledLi("Unidades", material.units));
+        ul.appendChild(createLabeledLi("Unidades mínimas", material.min_units));
     }
     body.appendChild(ul);
 
@@ -163,7 +165,7 @@ function renderTable(limit, paginaActual) {
     let tbody = document.querySelector("table tbody");
     while (tbody.firstChild) tbody.removeChild(tbody.firstChild);
 
-    let filtrados = aplicarFiltro(["name", "description", "storage", "cabinet", "shelf", "units", "min_units"]);
+    let filtrados = applyFilter(["name", "description", "storage", "cabinet", "shelf", "units", "min_units"]);
 
     let inicio = paginaActual * limit;
     let fin = inicio + limit;
@@ -184,14 +186,14 @@ function renderTable(limit, paginaActual) {
         tr.appendChild(td);
 
         // Columnas con datos y data-label para responsive
-        tr.appendChild(crearDataLabel(crearTD(item.name ?? "-"), "Nombre"));
-        tr.appendChild(crearDataLabel(crearTD(item.description ?? "-"), "Descripción"));
-        tr.appendChild(crearDataLabel(crearTD(displayName(item.storage, DisplayCategory.STORAGE)), "Localización"));
-        tr.appendChild(crearDataLabel(crearTD(item.cabinet ?? "-"), "Armario"));
-        tr.appendChild(crearDataLabel(crearTD(item.shelf ?? "-"), "Balda"));
-        if (isUse) tr.appendChild(crearDataLabel(crearTD(item.drawer ?? "-"), "Cajón"));
-        tr.appendChild(crearDataLabel(crearTD(item.units ?? "-"), "Unidades"));
-        tr.appendChild(crearDataLabel(crearTD(item.min_units ?? "-"), "Mínimo"));
+        tr.appendChild(createDataLabel(createTextTD(item.name ?? "-"), "Nombre"));
+        tr.appendChild(createDataLabel(createTextTD(item.description ?? "-"), "Descripción"));
+        tr.appendChild(createDataLabel(createTextTD(displayName(item.storage, DisplayCategory.STORAGE)), "Localización"));
+        tr.appendChild(createDataLabel(createTextTD(item.cabinet ?? "-"), "Armario"));
+        tr.appendChild(createDataLabel(createTextTD(item.shelf ?? "-"), "Balda"));
+        if (isUse) tr.appendChild(createDataLabel(createTextTD(item.drawer ?? "-"), "Cajón"));
+        tr.appendChild(createDataLabel(createTextTD(item.units ?? "-"), "Unidades"));
+        tr.appendChild(createDataLabel(createTextTD(item.min_units ?? "-"), "Mínimo"));
 
         tbody.appendChild(tr);
     });

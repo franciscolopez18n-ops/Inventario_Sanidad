@@ -1,3 +1,5 @@
+import { createTextTD, createDataLabel } from '../../utils/elements.js';
+
 window.addEventListener("DOMContentLoaded", inicio);
 
 async function inicio() {
@@ -6,15 +8,14 @@ async function inicio() {
     }
 
     allData = window.ACTIVITYDATA;
-    console.log(allData);
 
     hideLoader();
     paginaActual = 0;
-    currentLimit = parseInt(document.getElementById("regsPorPagina").value);
+    currentLimit = parseInt(document.getElementById("rows-per-page").value);
 
     renderActivityCards(currentLimit, paginaActual);
 
-    document.getElementById("regsPorPagina").addEventListener("change", event => {
+    document.getElementById("rows-per-page").addEventListener("change", event => {
         currentLimit = parseInt(event.target.value);
         paginaActual = 0;
         renderActivityCards(currentLimit, paginaActual);
@@ -69,11 +70,12 @@ function crearActivityCard(activity) {
         pTeach.appendChild(strongTeach);
         pTeach.appendChild(document.createTextNode(" " + (activity.user.first_name ?? "-") + " " + (activity.user.last_name ?? "-")));
 
-    }else{
+    } else {
         strongTeach.textContent = "Profesor/a:";
         pTeach.appendChild(strongTeach);
         pTeach.appendChild(document.createTextNode(" " + (activity.teacher.first_name ?? "-") + " " + (activity.teacher.last_name ?? "-")));
     }
+
     content.appendChild(pTeach);
 
     if (!activity.materials || activity.materials.length === 0) {
@@ -102,10 +104,10 @@ function crearActivityCard(activity) {
         let tbody = document.createElement("tbody");
         activity.materials.forEach(material => {
             let tr = document.createElement("tr");
-            let tdMaterial = crearTD(material.name ?? "-");
-            crearDataLabel(tdMaterial, "Material");
-            let tdCantidad = crearTD(material.pivot.units ?? "-");
-            crearDataLabel(tdCantidad, "Cantidad");
+            let tdMaterial = createTextTD(material.name ?? "-");
+            createDataLabel(tdMaterial, "Material");
+            let tdCantidad = createTextTD(material.pivot.units ?? "-");
+            createDataLabel(tdCantidad, "Cantidad");
             tr.appendChild(tdMaterial);
             tr.appendChild(tdCantidad);
             tbody.appendChild(tr);
@@ -117,5 +119,6 @@ function crearActivityCard(activity) {
     }
 
     card.appendChild(content);
+
     return card;
 }

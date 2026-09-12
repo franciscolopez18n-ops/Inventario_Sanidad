@@ -18,8 +18,8 @@
         <!-- Paginación -->
         <div id="paginacion" class="pagination-controls">
             <div class="pagination-select">
-                <label for="regsPorPagina"></label>
-                <select id="regsPorPagina">
+                <label for="rows-per-page"></label>
+                <select id="rows-per-page">
                     <option value="5" selected>5</option>
                     <option value="10">10</option>
                     <option value="25">25</option>
@@ -41,5 +41,5 @@
     <script src="{{ asset('js/activities/history/dataLoad.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/components/loader.js') }}"></script>
     <script src="{{ asset('js/components/paginatedTable.js') }}"></script>
-    <script src="{{ asset('js/activities/history/table.js') }}" type="text/javascript"></script>
+    <script type="module" src="{{ asset('js/activities/history/table.js') }}" type="text/javascript"></script>
 @endpush

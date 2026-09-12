@@ -50,8 +50,8 @@ Route::middleware('auth')->group(function () {
             Route::prefix('manage')->group(function () {
                 Route::get('/', [UsersManagementController::class, 'manageIndex'])->name('users.manage.index');
                 Route::get('/data-users', [UsersManagementController::class, 'dataUsers']);
-                Route::post('/destroy', [UsersManagementController::class, 'destroy'])->name('users.manage.destroy');
-                Route::post('/change-password', [UsersManagementController::class, 'changePassword'])->name('users.manage.change-password');
+                Route::post('/destroy/{user}', [UsersManagementController::class, 'destroy'])->name('users.manage.destroy');
+                Route::post('/change-password/{user}', [UsersManagementController::class, 'changePassword'])->name('users.manage.change-password');
             });
         });
 
@@ -65,7 +65,6 @@ Route::middleware('auth')->group(function () {
             // Gestión de materiales
             Route::prefix('manage')->group(function () {
                 Route::get('/', [MaterialManagementController::class, 'manageIndex'])->name('materials.manage.index');
-                Route::get('/data-materials', [MaterialManagementController::class, 'dataMaterials']);
                 Route::get('/edit/{material}', [MaterialManagementController::class, 'edit'])->name('materials.manage.edit');
                 Route::get('/edit/{material}/storage/{storage}', [MaterialManagementController::class, 'editQr'])->name('materials.manage.edit-qr');
                 Route::post('/update/{material}', [MaterialManagementController::class, 'update'])->name('materials.manage.update');

@@ -29,10 +29,10 @@ function inicio() {
     let botonesBaja = document.querySelectorAll("[id^='btn-delete-']");
 
     for (let btn of botonesVer) {
-        btn.addEventListener("submit", mostrarDialogConfirmacion);
+        btn.addEventListener("submit", showConfirmDialog);
     }
 
     for (let btn of botonesBaja) {
-        btn.addEventListener("submit", mostrarDialogConfirmacion);
+        btn.addEventListener("submit", showConfirmDialog);
     }
 }

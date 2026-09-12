@@ -1,5 +1,5 @@
 // Función que muestra un cuadro de diálogo de confirmación personalizado según el botón clicado
-function mostrarDialogConfirmacion(event) {
+function showConfirmDialog(event) {
     event.preventDefault();
 
     let botonConfirmar;
@@ -14,9 +14,9 @@ function mostrarDialogConfirmacion(event) {
         dialog = document.getElementById("confirmacionContra");
     } else {
         // Selecciona los elementos para el diálogo genérico
-        botonConfirmar = document.getElementById("aceptar");
-        botonCancelar = document.getElementById("cancelar");
-        dialog = document.getElementById("confirmacion");
+        botonConfirmar = document.getElementById("acept");
+        botonCancelar = document.getElementById("cancel");
+        dialog = document.getElementById("confirmation");
     }
 
     // Muestra el cuadro de diálogo añadiendo el atributo "open"

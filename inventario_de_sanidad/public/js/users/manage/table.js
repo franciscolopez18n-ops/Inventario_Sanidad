@@ -1,3 +1,6 @@
+import { createTextTD, createDataLabel } from '../../utils/elements.js';
+import { createHiddenCSRFTokenInput } from '../../utils/csrf.js';
+
 window.addEventListener("DOMContentLoaded", inicio);
 
 /**
@@ -19,7 +22,7 @@ async function inicio () {
 
     allData = window.USERDATA; // Datos cargados
 
-    initLoad();
+    initEvents();
 
     renderTable(currentLimit,paginaActual);
 }
@@ -35,7 +38,7 @@ function renderTable(limit, paginaActual) {
     while (tbody.firstChild) tbody.removeChild(tbody.firstChild);
 
     // Aplica filtro sobre campos indicados
-    let filtrados = aplicarFiltro(["first_name", "last_name", "email", "user_type", "created_at"]);
+    let filtrados = applyFilter(["first_name", "last_name", "email", "user_type", "created_at"]);
 
     let inicio = paginaActual * limit; // Índice inicial para paginación
     let fin = inicio + limit;          // Índice final para paginación
@@ -45,21 +48,20 @@ function renderTable(limit, paginaActual) {
         let tr = document.createElement("tr");
 
         // Crea y añade celdas con etiquetas accesibles (label)
-        tr.appendChild(crearDataLabel(crearTD(usuario.first_name),"Nombre"));
-        tr.appendChild(crearDataLabel(crearTD(usuario.last_name),"Apellidos"));
-        tr.appendChild(crearDataLabel(crearTD(usuario.email),"Email"));
-        tr.appendChild(crearDataLabel(crearTD(usuario.user_type),"Tipo de usuario"));
-        tr.appendChild(crearDataLabel(crearTD(usuario.created_at),"Fecha de alta"));
+        tr.appendChild(createDataLabel(createTextTD(usuario.first_name),"Nombre"));
+        tr.appendChild(createDataLabel(createTextTD(usuario.last_name),"Apellidos"));
+        tr.appendChild(createDataLabel(createTextTD(usuario.email),"Email"));
+        tr.appendChild(createDataLabel(createTextTD(usuario.user_type),"Tipo de usuario"));
+        tr.appendChild(createDataLabel(createTextTD(usuario.created_at),"Fecha de alta"));
 
         // Columna para formulario "Generar contraseña"
         let tdAc = document.createElement("td");
         let formAc = document.createElement("form");
         formAc.method = "POST";
-        formAc.action = "/users/manage/change-password";
+        formAc.action = `/users/manage/change-password/${usuario.user_id}`;
         formAc.id = `btn-ver-${usuario.user_id}`;
 
-        let formToken = getHiddenToken(); // Token CSRF oculto
-        let formId = getHiddenId(usuario.user_id,"user_id"); // ID oculto
+        let formToken = createHiddenCSRFTokenInput(); // Token CSRF oculto
 
         let btnAc = document.createElement("button");
         btnAc.type = "submit";
@@ -67,7 +69,6 @@ function renderTable(limit, paginaActual) {
         btnAc.textContent = "Generar contraseña";
 
         formAc.appendChild(formToken);
-        formAc.appendChild(formId);
         formAc.appendChild(btnAc);
         tdAc.appendChild(formAc);
 
@@ -80,11 +81,10 @@ function renderTable(limit, paginaActual) {
         if ((usuario.first_name + " " + usuario.last_name) != document.getElementsByClassName("user-name")[0].textContent) {
             let formDel = document.createElement("form");
             formDel.method = "POST";
-            formDel.action = "/users/manage/destroy";
+            formDel.action = `/users/manage/destroy/${usuario.user_id}`;
             formDel.id = `btn-delete-${usuario.user_id}`;
 
-            let formToken = getHiddenToken(); // Token CSRF oculto
-            let formId = getHiddenId(usuario.user_id,"user_id"); // ID oculto
+            let formToken = createHiddenCSRFTokenInput(); // Token CSRF oculto
 
             let btn = document.createElement("button");
             btn.type = "submit";
@@ -95,7 +95,6 @@ function renderTable(limit, paginaActual) {
 
             btn.appendChild(icon);
             formDel.appendChild(formToken);
-            formDel.appendChild(formId);
             formDel.appendChild(btn);
             tdDel.appendChild(formDel);
         }
@@ -114,20 +113,11 @@ function renderTable(limit, paginaActual) {
 function rebindDynamicEvents() {
     // Añade evento submit para confirmar acción en formularios "Generar contraseña"
     document.querySelectorAll("[id^='btn-ver-']").forEach(form => {
-        form.addEventListener("submit", mostrarDialogConfirmacion);
+        form.addEventListener("submit", showConfirmDialog);
     });
 
     // Añade evento submit para confirmar acción en formularios "Eliminar usuario"
     document.querySelectorAll("[id^='btn-delete-']").forEach(form => {
-        form.addEventListener("submit", mostrarDialogConfirmacion);
+        form.addEventListener("submit", showConfirmDialog);
     });
-}
-
-/**
- * Obtiene el token CSRF oculto desde meta etiqueta
- * @returns {string} Token CSRF
- */
-function getCSRFToken() {
-    let tokenMeta = document.querySelector('meta[name="csrf-token"]');
-    return tokenMeta ? tokenMeta.getAttribute("content") : "";
 }

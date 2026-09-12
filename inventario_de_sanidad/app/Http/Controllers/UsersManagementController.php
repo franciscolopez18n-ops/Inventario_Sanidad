@@ -92,30 +92,20 @@ class UsersManagementController extends Controller {
         return $password;
     }
     
-    /**
-     * Elimina un usuario basado en su ID.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function destroy(Request $request) {
-        $user = $request["user_id"];
-
-        User::where('user_id', $user)->delete();
+    public function destroy(User $user) {
+        $user->delete();
 
         return back()->withPush(AlertType::SUCCESS, 'Usuario dado de baja con éxito.');
     }
 
-    public function changePassword(Request $request) {
-        $user = $request["user_id"];
+    public function changePassword(User $user) {
         $password = self::generateRandomPassword(8);
-        $userInfo = User::where('user_id', $user)->first();
 
-        $userInfo->hashed_password = Hash::make($password);
-        $userInfo->first_log = 0;
-        $userInfo->save();
+        $user->hashed_password = Hash::make($password);
+        $user->first_log = 0;
+        $user->save();
 
-        Mail::to($userInfo->email)->send(new PasswordChanged($password,$userInfo->first_name,$userInfo->last_name));
+        Mail::to($user->email)->send(new PasswordChanged($password, $user->first_name, $user->last_name));
 
         return back()->withPush(AlertType::SUCCESS, 'Contraseña cambiada con éxito y enviada por correo al usuario.');
     }

@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const toggleBtn = document.getElementById('filterToggle');
-    const optionsBox = document.getElementById('filterOptions');
+    const toggleBtn = document.getElementById('filter-toggle');
+    const optionsBox = document.getElementById('filter-options');
     
     // Añade un manejador para el click en el botón toggle
     toggleBtn.addEventListener('click', (e) => {

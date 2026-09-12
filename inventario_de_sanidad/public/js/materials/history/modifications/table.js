@@ -1,3 +1,5 @@
+import { createTextTD, createDataLabel } from '../../../utils/elements.js';
+
 window.addEventListener("DOMContentLoaded", inicio);
 
 /**
@@ -17,7 +19,7 @@ async function inicio() {
 
     paginaActual = 0; // Reinicia el contador de página
 
-    initLoad(); // Inicializa los eventos y lógica de filtros/paginación
+    initEvents(); // Inicializa los eventos y lógica de filtros/paginación
 
     renderTable(currentLimit, paginaActual); // Muestra la tabla con los datos iniciales
 }
@@ -34,7 +36,7 @@ function renderTable(limit, paginaActual) {
     while (tbody.firstChild) tbody.removeChild(tbody.firstChild);
 
     // Aplica el filtro de búsqueda sobre los campos definidos
-    let filtrados = aplicarFiltro([
+    let filtrados = applyFilter([
         "first_name", "last_name", "email", "user_type",
         "material_name", "units", "storage", "storage_type", "action_datetime"
     ]);
@@ -51,21 +53,21 @@ function renderTable(limit, paginaActual) {
         let tr = document.createElement("tr");
 
         // Crea y agrega las celdas con sus respectivos labels responsivos
-        tr.appendChild(crearDataLabel(crearTD(item.first_name ?? "-"), "Nombre"));
-        tr.appendChild(crearDataLabel(crearTD(item.last_name ?? "-"), "Apellidos"));
-        tr.appendChild(crearDataLabel(crearTD(item.email ?? "-"), "Email"));
-        tr.appendChild(crearDataLabel(crearTD(item.user_type ?? "-"), "Tipo de usuario"));
-        tr.appendChild(crearDataLabel(crearTD(item.material_name ?? "-"), "Material"));
-        tr.appendChild(crearDataLabel(crearTD(item.units ?? "-"), "Unidades modificadas"));
-        tr.appendChild(crearDataLabel(
-            crearTD(displayName(item.storage, DisplayCategory.STORAGE)),
+        tr.appendChild(createDataLabel(createTextTD(item.first_name ?? "-"), "Nombre"));
+        tr.appendChild(createDataLabel(createTextTD(item.last_name ?? "-"), "Apellidos"));
+        tr.appendChild(createDataLabel(createTextTD(item.email ?? "-"), "Email"));
+        tr.appendChild(createDataLabel(createTextTD(item.user_type ?? "-"), "Tipo de usuario"));
+        tr.appendChild(createDataLabel(createTextTD(item.material_name ?? "-"), "Material"));
+        tr.appendChild(createDataLabel(createTextTD(item.units ?? "-"), "Unidades modificadas"));
+        tr.appendChild(createDataLabel(
+            createTextTD(displayName(item.storage, DisplayCategory.STORAGE)),
             "Localización"
         ));
-        tr.appendChild(crearDataLabel(
-            crearTD(displayName(item.storage_type, DisplayCategory.MODALITY)),
+        tr.appendChild(createDataLabel(
+            createTextTD(displayName(item.storage_type, DisplayCategory.MODALITY)),
             "Tipo de almacenamiento"
         ));
-        tr.appendChild(crearDataLabel(crearTD(item.action_datetime ?? "-"), "Fecha de modificación"));
+        tr.appendChild(createDataLabel(createTextTD(item.action_datetime ?? "-"), "Fecha de modificación"));
 
         tbody.appendChild(tr); // Añade la fila a la tabla
     });
@@ -73,6 +75,3 @@ function renderTable(limit, paginaActual) {
     // Muestra los botones de paginación correspondientes
     renderPaginationButtons(filtrados.length, limit);
 }
-
-
-

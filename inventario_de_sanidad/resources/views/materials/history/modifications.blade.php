@@ -19,19 +19,19 @@
     <form class="search-form">
         <!-- Buscador -->
         <div class="search-container">
-            <input type="text" id="buscarId" placeholder="Buscar..." autocomplete="off">
+            <input type="text" id="search-input" placeholder="Buscar..." autocomplete="off">
             <div class="dropdown-container">
-                <button type="button" id="filterToggle"><i class="fa-solid fa-filter table-icon-interactive"></i></button>
-                <div id="filterOptions" class="filter-options fade-in">
-                    <label><input type="radio" name="filtro" value="1" checked>Nombre</label>
-                    <label><input type="radio" name="filtro" value="2">Apellidos</label>
-                    <label><input type="radio" name="filtro" value="3">Email</label>
-                    <label><input type="radio" name="filtro" value="4">Tipo de usuario</label>
-                    <label><input type="radio" name="filtro" value="5">Material</label>
-                    <label><input type="radio" name="filtro" value="6">Unidades modificadas</label>
-                    <label><input type="radio" name="filtro" value="7">Localización</label>
-                    <label><input type="radio" name="filtro" value="8">Tipo de almacenamiento</label>
-                    <label><input type="radio" name="filtro" value="9">Fecha de modificación</label>
+                <button type="button" id="filter-toggle"><i class="fa-solid fa-filter table-icon-interactive"></i></button>
+                <div id="filter-options" class="filter-options fade-in">
+                    <label><input type="radio" name="filter" value="1" checked>Nombre</label>
+                    <label><input type="radio" name="filter" value="2">Apellidos</label>
+                    <label><input type="radio" name="filter" value="3">Email</label>
+                    <label><input type="radio" name="filter" value="4">Tipo de usuario</label>
+                    <label><input type="radio" name="filter" value="5">Material</label>
+                    <label><input type="radio" name="filter" value="6">Unidades modificadas</label>
+                    <label><input type="radio" name="filter" value="7">Localización</label>
+                    <label><input type="radio" name="filter" value="8">Tipo de almacenamiento</label>
+                    <label><input type="radio" name="filter" value="9">Fecha de modificación</label>
                 </div>
             </div>
         </div>
@@ -61,8 +61,8 @@
         <!-- Paginación -->
         <div id="paginacion" class="pagination-controls">
             <div class="pagination-select">
-                <label for="regsPorPagina"></label>
-                <select id="regsPorPagina">
+                <label for="rows-per-page"></label>
+                <select id="rows-per-page">
                     <option value="5" selected>5</option>
                     <option value="10">10</option>
                     <option value="25">25</option>
@@ -82,6 +82,6 @@
     <script src="{{ asset('js/materials/history/modifications/dataLoad.js') }}"></script>
     <script src="{{ asset('js/components/loader.js') }}"></script>
     <script src="{{ asset('js/components/paginatedTable.js') }}"></script>
-    <script src="{{ asset('js/materials/history/modifications/table.js') }}"></script>
+    <script type="module" src="{{ asset('js/materials/history/modifications/table.js') }}"></script>
     <script src="{{ asset('js/components/filterToggle.js') }}"></script> 
 @endpush

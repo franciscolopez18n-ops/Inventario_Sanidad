@@ -21,7 +21,7 @@ class MaterialManagementController extends Controller {
     use HasStorageOperations;
     
     public function manageIndex() {
-        return view('materials.manage.index');
+        return view('materials.manage.index', ['materials' => Material::orderBy('material_id')->get()]);
     }
 
     public function edit(Material $material) {
@@ -297,15 +297,6 @@ class MaterialManagementController extends Controller {
      */
     public function create() {
         return view('materials.create');
-    }
-
-    /**
-     * Devuelve en JSON la lista de todos los materiales ordenados por ID
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function dataMaterials() {
-        return response()->json(Material::orderBy('material_id')->get());
     }
 
     /**

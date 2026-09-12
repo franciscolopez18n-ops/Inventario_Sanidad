@@ -19,11 +19,11 @@
         <!-- Buscador -->
         <form class="search-form">
             <div class="search-container">
-                <input type="text" id="buscarId" placeholder="Buscar..." autocomplete="off">
+                <input type="text" id="search-input" placeholder="Buscar..." autocomplete="off">
                 <div class="dropdown-container">
-                    <button type="button" id="filterToggle"><i class="fa-solid fa-filter table-icon-interactive"></i></button>
-                    <div id="filterOptions" class="filter-options">
-                        <label><input type="radio" name="filtro" value="1" checked>Nombre</label>
+                    <button type="button" id="filter-toggle"><i class="fa-solid fa-filter table-icon-interactive"></i></button>
+                    <div id="filter-options" class="filter-options">
+                        <label><input type="radio" name="filter" value="1" checked>Nombre</label>
                     </div>
                 </div>
             </div>
@@ -51,8 +51,8 @@
         <!-- Paginación -->
         <div id="paginacion" class="pagination-controls">
             <div class="pagination-select">
-                <label for="regsPorPagina"></label>
-                <select id="regsPorPagina">
+                <label for="rows-per-page"></label>
+                <select id="rows-per-page">
                     <option value="5" selected>5</option>
                     <option value="10">10</option>
                     <option value="25">25</option>
@@ -72,8 +72,7 @@
     <script src="{{ asset('js/storages/manage/dataLoad.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/components/loader.js') }}"></script>
     <script src="{{ asset('js/components/paginatedTable.js') }}"></script>
-    <script src="{{ asset('js/storages/manage/table.js') }}" type="text/javascript"></script>
+    <script type="module" src="{{ asset('js/storages/manage/table.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/components/filterToggle.js') }}"></script>
-    
 @endpush
 

@@ -1,5 +1,9 @@
 @extends('layout.app')
 
+@section('head-extra')
+    <x-csrf-meta />
+@endsection
+
 @section('title', 'Gestión de material')
 
 @push('styles')
@@ -10,85 +14,35 @@
 
 @section('content')
 
-<meta name="csrf-token" content="{{ csrf_token() }}">
-<div id="loader-overlay">
-    <div class="spinner"></div>
-</div> 
+<x-loader />
 
-<div>
-    <!-- Dialogo para confirmar eliminación de material -->
+<!-- Dialogo para confirmar eliminación de material -->
+<dialog id="confirmation">
+    <p>¿Estás seguro de que deseas eliminar el material seleccionado?</p>
+    <input type="button" class="btn btn-success" value="Aceptar" id="acept">
+    <input type="button" class="btn btn-danger" value="Cancelar" id="cancel">
+</dialog>
 
-    <dialog  id="confirmacion">
-        <p>¿Estás seguro de que deseas eliminar el material seleccionado?</p>
-        <input type="button" class="btn btn-success" value="Aceptar" id="aceptar">
-        <input type="button" class="btn btn-danger" value="Cancelar" id="cancelar">
-    </dialog>
+<div class="content-wrapper">
+    <h2>Gestión de material</h2>
 
-    <div class="content-wrapper">
-        <h2>Gestión de material</h2>
-        <form class="search-form">
-            <!-- Buscador -->
-            <div class="search-container">
-                <input type="text" id="buscarId" placeholder="Buscar..." autocomplete="off">
-                <div class="dropdown-container">
-                    <button type="button" id="filterToggle"><i class="fa-solid fa-filter table-icon-interactive"></i></button>
-                    <div id="filterOptions" class="filter-options fade-in">
-                        <label><input type="radio" name="filtro" value="1" checked>Nombre</label>
-                        <label><input type="radio" name="filtro" value="2">Descripción</label>
-                        <label><input type="radio" name="filtro" value="3">Imagen</label>
-                    </div>
-                </div>
-            </div>
-        </form>
-
-        <div>
-
-            <!-- Tabla de materiales -->
-            <div class="table-wrapper">
-                <table class="table custom-scroll">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Descripción</th>
-                            <th>Imagen</th>
-                            <th colspan="2"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Tabla de materiales se insertará aquí -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Paginación -->
-        <div id="paginacion" class="pagination-controls">
-            <div class="pagination-select">
-                <label for="regsPorPagina"></label>
-                <select id="regsPorPagina">
-                    <option value="5" selected>5</option>
-                    <option value="10">10</option>
-                    <option value="25">25</option>
-                    <option value="50">50</option>
-                </select>
-            </div>
-
-            <div class="pagination-buttons">
-                <!-- Botones de paginación se insertarán aquí -->
-            </div>
-        </div>
-
-        <div id="paginacion" class="pagination-controls">
-            <!-- Aquí se inyectarán los botones de paginación desde JS -->
-        </div>
+    <x-search-bar
+        :options="[
+            ['label' => 'Nombre', 'field' => 'name'],
+            ['label' => 'Descripción', 'field' => 'description'],
+        ]"
+    />
+    <x-paginated-table
+        :columns="['Nombre', 'Descripción', 'Imagen']"
+        :actions-colspan="2"
+    />
 </div>
 @endsection
 
 @push('scripts')
+    <script type="application/json" id="materials-data">@json($materials)</script>
     <script src="{{ asset('js/components/loader.js') }}"></script>
     <script src="{{ asset('js/components/confirmDialog.js') }}"></script>
-    <script src="{{ asset('js/materials/manage/dataLoad.js') }}"></script>
-    <script src="{{ asset('js/components/paginatedTable.js') }}"></script>
-    <script src="{{ asset('js/materials/manage/table.js') }}"></script>
+    <script type="module" src="{{ asset('js/materials/manage/table.js') }}"></script>
     <script src="{{ asset('js/components/filterToggle.js') }}"></script> 
 @endpush

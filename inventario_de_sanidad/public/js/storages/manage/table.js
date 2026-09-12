@@ -1,3 +1,5 @@
+import { createTextTD, createDataLabel } from '../../utils/elements.js';
+
 /**
  * Detecta cuando el DOM está listo y ejecuta la función `inicio`.
  */
@@ -17,7 +19,7 @@ async function inicio() {
     allData = window.STORAGEDATA;
     paginaActual = 0;
 
-    initLoad();
+    initEvents();
 
     renderTable(currentLimit, paginaActual);
 }
@@ -34,7 +36,7 @@ function renderTable(limit, paginaActual) {
         tbody.removeChild(tbody.firstChild);
     }
 
-    let filtrados = aplicarFiltro(["name"]);
+    let filtrados = applyFilter(["name"]);
 
     // =========================
     // AGRUPAR POR MATERIAL
@@ -70,7 +72,7 @@ function renderTable(limit, paginaActual) {
         // Fila título material
         let trMaterial = document.createElement("tr");
 
-        let tdMaterial = crearTD(material.name ?? "-");
+        let tdMaterial = createTextTD(material.name ?? "-");
         tdMaterial.colSpan = 8;
         tdMaterial.classList.add("material-title");
 
@@ -82,13 +84,13 @@ function renderTable(limit, paginaActual) {
 
             let trUse = document.createElement("tr");
 
-            trUse.appendChild(crearDataLabel(crearTD(item.storage ?? "-"), "Localización"));
-            trUse.appendChild(crearDataLabel(crearTD("uso"), "Tipo"));
-            trUse.appendChild(crearDataLabel(crearTD(item.units ?? "0"), "Cantidad"));
-            trUse.appendChild(crearDataLabel(crearTD(item.min_units ?? "0"), "Cantidad mínima"));
-            trUse.appendChild(crearDataLabel(crearTD(item.cabinet ?? "-"), "Armario"));
-            trUse.appendChild(crearDataLabel(crearTD(item.shelf ?? "-"), "Balda"));
-            trUse.appendChild(crearDataLabel(crearTD(item.drawer ?? "-"), "Cajón"));
+            trUse.appendChild(createDataLabel(createTextTD(item.storage ?? "-"), "Localización"));
+            trUse.appendChild(createDataLabel(createTextTD("uso"), "Tipo"));
+            trUse.appendChild(createDataLabel(createTextTD(item.units ?? "0"), "Cantidad"));
+            trUse.appendChild(createDataLabel(createTextTD(item.min_units ?? "0"), "Cantidad mínima"));
+            trUse.appendChild(createDataLabel(createTextTD(item.cabinet ?? "-"), "Armario"));
+            trUse.appendChild(createDataLabel(createTextTD(item.shelf ?? "-"), "Balda"));
+            trUse.appendChild(createDataLabel(createTextTD(item.drawer ?? "-"), "Cajón"));
 
             let tdAcciones = crearAccionesTd(item.material_id, item.storage);
             trUse.appendChild(tdAcciones);
