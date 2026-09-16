@@ -104,11 +104,6 @@ Route::middleware('auth')->group(function () {
                 Route::post('/{material}/{currentLocation}/subtract', [TeacherStorageController::class, 'subtract'])->name('storages.manage.subtract');
             });
         });
-
-        // Actividades
-        Route::prefix('activities')->group(function () {
-            Route::get('/data-teacher-activities', [ActivityController::class, 'dataTeacherActivities']);
-        });
     });
 
     /*
@@ -122,7 +117,6 @@ Route::middleware('auth')->group(function () {
         Route::prefix('activities')->group(function () {
             Route::get('/create', [ActivityController::class, 'create'])->name('activities.create');
             Route::post('/store', [ActivityController::class, 'store'])->name('activities.store');
-            Route::get('/data-student-activities', [ActivityController::class, 'dataStudentActivities']);
         });
     });
 
@@ -135,7 +129,7 @@ Route::middleware('auth')->group(function () {
     // Actividades compartidas
     Route::middleware('check.role:student,teacher')->group(function () {
         Route::prefix('activities')->group(function() {
-            Route::get('/history', [ActivityController::class, 'activitiesHistory'])->name('activities.history');
+            Route::get('/history', [ActivityController::class, 'history'])->name('activities.history');
         });
     });
 

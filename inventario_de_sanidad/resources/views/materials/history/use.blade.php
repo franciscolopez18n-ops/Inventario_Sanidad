@@ -106,5 +106,4 @@
     <script src="{{ asset('js/components/loader.js') }}"></script>
     <script src="{{ asset('js/components/paginatedTable.js') }}"></script>
     <script type="module" src="{{ asset('js/materials/history/summary/table.js') }}"></script>
-    <script src="{{ asset('js/components/filterToggle.js') }}"></script> 
 @endpush

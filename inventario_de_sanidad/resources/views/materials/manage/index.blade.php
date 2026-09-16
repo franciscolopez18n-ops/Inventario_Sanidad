@@ -23,20 +23,20 @@
     <input type="button" class="btn btn-danger" value="Cancelar" id="cancel">
 </dialog>
 
-<div class="content-wrapper">
-    <h2>Gestión de material</h2>
+<h2>Gestión de material</h2>
 
-    <x-search-bar
-        :options="[
-            ['label' => 'Nombre', 'field' => 'name'],
-            ['label' => 'Descripción', 'field' => 'description'],
-        ]"
-    />
-    <x-paginated-table
-        :columns="['Nombre', 'Descripción', 'Imagen']"
-        :actions-colspan="2"
-    />
-</div>
+<x-search-bar
+    :options="[
+        ['label' => 'Nombre', 'path' => 'name'],
+        ['label' => 'Descripción', 'path' => 'description'],
+    ]"
+/>
+<x-fillable-table
+    :columns="['Nombre', 'Descripción', 'Imagen']"
+    :actions-colspan="2"
+/>
+<x-pagination />
+
 @endsection
 
 @push('scripts')
@@ -44,5 +44,4 @@
     <script src="{{ asset('js/components/loader.js') }}"></script>
     <script src="{{ asset('js/components/confirmDialog.js') }}"></script>
     <script type="module" src="{{ asset('js/materials/manage/table.js') }}"></script>
-    <script src="{{ asset('js/components/filterToggle.js') }}"></script> 
 @endpush

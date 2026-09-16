@@ -33,8 +33,8 @@ export class PaginatedDataPresenter {
 
     /**
      * Añade un renderer.
-     * @param {TableRenderer} renderer - opción que sabe cómo representar los datos en el DOM.
-     *      Se recomienda que herede de TableRenderer.
+     * @param {DataRenderer} renderer - opción que sabe cómo representar los datos en el DOM.
+     *      Se recomienda que herede de DataRenderer.
      */
     addRenderer(renderer) {
         this.#renderers.push(renderer);
@@ -106,7 +106,7 @@ export class PaginatedDataPresenter {
 }
 
 // Contrato opcional/documental que falla con un mensaje claro, recomendable para escribir renderers
-export class TableRenderer {
+export class DataRenderer {
     render(_pageData) {
         throw new Error(`${this.constructor.name} debe implementar render(pageData)`);
     }

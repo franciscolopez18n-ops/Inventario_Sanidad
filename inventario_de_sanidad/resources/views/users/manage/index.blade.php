@@ -88,5 +88,4 @@
     <script src="{{ asset('js/users/manage/dataLoad.js') }}"></script>
     <script src="{{ asset('js/components/paginatedTable.js') }}"></script>
     <script type="module" src="{{ asset('js/users/manage/table.js') }}"></script>
-    <script src="{{ asset('js/components/filterToggle.js') }}"></script> 
 @endpush

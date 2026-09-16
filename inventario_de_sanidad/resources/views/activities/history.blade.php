@@ -3,43 +3,33 @@
 @section('title', 'Historial de actividades')
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/components/paginated-table.css') }}">    
+    <link rel="stylesheet" href="{{ asset('css/components/paginated-table.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/loader.css') }}">    
     <link rel="stylesheet" href="{{ asset('css/activities/history.css') }}">   
 @endpush
 
 @section('content')
-<div id="loader-overlay">
-    <div class="spinner"></div>
-</div> 
-    <h1 class="activities-title">Historial de actividades</h1>
-    <div class="activities-section">
-        <div id="activityCardContainer" class="activity-cards-grid"></div>
 
-        <!-- Paginación -->
-        <div id="paginacion" class="pagination-controls">
-            <div class="pagination-select">
-                <label for="rows-per-page"></label>
-                <select id="rows-per-page">
-                    <option value="5" selected>5</option>
-                    <option value="10">10</option>
-                    <option value="25">25</option>
-                    <option value="50">50</option>
-                </select>
-            </div>
+<x-loader />
 
-            <div class="pagination-buttons">
-                <!-- Botones de paginación se insertarán aquí -->
-            </div>
-        </div>
-    
-        </div>
-    </div>
-</div>
+<h1 class="activities-title">Historial de actividades</h1>
+
+<x-search-bar
+    :options="[
+        ['label' => 'Fecha y hora', 'path' => 'created_at'],
+        ['label' => 'Título', 'path' => 'title'],
+        ['label' => auth()->user()->user_type === 'teacher' ? 'Alumno/a' : 'Profesor/a', 'path' => 'partner.full_name'],
+        ['label' => 'Material', 'path' => 'materials.name'],
+    ]"
+/>
+
+<div id="activities-card-container" class="activity-cards-grid"></div>
+<x-pagination />
+
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/activities/history/dataLoad.js') }}" type="text/javascript"></script>
+    <script type="application/json" id="activities-data">@json($activities)</script>
     <script src="{{ asset('js/components/loader.js') }}"></script>
-    <script src="{{ asset('js/components/paginatedTable.js') }}"></script>
-    <script type="module" src="{{ asset('js/activities/history/table.js') }}" type="text/javascript"></script>
+    <script type="module" src="{{ asset('js/activities/history.js') }}" type="text/javascript"></script>
 @endpush

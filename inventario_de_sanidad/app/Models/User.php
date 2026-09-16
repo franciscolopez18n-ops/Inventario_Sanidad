@@ -30,8 +30,12 @@ class User extends Authenticatable {
         return $this->hasMany(Modification::class, 'user_id', 'user_id');
     }
 
-    public function activities() {
+    public function studentActivities() {
         return $this->hasMany(Activity::class, 'user_id', 'user_id');
+    }
+
+    public function teacherActivities() {
+        return $this->hasMany(Activity::class, 'teacher_id', 'user_id');
     }
 
     public function getFullNameAttribute(): string {

@@ -1,4 +1,4 @@
-import { createTextTD, createDataLabel, createLabeledLi } from '../../utils/elements.js';
+import { createTextTD, createDataLabel, createLabeledTextContainer } from '../../utils/elements.js';
 
 let isUse = window.location.href.split("/").pop() === 'use';
 
@@ -142,13 +142,13 @@ function crearMaterialCard(material) {
     body.appendChild(p);
 
     let ul = document.createElement("ul");
-    ul.appendChild(createLabeledLi("Localización", displayName(material.storage, DisplayCategory.STORAGE)));
-    ul.appendChild(createLabeledLi("Armario", material.cabinet));
-    ul.appendChild(createLabeledLi("Balda", material.shelf));
-    if (isUse) ul.appendChild(createLabeledLi("Cajón", material.drawer));
+    ul.appendChild(createLabeledTextContainer("li", "Localización", displayName(material.storage, DisplayCategory.STORAGE)));
+    ul.appendChild(createLabeledTextContainer("li", "Armario", material.cabinet));
+    ul.appendChild(createLabeledTextContainer("li", "Balda", material.shelf));
+    if (isUse) ul.appendChild(createLabeledTextContainer("li", "Cajón", material.drawer));
     if (!isStudent) {
-        ul.appendChild(createLabeledLi("Unidades", material.units));
-        ul.appendChild(createLabeledLi("Unidades mínimas", material.min_units));
+        ul.appendChild(createLabeledTextContainer("li", "Unidades", material.units));
+        ul.appendChild(createLabeledTextContainer("li", "Unidades mínimas", material.min_units));
     }
     body.appendChild(ul);
 

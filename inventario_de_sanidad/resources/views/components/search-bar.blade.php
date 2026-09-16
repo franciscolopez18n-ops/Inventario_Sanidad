@@ -12,7 +12,7 @@
                         <input
                             type="radio"
                             name="filter"
-                            value="{{ $option['field'] }}"
+                            value="{{ $option['path'] }}"
                             {{ $index === 0 ? 'checked' : '' }}
                         >
                         {{ $option['label'] }}

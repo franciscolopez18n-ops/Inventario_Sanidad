@@ -44,17 +44,16 @@ export function createDataLabel(td, label) {
     return td;
 }
 
-// Crea un <li> con una etiqueta fuerte y un valor
-export function createLabeledLi(label, value) {
-    let li = document.createElement("li");
+// Crea un contenedor con texto compuesto por una etiqueta fuerte y un valor (solo sirve con contenedores compatibles)
+export function createLabeledTextContainer(tagName, label, value) {
+    let container = document.createElement(tagName);
     let strong = document.createElement("strong");
-    
+
     strong.textContent = `${label}: `;
+    container.appendChild(strong);
+    container.appendChild(document.createTextNode(value));
 
-    li.appendChild(strong);
-    li.appendChild(document.createTextNode(value ?? "-"));
-
-    return li;
+    return container;
 }
 
 export function createHiddenInput(value, name) {
