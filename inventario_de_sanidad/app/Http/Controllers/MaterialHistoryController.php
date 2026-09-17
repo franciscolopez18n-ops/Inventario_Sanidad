@@ -7,12 +7,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 
 class MaterialHistoryController extends Controller {
-    /**
-     * Devuelve un JSON con el historial de modificaciones en los materiales.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function dataModifications() {
+    
+    public function modifications() {
         $modifications = DB::table('modifications')
             ->join('users', 'modifications.user_id', '=', 'users.user_id')
             ->join('materials', 'modifications.material_id', '=', 'materials.material_id')
@@ -22,17 +18,7 @@ class MaterialHistoryController extends Controller {
             ->orderBy('action_datetime', 'desc')
             ->get();
 
-        return response()->json($modifications);
-    }
-
-    /**
-     * Muestra la vista del historial de modificaciones.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function modifications()
-    {
-        return view('materials.history.modifications');
+        return view('materials.history.modifications', compact('modifications'));
     }
 
     public function useSummary() {

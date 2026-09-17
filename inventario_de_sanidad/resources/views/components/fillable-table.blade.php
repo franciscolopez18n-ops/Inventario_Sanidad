@@ -1,4 +1,4 @@
-@props(['id' => '', 'columns' => [], 'actionsColspan' => 1])
+@props(['id' => '', 'columns' => [], 'actionsColspan' => 0])
 
 <!-- Tabla -->
 <div class="table-wrapper">
@@ -8,7 +8,9 @@
                 @foreach ($columns as $column)
                     <th>{{ $column }}</th>
                 @endforeach
-                <th colspan="{{ $actionsColspan }}"></th>
+                @if ($actionsColspan > 0)
+                    <th colspan="{{ $actionsColspan }}"></th>
+                @endif
             </tr>
         </thead>
         <tbody>

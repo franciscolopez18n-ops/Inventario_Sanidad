@@ -74,7 +74,6 @@ Route::middleware('auth')->group(function () {
             Route::prefix('history')->group(function () {
                 Route::get('/reserve', [MaterialHistoryController::class, 'reserveSummary'])->name('materials.history.reserve');
                 Route::get('/modifications', [MaterialHistoryController::class, 'modifications'])->name('materials.history.modifications');
-                Route::get('/data-modifications', [MaterialHistoryController::class, 'dataModifications']);
             });
 
             // Códigos QR
