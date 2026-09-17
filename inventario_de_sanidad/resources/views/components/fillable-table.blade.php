@@ -1,8 +1,8 @@
-@props(['columns' => [], 'actionsColspan' => 1])
+@props(['id' => '', 'columns' => [], 'actionsColspan' => 1])
 
 <!-- Tabla -->
 <div class="table-wrapper">
-    <table class="table custom-scroll">
+    <table id="{{ $id }}" class="table">
         <thead>
             <tr>
                 @foreach ($columns as $column)

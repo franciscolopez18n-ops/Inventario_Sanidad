@@ -70,7 +70,6 @@
 
 @push('scripts')
     <script src="{{ asset('js/storages/manage/dataLoad.js') }}" type="text/javascript"></script>
-    <script src="{{ asset('js/components/loader.js') }}"></script>
     <script src="{{ asset('js/components/paginatedTable.js') }}"></script>
     <script type="module" src="{{ asset('js/storages/manage/table.js') }}" type="text/javascript"></script>
 @endpush

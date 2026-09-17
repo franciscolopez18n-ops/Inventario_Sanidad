@@ -1,5 +1,5 @@
 /*
-	- /users/manage/table.js
+	- [X] /users/manage/table.js
 	- /storages/manage/table.js
 	- [X] /materials/manage/table.js
 	- /materials/history/summary/table.js

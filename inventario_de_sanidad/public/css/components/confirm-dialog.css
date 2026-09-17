@@ -1,4 +1,4 @@
-dialog#confirmation, dialog#confirmacionContra {
+dialog.confirm-dialog {
     position: absolute;
     top: 50%;
     left: 50%;

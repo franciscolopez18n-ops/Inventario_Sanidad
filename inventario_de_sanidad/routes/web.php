@@ -49,7 +49,6 @@ Route::middleware('auth')->group(function () {
             // Gestión de usuarios
             Route::prefix('manage')->group(function () {
                 Route::get('/', [UsersManagementController::class, 'manageIndex'])->name('users.manage.index');
-                Route::get('/data-users', [UsersManagementController::class, 'dataUsers']);
                 Route::post('/destroy/{user}', [UsersManagementController::class, 'destroy'])->name('users.manage.destroy');
                 Route::post('/change-password/{user}', [UsersManagementController::class, 'changePassword'])->name('users.manage.change-password');
             });

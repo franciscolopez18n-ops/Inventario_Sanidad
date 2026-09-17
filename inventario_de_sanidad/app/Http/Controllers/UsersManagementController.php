@@ -28,17 +28,17 @@ class UsersManagementController extends Controller {
      * @return \Illuminate\View\View
      */
     public function manageIndex() {
-        return view('users.manage.index',);
+        return view('users.manage.index', [
+            'users' => User::select(
+                'user_id',
+                'first_name',
+                'last_name',
+                'email',
+                'user_type',
+                'created_at'
+            )->latest()->get()
+        ]);
     }
-
-    /**
-     * Devuelve todos los usuarios en formato JSON ordenados por fecha de creación descendente.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function dataUsers() {
-        return response()->json(User::orderBy('created_at','desc')->get());
-    } 
 
     /**
      * Crea un nuevo usuario validando los datos y generando una contraseña aleatoria.
@@ -93,9 +93,17 @@ class UsersManagementController extends Controller {
     }
     
     public function destroy(User $user) {
-        $user->delete();
+        if ($user->user_id === auth()->id()) { // Comprobación de seguridad por si el frontend fue manipulado
+            return back()->withPush(AlertType::ERROR, 'No puedes dar de baja a tu propio usuario.');
+        }
 
-        return back()->withPush(AlertType::SUCCESS, 'Usuario dado de baja con éxito.');
+        try {
+            $user->delete();
+            return back()->withPush(AlertType::SUCCESS, 'Usuario dado de baja con éxito.');
+
+        } catch (\Exception $e) {
+            return back()->withPush(AlertType::ERROR, 'Error al borrar: ' . $e->getMessage());
+        }
     }
 
     public function changePassword(User $user) {

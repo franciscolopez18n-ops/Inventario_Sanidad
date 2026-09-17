@@ -1,4 +1,5 @@
 import { DataTool } from "../utils/dataTool.js";
+import { hideLoader } from "./loader.js";
 
 export class PaginatedDataPresenter {
     #rawData = [];

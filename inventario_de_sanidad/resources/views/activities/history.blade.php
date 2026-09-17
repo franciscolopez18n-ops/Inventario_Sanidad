@@ -30,6 +30,5 @@
 
 @push('scripts')
     <script type="application/json" id="activities-data">@json($activities)</script>
-    <script src="{{ asset('js/components/loader.js') }}"></script>
     <script type="module" src="{{ asset('js/activities/history.js') }}" type="text/javascript"></script>
 @endpush

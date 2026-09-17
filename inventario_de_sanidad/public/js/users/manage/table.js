@@ -1,123 +1,76 @@
+import { PaginatedDataPresenter, DataRenderer } from "../../components/paginatedDataPresenter.js";
+import { SearchBarTool } from "../../components/searchBarTool.js";
+import { showConfirmDialog } from "../../components/confirmDialog.js";
 import { createTextTD, createDataLabel } from '../../utils/elements.js';
 import { createHiddenCSRFTokenInput } from '../../utils/csrf.js';
 
-window.addEventListener("DOMContentLoaded", inicio);
+class UsersManagementTableRenderer extends DataRenderer {
+    render(pageData) {
+        // Resetea la tabla
+        let tbody = document.querySelector("#users-management-table tbody");
+        tbody.replaceChildren();
 
-/**
- * Función principal que inicializa la carga y renderizado de datos
- * @async
- */
-async function inicio () {
-    /**
-     * Espera que window.USERDATA esté definido
-     * @returns {Promise<void>}
-     */
-    while (typeof window.USERDATA === 'undefined') {
-        await new Promise(resolve => setTimeout(resolve, 100));
+        // La reconstruye
+        pageData.forEach(user => tbody.appendChild(this.#buildRow(user)));
     }
-    hideLoader();
 
-    currentLimit = 5; // Número de filas por página
-    paginaActual = 0; // Página actual
-
-    allData = window.USERDATA; // Datos cargados
-
-    initEvents();
-
-    renderTable(currentLimit,paginaActual);
-}
-
-/**
- * Renderiza la tabla de usuarios con paginación y filtrado
- * @param {number} limit - Número de filas por página
- * @param {number} paginaActual - Página actual a mostrar
- */
-function renderTable(limit, paginaActual) {
-    let tbody = document.querySelector("#tabla-usuarios tbody");
-    // Limpia el tbody antes de renderizar
-    while (tbody.firstChild) tbody.removeChild(tbody.firstChild);
-
-    // Aplica filtro sobre campos indicados
-    let filtrados = applyFilter(["first_name", "last_name", "email", "user_type", "created_at"]);
-
-    let inicio = paginaActual * limit; // Índice inicial para paginación
-    let fin = inicio + limit;          // Índice final para paginación
-    let datosPagina = filtrados.slice(inicio, fin); // Datos de la página actual
-
-    datosPagina.forEach((usuario) => {
+    #buildRow(user) {
         let tr = document.createElement("tr");
 
-        // Crea y añade celdas con etiquetas accesibles (label)
-        tr.appendChild(createDataLabel(createTextTD(usuario.first_name),"Nombre"));
-        tr.appendChild(createDataLabel(createTextTD(usuario.last_name),"Apellidos"));
-        tr.appendChild(createDataLabel(createTextTD(usuario.email),"Email"));
-        tr.appendChild(createDataLabel(createTextTD(usuario.user_type),"Tipo de usuario"));
-        tr.appendChild(createDataLabel(createTextTD(usuario.created_at),"Fecha de alta"));
+        // Celdas
+        tr.appendChild(createDataLabel(createTextTD(user.first_name), "Nombre"));
+        tr.appendChild(createDataLabel(createTextTD(user.last_name), "Apellidos"));
+        tr.appendChild(createDataLabel(createTextTD(user.email), "Email"));
+        tr.appendChild(createDataLabel(createTextTD(user.user_type), "Tipo de usuario"));
+        tr.appendChild(createDataLabel(createTextTD(user.created_at), "Fecha de alta"));
 
-        // Columna para formulario "Generar contraseña"
-        let tdAc = document.createElement("td");
-        let formAc = document.createElement("form");
-        formAc.method = "POST";
-        formAc.action = `/users/manage/change-password/${usuario.user_id}`;
-        formAc.id = `btn-ver-${usuario.user_id}`;
+        // Botón Generar contraseña
+        let changePasswordTd = document.createElement("td");
 
-        let formToken = createHiddenCSRFTokenInput(); // Token CSRF oculto
+        let changePasswordBtn = document.createElement("button");
+        changePasswordBtn.type = "submit";
+        changePasswordBtn.classList = "btn btn-primary";
+        changePasswordBtn.textContent = "Generar contraseña";
 
-        let btnAc = document.createElement("button");
-        btnAc.type = "submit";
-        btnAc.classList = "btn btn-primary";
-        btnAc.textContent = "Generar contraseña";
+        let changePasswordForm = document.createElement("form");
+        changePasswordForm.method = "POST";
+        changePasswordForm.action = `/users/manage/change-password/${user.user_id}`;
 
-        formAc.appendChild(formToken);
-        formAc.appendChild(btnAc);
-        tdAc.appendChild(formAc);
+        changePasswordForm.appendChild(createHiddenCSRFTokenInput());
+        changePasswordForm.appendChild(changePasswordBtn);
+        changePasswordForm.addEventListener("submit", event => showConfirmDialog(event, "change-password-cd"));
+        changePasswordTd.appendChild(changePasswordForm);
+        tr.appendChild(changePasswordTd);
 
-        tr.appendChild(tdAc);
+        // Botón Eliminar
+        let deleteTd = document.createElement("td");
 
-        // Columna para formulario "Eliminar usuario"
-        let tdDel = document.createElement("td");
+        // No muestra el botón para el usuario logueado
+        if ((user.first_name + " " + user.last_name) !== document.getElementsByClassName("user-name")[0].textContent) {
+            let deleteBtn = document.createElement("button");
+            deleteBtn.type = "submit";
+            deleteBtn.style.cssText = "background: none; border: none; cursor: pointer;";
+            let trashIcon = document.createElement("i");
+            trashIcon.classList.add("fa", "fa-trash", "table-icon-interactive");
+            deleteBtn.appendChild(trashIcon);
 
-        // No muestra botón eliminar para el usuario logueado
-        if ((usuario.first_name + " " + usuario.last_name) != document.getElementsByClassName("user-name")[0].textContent) {
-            let formDel = document.createElement("form");
-            formDel.method = "POST";
-            formDel.action = `/users/manage/destroy/${usuario.user_id}`;
-            formDel.id = `btn-delete-${usuario.user_id}`;
+            let deleteForm = document.createElement("form");
+            deleteForm.method = "POST";
+            deleteForm.action = `/users/manage/destroy/${user.user_id}`;
 
-            let formToken = createHiddenCSRFTokenInput(); // Token CSRF oculto
-
-            let btn = document.createElement("button");
-            btn.type = "submit";
-            btn.style.cssText = "background: none; border: none; cursor: pointer;";
-
-            let icon = document.createElement("i");
-            icon.classList.add("fa", "fa-trash", "table-icon-interactive");
-
-            btn.appendChild(icon);
-            formDel.appendChild(formToken);
-            formDel.appendChild(btn);
-            tdDel.appendChild(formDel);
+            deleteForm.appendChild(createHiddenCSRFTokenInput());
+            deleteForm.appendChild(deleteBtn);
+            deleteForm.addEventListener("submit", event => showConfirmDialog(event, "delete-cd"));
+            deleteTd.appendChild(deleteForm);
         }
 
-        tr.appendChild(tdDel);
-        tbody.appendChild(tr);
-    });
+        tr.appendChild(deleteTd);
 
-    renderPaginationButtons(filtrados.length, limit); // Renderiza botones de paginación
-    rebindDynamicEvents(); // Añade eventos a formularios dinámicos
+        return tr;
+    }
 }
 
-/**
- * Añade eventos submit para formularios dinámicos de generar contraseña y eliminar usuario
- */
-function rebindDynamicEvents() {
-    // Añade evento submit para confirmar acción en formularios "Generar contraseña"
-    document.querySelectorAll("[id^='btn-ver-']").forEach(form => {
-        form.addEventListener("submit", showConfirmDialog);
-    });
-
-    // Añade evento submit para confirmar acción en formularios "Eliminar usuario"
-    document.querySelectorAll("[id^='btn-delete-']").forEach(form => {
-        form.addEventListener("submit", showConfirmDialog);
-    });
-}
+const table = new PaginatedDataPresenter({
+    dataTool: new SearchBarTool()
+});
+table.addRenderer(new UsersManagementTableRenderer()).loadFrom("users-data");

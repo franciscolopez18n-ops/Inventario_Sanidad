@@ -80,7 +80,6 @@
 
 @push('scripts')
     <script src="{{ asset('js/materials/history/modifications/dataLoad.js') }}"></script>
-    <script src="{{ asset('js/components/loader.js') }}"></script>
     <script src="{{ asset('js/components/paginatedTable.js') }}"></script>
     <script type="module" src="{{ asset('js/materials/history/modifications/table.js') }}"></script>
 @endpush

@@ -16,12 +16,10 @@
 
 <x-loader />
 
-<!-- Dialogo para confirmar eliminación de material -->
-<dialog id="confirmation">
-    <p>¿Estás seguro de que deseas eliminar el material seleccionado?</p>
-    <input type="button" class="btn btn-success" value="Aceptar" id="acept">
-    <input type="button" class="btn btn-danger" value="Cancelar" id="cancel">
-</dialog>
+<x-confirm-dialog
+    :id="'delete-cd'"
+    :message="'¿Estás seguro de que deseas eliminar el material seleccionado?'"
+/>
 
 <h2>Gestión de material</h2>
 
@@ -32,6 +30,7 @@
     ]"
 />
 <x-fillable-table
+    :id="'materials-management-table'"
     :columns="['Nombre', 'Descripción', 'Imagen']"
     :actions-colspan="2"
 />
@@ -41,7 +40,5 @@
 
 @push('scripts')
     <script type="application/json" id="materials-data">@json($materials)</script>
-    <script src="{{ asset('js/components/loader.js') }}"></script>
-    <script src="{{ asset('js/components/confirmDialog.js') }}"></script>
     <script type="module" src="{{ asset('js/materials/manage/table.js') }}"></script>
 @endpush

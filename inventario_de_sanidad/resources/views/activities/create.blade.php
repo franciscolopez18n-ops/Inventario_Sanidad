@@ -60,7 +60,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td data-label="Material" class="cell-description custom-scroll">
+                                <td data-label="Material" class="cell-description">
                                     <select name="material" id="material">
                                         <option value="" selected disabled>--Selecciona un material--</option>
 

@@ -1,40 +1,18 @@
-// Función que muestra un cuadro de diálogo de confirmación personalizado según el botón clicado
-function showConfirmDialog(event) {
+export function showConfirmDialog(event, dialogId) {
     event.preventDefault();
 
-    let botonConfirmar;
-    let botonCancelar;
-    let dialog;
+    const dialog = document.getElementById(dialogId);
+    const btnConfirm = document.querySelector(`#${dialogId} [data-action="confirm"]`);
+    const btnCancel = document.querySelector(`#${dialogId} [data-action="cancel"]`);
 
-    // Verifica si el botón clicado tiene un ID que contiene "ver" (por ejemplo, "btn-ver")
-    if (event.target.id.split("-")[1] == "ver") {
-        // Selecciona los elementos correspondientes para la variante "ver"
-        botonConfirmar = document.getElementById("aceptarContra");
-        botonCancelar = document.getElementById("cancelarContra");
-        dialog = document.getElementById("confirmacionContra");
-    } else {
-        // Selecciona los elementos para el diálogo genérico
-        botonConfirmar = document.getElementById("acept");
-        botonCancelar = document.getElementById("cancel");
-        dialog = document.getElementById("confirmation");
-    }
+    dialog.showModal();
 
-    // Muestra el cuadro de diálogo añadiendo el atributo "open"
-    dialog.setAttribute("open", "true");
-
-    // Al hacer clic en "Confirmar", se envía el formulario original y se cierra el diálogo
-    botonConfirmar.onclick = () => {
+    btnConfirm.onclick = () => {
         event.target.submit();
-        cerrarDialog(dialog);
+        dialog.close();
     };
 
-    // Al hacer clic en "Cancelar", simplemente se cierra el diálogo
-    botonCancelar.onclick = () => {
-        cerrarDialog(dialog);
+    btnCancel.onclick = () => {
+        dialog.close();
     };
-}
-
-// Función que cierra el cuadro de diálogo
-function cerrarDialog(dialog) {
-    dialog.removeAttribute("open");
 }

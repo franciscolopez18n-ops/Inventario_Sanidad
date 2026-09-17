@@ -1,12 +1,13 @@
 import { PaginatedDataPresenter, DataRenderer } from "../../components/paginatedDataPresenter.js";
 import { SearchBarTool } from "../../components/searchBarTool.js";
+import { showConfirmDialog } from "../../components/confirmDialog.js";
 import { createTextTD, createPublicImageTD, createDataLabel } from '../../utils/elements.js';
 import { createHiddenCSRFTokenInput } from '../../utils/csrf.js';
 
-class MaterialsTableRenderer extends DataRenderer {
+class MaterialsManagementTableRenderer extends DataRenderer {
     render(pageData) {
         // Resetea la tabla
-        let tbody = document.querySelector("table tbody");
+        let tbody = document.querySelector("#materials-management-table tbody");
         tbody.replaceChildren();
 
         // La reconstruye
@@ -48,11 +49,10 @@ class MaterialsTableRenderer extends DataRenderer {
         let deleteForm = document.createElement("form");
         deleteForm.method = "POST";
         deleteForm.action = `/materials/manage/destroy/${material.material_id}`;
-        deleteForm.id = "btn-delete-" + material.material_id;
 
         deleteForm.appendChild(createHiddenCSRFTokenInput());
         deleteForm.appendChild(deleteBtn);
-        deleteForm.addEventListener("submit", showConfirmDialog);
+        deleteForm.addEventListener("submit", event => showConfirmDialog(event, "delete-cd"));
         deleteTd.appendChild(deleteForm);
         tr.appendChild(deleteTd);
 
@@ -63,4 +63,4 @@ class MaterialsTableRenderer extends DataRenderer {
 const table = new PaginatedDataPresenter({
     dataTool: new SearchBarTool()
 });
-table.addRenderer(new MaterialsTableRenderer()).loadFrom("materials-data");
+table.addRenderer(new MaterialsManagementTableRenderer()).loadFrom("materials-data");
