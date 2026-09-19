@@ -1,6 +1,7 @@
 import { PaginatedDataPresenter, DataRenderer } from "../../components/paginatedDataPresenter.js";
 import { SearchBarTool } from "../../components/searchBarTool.js";
 import { showConfirmDialog } from "../../components/confirmDialog.js";
+import { hideLoader } from "../../components/loader.js";
 import { createTextTD, createPublicImageTD, createDataLabel } from '../../utils/elements.js';
 import { createHiddenCSRFTokenInput } from '../../utils/csrf.js';
 
@@ -61,6 +62,9 @@ class MaterialsManagementTableRenderer extends DataRenderer {
 }
 
 const table = new PaginatedDataPresenter({
+    renderers: [new MaterialsManagementTableRenderer()],
     dataTool: new SearchBarTool()
 });
-table.addRenderer(new MaterialsManagementTableRenderer()).loadFrom("materials-data");
+table.loadFrom("materials-data");
+
+hideLoader();

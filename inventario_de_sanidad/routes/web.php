@@ -135,7 +135,6 @@ Route::middleware('auth')->group(function () {
         // Sumario de uso compartido
         Route::prefix('history')->group(function () {
             Route::get('/use', [MaterialHistoryController::class, 'useSummary'])->name('materials.history.use');
-            Route::get('/data-summary', [MaterialHistoryController::class, 'dataSummary']);
         });
     });
 });

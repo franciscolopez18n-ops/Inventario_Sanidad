@@ -9,6 +9,7 @@
     opacity: 0.8;
 
     z-index: 9999;
+    pointer-events: auto; /* explícito */
 }
 
 .spinner {

@@ -23,7 +23,7 @@
     ]"
 />
 
-<div id="activities-card-container" class="activity-cards-grid"></div>
+<div id="activities-card-view" class="activity-cards-grid"></div>
 <x-pagination />
 
 @endsection

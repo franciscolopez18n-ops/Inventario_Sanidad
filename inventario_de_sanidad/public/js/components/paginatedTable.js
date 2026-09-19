@@ -2,8 +2,8 @@
 	- [X] /users/manage/table.js
 	- /storages/manage/table.js
 	- [X] /materials/manage/table.js
-	- /materials/history/summary/table.js
-	- /materials/history/modifications/table.js
+	- [X] /materials/history/summary/table.js
+	- [X] /materials/history/modifications/table.js
 	- [X] /activities/history/table.js
 */
 

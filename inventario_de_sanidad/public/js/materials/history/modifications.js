@@ -1,5 +1,6 @@
 import { PaginatedDataPresenter, DataRenderer } from "../../components/paginatedDataPresenter.js";
 import { SearchBarTool } from "../../components/searchBarTool.js";
+import { hideLoader } from "../../components/loader.js";
 import { createTextTD, createDataLabel } from '../../utils/elements.js';
 
 class ModificationsHistoryTableRenderer extends DataRenderer {
@@ -31,6 +32,9 @@ class ModificationsHistoryTableRenderer extends DataRenderer {
 }
 
 const table = new PaginatedDataPresenter({
+    renderers: [new ModificationsHistoryTableRenderer()],
     dataTool: new SearchBarTool()
 });
-table.addRenderer(new ModificationsHistoryTableRenderer()).loadFrom("modifications-data");
+table.loadFrom("modifications-data");
+
+hideLoader();

@@ -27,7 +27,7 @@
     ]"
 />
 <x-fillable-table
-    :id="'modifications-history-table'"
+    :table-id="'modifications-history-table'"
     :columns="[
         'Nombre',
         'Apellidos',

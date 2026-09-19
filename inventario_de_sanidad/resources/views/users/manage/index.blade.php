@@ -38,7 +38,7 @@
     ]"
 />
 <x-fillable-table
-    :id="'users-management-table'"
+    :table-id="'users-management-table'"
     :columns="['Nombre', 'Apellidos', 'Email', 'Tipo de usuario', 'Fecha de alta']"
     :actions-colspan="2"
 />

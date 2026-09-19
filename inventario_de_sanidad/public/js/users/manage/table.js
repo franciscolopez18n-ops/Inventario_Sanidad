@@ -1,6 +1,7 @@
 import { PaginatedDataPresenter, DataRenderer } from "../../components/paginatedDataPresenter.js";
 import { SearchBarTool } from "../../components/searchBarTool.js";
 import { showConfirmDialog } from "../../components/confirmDialog.js";
+import { hideLoader } from "../../components/loader.js";
 import { createTextTD, createDataLabel } from '../../utils/elements.js';
 import { createHiddenCSRFTokenInput } from '../../utils/csrf.js';
 
@@ -71,6 +72,9 @@ class UsersManagementTableRenderer extends DataRenderer {
 }
 
 const table = new PaginatedDataPresenter({
+    renderers: [new UsersManagementTableRenderer()],
     dataTool: new SearchBarTool()
 });
-table.addRenderer(new UsersManagementTableRenderer()).loadFrom("users-data");
+table.loadFrom("users-data");
+
+hideLoader();

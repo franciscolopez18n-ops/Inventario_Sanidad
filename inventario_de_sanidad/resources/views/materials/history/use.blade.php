@@ -6,103 +6,62 @@
     <link rel="stylesheet" href="{{ asset('css/components/paginated-table.css') }}">
     <link rel="stylesheet" href="{{ asset('css/materials/history/summary.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/loader.css') }}">
-    
 @endpush
 
 @section('content')
 
-<div id="loader-overlay">
-    <div class="spinner"></div>
-</div> 
-<div class="historical-container">
+<x-loader />
+
+<div class="summary-header">
     <h1>Materiales en Uso</h1>
-    <form class="search-form">
-        <!-- Buscador -->
-        <div class="search-container">
-            <input type="text" id="search-input" placeholder="Buscar..." autocomplete="off">
-            <div class="dropdown-container">
-                <button type="button" id="filter-toggle"><i class="fa-solid fa-filter table-icon-interactive"></i></button>
-                <div id="filter-options" class="filter-options">
-                    <label><input type="radio" name="filter" value="1" checked>Nombre</label>
-                    <label><input type="radio" name="filter" value="2">Descripción</label>
-                    <label><input type="radio" name="filter" value="3">Localización</label>
-                    <label><input type="radio" name="filter" value="4">Armario</label>
-                    <label><input type="radio" name="filter" value="5">Balda</label>
-                    <label><input type="radio" name="filter" value="6">Cajón</label>
-                    @if(Auth::user()->user_type !== 'student')
-                        <label><input type="radio" name="filter" value="7">Unidades</label>
-                        <label><input type="radio" name="filter" value="8">Unidades Mínimas</label>
-                    @endif
-                </div>
-            </div>
-        </div>
-    </form>
-        @if(Auth::user()->user_type !== 'student')
-            <div class="view-toggle">
-                <button id="cardViewBtn" class="btn btn-outline btn-notifications active"><i class="fa-solid fa-list-ul"></i> </button>
-                <button id="tableViewBtn" class="btn btn-outline btn-notifications"><i class="fa-solid fa-table"></i> </button>
-            </div>
-        @endif
-    </div>
+
+    @php
+        $isStudent = auth()->user()->user_type === 'student';
+
+        $options = [
+            ['label' => 'Nombre', 'path' => 'name'],
+            ['label' => 'Descripción', 'path' => 'description'],
+            ['label' => 'Localización', 'path' => 'storage'],
+            ['label' => 'Armario', 'path' => 'cabinet'],
+            ['label' => 'Balda', 'path' => 'shelf'],
+            ['label' => 'Cajón', 'path' => 'drawer'],
+            ...(!$isStudent ? [
+                ['label' => 'Unidades', 'path' => 'units'],
+                ['label' => 'Unidades mínimas', 'path' => 'min_units'],
+            ] : [])
+        ];
+
+        $columns = [
+            'Imagen', 'Nombre', 'Descripción', 'Localización', 'Armario', 'Balda', 'Cajón',
+            ...(!$isStudent ? ['Unidades', 'Unidades mínimas'] : [])
+        ];
+    @endphp
     
-<div id="cardView"  class="card-grid"></div>
-        <div id="tableView" class="table-wrapper" style="display: none;">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Imagen</th>
-                        <th>Nombre</th>
-                        <th>Descripción</th>
-                        <th>Localización</th>
-                        <th>Armario</th>
-                        <th>Balda</th>
-                        <th>Cajón</th>
-                        <th>Unidades</th>
-                        <th>Unidades Mínimas</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                        /* @foreach($materials as $material)
-                            <tr>
-                                <td>
-                                    <img src="{{ asset($material->image_path 
-                                        ? 'storage/' . $material->image_path 
-                                        : 'img/no_image.jpg') 
-                                    }}" alt="{{ $material->name }}" class="cell-img">
-                                </td>
-                                <td>{{ $material->name }}</td>
-                                <td class="cell-description">{{ $material->description }}</td>
-                                <td>{{ $material->cabinet }}</td>
-                                <td>{{ $material->shelf }}</td>
-                                <td>{{ $material->units }}</td>
-                                <td>{{ $material->min_units }}</td>
-                            </tr>
-                        @endforeach */
-                    ?>
-                </tbody>
-            </table>
-        </div>
-        <div id="paginacion" class="pagination-controls">
-            <div class="pagination-select">
-                <label for="rows-per-page"></label>
-                <select id="rows-per-page">
-                    <option value="5" selected>5</option>
-                    <option value="10">10</option>
-                    <option value="25">25</option>
-                    <option value="50">50</option>
-                </select>
-            </div>
+    <x-search-bar :options="$options" />
 
-            <div class="pagination-buttons">
-                <!-- Botones de paginación se insertarán aquí -->
-            </div>
-
+    <x-view-toggle 
+        :view-btns="[
+            ['id' => 'card-view-btn', 'icon' => 'fa-solid fa-list-ul'],
+            ['id' => 'table-view-btn', 'icon' => 'fa-solid fa-table'],
+        ]"
+    />
 </div>
+
+<div id="summary-card-view" class="card-grid"></div>
+
+<x-fillable-table
+    :wrapper-id="'summary-table-view'"
+    :table-id="'summary-table'"
+    :should-hide="true"
+    :columns="$columns"
+/>
+<x-pagination
+    :option-list="['6', '18', '30', '60']"
+/>
+
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/materials/history/summary/dataLoad.js') }}"></script>
-    <script src="{{ asset('js/components/paginatedTable.js') }}"></script>
-    <script type="module" src="{{ asset('js/materials/history/summary/table.js') }}"></script>
+    <script type="application/json" id="summary-data">@json($summary)</script>
+    <script type="module" src="{{ asset('js/materials/history/summary.js') }}"></script>
 @endpush

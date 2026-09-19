@@ -22,28 +22,39 @@ class MaterialHistoryController extends Controller {
     }
 
     public function useSummary() {
-        return view('materials.history.use');
+        $columns = [
+            'materials.material_id',
+            'materials.name',
+            'materials.description',
+            'materials.image_path',
+            'storages.storage',
+            'storage_use.cabinet',
+            'storage_use.shelf',
+            'storage_use.drawer',
+            ...(auth()->user()->user_type !== 'student' ? [
+                'storage_use.units',
+                'storage_use.min_units',
+            ] : [])
+        ];
+
+        $summary = DB::table('storages')
+            ->join('materials', 'storages.material_id', '=', 'materials.material_id')
+            ->join('storage_use', function ($join) {
+                $join->on('storages.material_id', '=', 'storage_use.material_id')
+                    ->on('storages.storage', '=', 'storage_use.storage');
+            })
+            ->select($columns)
+            ->get();
+
+        return view('materials.history.use', compact('summary'));
     }
 
     public function reserveSummary() {
-        return view('materials.history.reserve');
-    }
-
-    /**
-     * Devuelve un JSON con los materiales según el tipo de almacenamiento (use/reserve).
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function dataSummary() {
-        $type = explode("=", URL::full())[1];
-
-        $table = $type === 'use' ? 'storage_use' : 'storage_reserve';
-
-        $query = DB::table('storages')
+        $summary = DB::table('storages')
             ->join('materials', 'storages.material_id', '=', 'materials.material_id')
-            ->join($table, function ($join) use ($table) {
-                $join->on('storages.material_id', '=', "$table.material_id")
-                    ->on('storages.storage', '=', "$table.storage");
+            ->join('storage_reserve', function ($join) {
+                $join->on('storages.material_id', '=', 'storage_reserve.material_id')
+                    ->on('storages.storage', '=', 'storage_reserve.storage');
             })
             ->select(
                 'materials.material_id',
@@ -51,18 +62,13 @@ class MaterialHistoryController extends Controller {
                 'materials.description',
                 'materials.image_path',
                 'storages.storage',
-                "$table.cabinet",
-                "$table.shelf",
-                "$table.units",
-                "$table.min_units"
-            );
+                'storage_reserve.cabinet',
+                'storage_reserve.shelf',
+                'storage_reserve.units',
+                'storage_reserve.min_units'
+            )
+            ->get();
 
-        if ($type === 'use') {
-            $query->addSelect("$table.drawer");
-        }
-
-        $materials = $query->get();
-
-        return response()->json($materials);
+        return view('materials.history.reserve', compact('summary'));
     }
 }

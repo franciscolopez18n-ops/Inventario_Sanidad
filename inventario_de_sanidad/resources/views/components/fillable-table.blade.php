@@ -1,8 +1,8 @@
-@props(['id' => '', 'columns' => [], 'actionsColspan' => 0])
+@props(['wrapperId' => '', 'tableId' => '', 'shouldHide' => false, 'columns' => [], 'actionsColspan' => 0])
 
 <!-- Tabla -->
-<div class="table-wrapper">
-    <table id="{{ $id }}" class="table">
+<div id="{{ $wrapperId }}" class="table-wrapper {{ $shouldHide ? 'hidden' : '' }}">
+    <table id="{{ $tableId }}" class="table">
         <thead>
             <tr>
                 @foreach ($columns as $column)

@@ -109,7 +109,7 @@ legend {
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 /* === INPUTS Y CAMPOS DE TEXTO === */

@@ -1,15 +1,23 @@
 import { PaginatedDataPresenter, DataRenderer } from "../components/paginatedDataPresenter.js";
 import { SearchBarTool } from "../components/searchBarTool.js";
+import { hideLoader } from "../components/loader.js";
 import { createTextTD, createDataLabel, createLabeledTextContainer } from '../utils/elements.js';
 
-class ActivitiesCardRenderer extends DataRenderer {
-    render(pageData) {
-        // Resetea el contenedor
-        let container = document.querySelector("#activities-card-container");
-        container.replaceChildren();
+class ActivitiesCardViewRenderer extends DataRenderer {
+    #isTeacher;
 
-        // Lo reconstruye
-        pageData.forEach(activity => container.appendChild(this.#buildCard(activity)));
+    constructor(isTeacher) {
+        super();
+        this.#isTeacher = isTeacher;
+    }
+
+    render(pageData) {
+        // Resetea la vista de tarjetas
+        let view = document.querySelector("#activities-card-view");
+        view.replaceChildren();
+
+        // La reconstruye
+        pageData.forEach(activity => view.appendChild(this.#buildCard(activity)));
     }
 
     #buildCard(activity) {
@@ -37,10 +45,9 @@ class ActivitiesCardRenderer extends DataRenderer {
 
     #buildCardContent(activity) {
         let content = document.createElement("div");
-        let isTeacher = document.querySelector(".user-role").textContent.includes("teacher");
 
         content.appendChild(createLabeledTextContainer("p", "Título", activity.title));
-        content.appendChild(createLabeledTextContainer("p", (isTeacher) ? "Alumno/a" : "Profesor/a", activity.partner.full_name));
+        content.appendChild(createLabeledTextContainer("p", (this.#isTeacher) ? "Alumno/a" : "Profesor/a", activity.partner.full_name));
         content.appendChild(this.#buildMaterialsSection(activity));
 
         return content;
@@ -105,6 +112,9 @@ class ActivitiesCardRenderer extends DataRenderer {
 }
 
 const cards = new PaginatedDataPresenter({
+    renderers: [new ActivitiesCardViewRenderer(document.querySelector(".user-role").textContent.includes("teacher"))],
     dataTool: new SearchBarTool()
 });
-cards.addRenderer(new ActivitiesCardRenderer()).loadFrom("activities-data");
+cards.loadFrom("activities-data");
+
+hideLoader();

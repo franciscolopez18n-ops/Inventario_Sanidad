@@ -30,7 +30,7 @@
     ]"
 />
 <x-fillable-table
-    :id="'materials-management-table'"
+    :table-id="'materials-management-table'"
     :columns="['Nombre', 'Descripción', 'Imagen']"
     :actions-colspan="2"
 />
