@@ -1,8 +1,9 @@
-import { PaginatedDataPresenter, DataRenderer } from "../../components/paginatedDataPresenter.js";
+import { PaginatedDataPresenter } from "../../components/paginatedDataPresenter.js";
+import { DataRenderer } from "../../utils/bases.js";
 import { SearchBarTool } from "../../components/searchBarTool.js";
 import { ViewToggle } from "../../components/viewToggle.js";
 import { hideLoader } from "../../components/loader.js";
-import { createPublicImageTD, createTextTD, createDataLabel, createLabeledTextContainer } from '../../utils/elements.js';
+import { createPublicImageTD, createTextTD, createLabeledTextContainer } from '../../utils/elements.js';
 
 class SummaryCardViewRenderer extends DataRenderer {
     render(pageData) {
@@ -75,7 +76,7 @@ class SummaryCardViewRenderer extends DataRenderer {
 class SummaryTableRenderer extends DataRenderer {
     render(pageData) {
         // Resetea la tabla
-        let tbody = document.querySelector("#summary-table tbody");
+        let tbody = document.querySelector("#summary-table tbody.dynamic-rows");
         tbody.replaceChildren();
 
         // La reconstruye
@@ -87,14 +88,14 @@ class SummaryTableRenderer extends DataRenderer {
 
         // Celdas
         tr.appendChild(createPublicImageTD(material.image_path));
-        tr.appendChild(createDataLabel(createTextTD(material.name), "Nombre"));
-        tr.appendChild(createDataLabel(createTextTD(material.description), "Descripción"));
-        tr.appendChild(createDataLabel(createTextTD(displayName(material.storage, DisplayCategory.STORAGE)), "Localización"));
-        tr.appendChild(createDataLabel(createTextTD(material.cabinet), "Armario"));
-        tr.appendChild(createDataLabel(createTextTD(material.shelf), "Balda"));
-        if ('drawer' in material) tr.appendChild(createDataLabel(createTextTD(material.drawer), "Cajón"));
-        if ('units' in material) tr.appendChild(createDataLabel(createTextTD(material.units), "Unidades"));
-        if ('min_units' in material) tr.appendChild(createDataLabel(createTextTD(material.min_units), "Mínimo"));
+        tr.appendChild(createTextTD(material.name));
+        tr.appendChild(createTextTD(material.description));
+        tr.appendChild(createTextTD(displayName(material.storage, DisplayCategory.STORAGE)));
+        tr.appendChild(createTextTD(material.cabinet));
+        tr.appendChild(createTextTD(material.shelf));
+        if ('drawer' in material) tr.appendChild(createTextTD(material.drawer));
+        if ('units' in material) tr.appendChild(createTextTD(material.units));
+        if ('min_units' in material) tr.appendChild(createTextTD(material.min_units));
 
         return tr;
     }

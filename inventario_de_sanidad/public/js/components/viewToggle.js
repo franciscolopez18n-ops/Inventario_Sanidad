@@ -5,18 +5,18 @@ export class ViewToggle {
         this.#views = views;
     }
 
-    init(defaultIndex = 0) {
+    init() {
         this.#views.forEach((view, index) => {
             view.button.addEventListener("click", (e) => {
                 e.preventDefault();
-                this.#activate(index);
+                this.activate(index);
             });
         });
 
-        this.#activate(defaultIndex);
+        return this;
     }
 
-    #activate(activeIndex) {
+    activate(activeIndex) {
         this.#views.forEach((view, index) => {
             let isActive = index === activeIndex;
             view.container.classList.toggle("hidden", !isActive);

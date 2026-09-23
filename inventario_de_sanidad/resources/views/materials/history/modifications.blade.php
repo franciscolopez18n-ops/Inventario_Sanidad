@@ -3,8 +3,10 @@
 @section('title', 'Historial de modificaciones')
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/components/paginated-table.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/loader.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/search-bar-tool.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/fillable-table.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/pagination.css') }}">
 @endpush
 
 @section('content')
@@ -13,7 +15,7 @@
 
 <h1>Historial de modificaciones</h1>
 
-<x-search-bar
+<x-search-bar-tool
     :options="[
         ['label' => 'Nombre', 'path' => 'first_name'],
         ['label' => 'Apellidos', 'path' => 'last_name'],

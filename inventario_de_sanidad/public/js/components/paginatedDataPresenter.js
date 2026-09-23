@@ -1,4 +1,4 @@
-import { DataTool } from "../utils/dataTool.js";
+import { DataTool } from "../utils/bases.js";
 
 export class PaginatedDataPresenter {
     #rawData = [];
@@ -10,12 +10,6 @@ export class PaginatedDataPresenter {
         ordenador ascendente/descendente), hay que convertir esta propiedad en array y modificar la clase para que lo gestione. 
         Todos las herramientas igualmente serían DataTool */
     
-    /**
-     * Constructor de la clase.
-     * @param {DataRenderer[]} renderers - lista de renderizadores que saben cómo representar los datos en el DOM.
-     *      Se recomienda que hereden de DataRenderer.
-     * @param {DataTool} dataTool - Herramienta de datos opcional. Debe ser una instancia que herede de DataTool.
-     */
     constructor({ renderers = [], dataTool = new DataTool() } = {}) {
         this.#renderers = renderers;
         this.#dataTool = dataTool;
@@ -91,12 +85,5 @@ export class PaginatedDataPresenter {
     #goToPage(page) {
         this.#page = page;
         this.#render();
-    }
-}
-
-// Contrato opcional/documental que falla con un mensaje claro, recomendable para escribir renderers
-export class DataRenderer {
-    render(_pageData) {
-        throw new Error(`${this.constructor.name} debe implementar render(pageData)`);
     }
 }

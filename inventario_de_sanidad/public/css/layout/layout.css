@@ -310,6 +310,7 @@
 
     scrollbar-width: thin;
     scrollbar-color: var(--primary-100) var(--primary-600);
+    scrollbar-gutter: stable;
 }
 
 .container {

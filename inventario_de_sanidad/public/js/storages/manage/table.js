@@ -1,4 +1,4 @@
-import { createTextTD, createDataLabel } from '../../utils/elements.js';
+import { createTextTD } from '../../utils/elements.js';
 
 /**
  * Detecta cuando el DOM está listo y ejecuta la función `inicio`.
@@ -84,13 +84,13 @@ function renderTable(limit, paginaActual) {
 
             let trUse = document.createElement("tr");
 
-            trUse.appendChild(createDataLabel(createTextTD(item.storage ?? "-"), "Localización"));
-            trUse.appendChild(createDataLabel(createTextTD("uso"), "Tipo"));
-            trUse.appendChild(createDataLabel(createTextTD(item.units ?? "0"), "Cantidad"));
-            trUse.appendChild(createDataLabel(createTextTD(item.min_units ?? "0"), "Cantidad mínima"));
-            trUse.appendChild(createDataLabel(createTextTD(item.cabinet ?? "-"), "Armario"));
-            trUse.appendChild(createDataLabel(createTextTD(item.shelf ?? "-"), "Balda"));
-            trUse.appendChild(createDataLabel(createTextTD(item.drawer ?? "-"), "Cajón"));
+            trUse.appendChild(createTextTD(item.storage ?? "-"));
+            trUse.appendChild(createTextTD("uso"));
+            trUse.appendChild(createTextTD(item.units ?? "0"));
+            trUse.appendChild(createTextTD(item.min_units ?? "0"));
+            trUse.appendChild(createTextTD(item.cabinet ?? "-"));
+            trUse.appendChild(createTextTD(item.shelf ?? "-"));
+            trUse.appendChild(createTextTD(item.drawer ?? "-"));
 
             let tdAcciones = crearAccionesTd(item.material_id, item.storage);
             trUse.appendChild(tdAcciones);

@@ -1,0 +1,43 @@
+.title-with-toggle {
+    position: relative;
+}
+
+.view-toggle {
+    margin-bottom: 1rem;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 10;
+}
+
+/* BOTONES DE TEXTO: pequeños, compactos, con outline cuando no están activos */
+.view-toggle .btn-toggle-text {
+    padding: 0.3rem 1rem;
+    font-size: 0.75rem;
+    line-height: 1.2;
+}
+
+/* Hover del botón no activo */
+.view-toggle .btn-toggle-text:hover:not(.active) {
+    background-color: var(--bg-300);
+    color: var(--primary-200);
+    border-color: var(--primary-200);
+}
+
+/* Botón activo */
+.view-toggle .btn-toggle-text.active {
+    background-color: var(--primary-300);
+    color: var(--text-300);
+    background-color: var(--primary-300);
+}
+
+/* Hover del activo */
+.view-toggle .btn-toggle-text.active:hover {
+    background-color: var(--primary-200);
+    border-color: var(--primary-200);
+}
+
+/* BOTONES DE ICONOS */
+.view-toggle .btn-notifications.active {
+    background-color: var(--primary-500);
+}

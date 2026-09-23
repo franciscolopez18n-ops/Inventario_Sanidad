@@ -336,7 +336,7 @@ class MaterialManagementController extends Controller {
                 ],
                 'description' => 'required|string',
                 'storage' => 'required|in:CAE,odontology,ambos',
-                'image_temp' => 'nullable|string',
+                'temp_image_path' => 'nullable|string',
 
                 'units_use' => 'required|numeric|min:0',
                 'min_units_use' => 'required|numeric|min:0',
@@ -399,11 +399,11 @@ class MaterialManagementController extends Controller {
                     $material->save(); // Guarda el material en la base de datos.
 
                     // Si hay imagen temporal, guarda info para moverla después de la transacción.
-                    if (!empty($materialData["image_temp"])) {
-                        $imageName = pathinfo($materialData["image_temp"], PATHINFO_BASENAME);
+                    if (!empty($materialData["temp_image_path"])) {
+                        $imageName = pathinfo($materialData["temp_image_path"], PATHINFO_BASENAME);
                         $imagesMaterials[] = [
                             'material_id'   =>  $material->material_id,
-                            'image_temp'    =>  $materialData["image_temp"],
+                            'temp_image_path'    =>  $materialData["temp_image_path"],
                             'image_path'    =>  "materials/{$imageName}",
                         ];
                     }
@@ -426,7 +426,7 @@ class MaterialManagementController extends Controller {
         // Intenta mover cada imagen temporal a su ubicación definitiva.
         foreach ($imagesMaterials as $imageData) {
             try {
-                $moved = StorageFacades::disk('public')->move($imageData["image_temp"], $imageData["image_path"]);
+                $moved = StorageFacades::disk('public')->move($imageData["temp_image_path"], $imageData["image_path"]);
 
                 if (!$moved) {
                     // Si no se pudo mover, se agrega el ID del material a la lista de fallidos.

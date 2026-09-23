@@ -1,14 +1,15 @@
-import { PaginatedDataPresenter, DataRenderer } from "../../components/paginatedDataPresenter.js";
+import { PaginatedDataPresenter } from "../../components/paginatedDataPresenter.js";
+import { DataRenderer } from "../../utils/bases.js";
 import { SearchBarTool } from "../../components/searchBarTool.js";
 import { showConfirmDialog } from "../../components/confirmDialog.js";
 import { hideLoader } from "../../components/loader.js";
-import { createTextTD, createDataLabel } from '../../utils/elements.js';
+import { createTextTD } from '../../utils/elements.js';
 import { createHiddenCSRFTokenInput } from '../../utils/csrf.js';
 
 class UsersManagementTableRenderer extends DataRenderer {
     render(pageData) {
         // Resetea la tabla
-        let tbody = document.querySelector("#users-management-table tbody");
+        let tbody = document.querySelector("#users-management-table tbody.dynamic-rows");
         tbody.replaceChildren();
 
         // La reconstruye
@@ -19,11 +20,11 @@ class UsersManagementTableRenderer extends DataRenderer {
         let tr = document.createElement("tr");
 
         // Celdas
-        tr.appendChild(createDataLabel(createTextTD(user.first_name), "Nombre"));
-        tr.appendChild(createDataLabel(createTextTD(user.last_name), "Apellidos"));
-        tr.appendChild(createDataLabel(createTextTD(user.email), "Email"));
-        tr.appendChild(createDataLabel(createTextTD(user.user_type), "Tipo de usuario"));
-        tr.appendChild(createDataLabel(createTextTD(user.created_at), "Fecha de alta"));
+        tr.appendChild(createTextTD(user.first_name));
+        tr.appendChild(createTextTD(user.last_name));
+        tr.appendChild(createTextTD(user.email));
+        tr.appendChild(createTextTD(user.user_type));
+        tr.appendChild(createTextTD(user.created_at));
 
         // Botón Generar contraseña
         let changePasswordTd = document.createElement("td");

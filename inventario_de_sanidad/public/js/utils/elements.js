@@ -11,7 +11,7 @@ function stopShimmer(wrap, img) {
     wrap.style.background = "none";
 }
 
-// Crea un <td> con la imagen proporcionada
+// Crea un <td> con la imagen pública proporcionada
 export function createPublicImageTD(relativePublicImagePath) {
     let td = document.createElement("td");
 
@@ -35,12 +35,6 @@ export function createPublicImageTD(relativePublicImagePath) {
     wrap.appendChild(img);
     td.appendChild(wrap);
 
-    return td;
-}
-
-// Asigna un data-label al <td> para soporte responsive
-export function createDataLabel(td, label) {
-    td.setAttribute("data-label", label);
     return td;
 }
 

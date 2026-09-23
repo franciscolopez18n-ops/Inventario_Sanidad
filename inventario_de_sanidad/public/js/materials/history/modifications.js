@@ -1,12 +1,13 @@
-import { PaginatedDataPresenter, DataRenderer } from "../../components/paginatedDataPresenter.js";
+import { PaginatedDataPresenter } from "../../components/paginatedDataPresenter.js";
+import { DataRenderer } from "../../utils/bases.js";
 import { SearchBarTool } from "../../components/searchBarTool.js";
 import { hideLoader } from "../../components/loader.js";
-import { createTextTD, createDataLabel } from '../../utils/elements.js';
+import { createTextTD } from '../../utils/elements.js';
 
 class ModificationsHistoryTableRenderer extends DataRenderer {
     render(pageData) {
         // Resetea la tabla
-        let tbody = document.querySelector("#modifications-history-table tbody");
+        let tbody = document.querySelector("#modifications-history-table tbody.dynamic-rows");
         tbody.replaceChildren();
 
         // La reconstruye
@@ -17,15 +18,15 @@ class ModificationsHistoryTableRenderer extends DataRenderer {
         let tr = document.createElement("tr");
 
         // Celdas
-        tr.appendChild(createDataLabel(createTextTD(modification.first_name), "Nombre"));
-        tr.appendChild(createDataLabel(createTextTD(modification.last_name), "Apellidos"));
-        tr.appendChild(createDataLabel(createTextTD(modification.email), "Email"));
-        tr.appendChild(createDataLabel(createTextTD(modification.user_type), "Tipo de usuario"));
-        tr.appendChild(createDataLabel(createTextTD(modification.material_name), "Material"));
-        tr.appendChild(createDataLabel(createTextTD(modification.units), "Unidades modificadas"));
-        tr.appendChild(createDataLabel(createTextTD(displayName(modification.storage, DisplayCategory.STORAGE)), "Localización"));
-        tr.appendChild(createDataLabel(createTextTD(displayName(modification.storage_type, DisplayCategory.MODALITY)), "Tipo de almacenamiento"));
-        tr.appendChild(createDataLabel(createTextTD(modification.action_datetime), "Fecha de modificación"));
+        tr.appendChild(createTextTD(modification.first_name));
+        tr.appendChild(createTextTD(modification.last_name));
+        tr.appendChild(createTextTD(modification.email));
+        tr.appendChild(createTextTD(modification.user_type));
+        tr.appendChild(createTextTD(modification.material_name));
+        tr.appendChild(createTextTD(modification.units));
+        tr.appendChild(createTextTD(displayName(modification.storage, DisplayCategory.STORAGE)));
+        tr.appendChild(createTextTD(displayName(modification.storage_type, DisplayCategory.MODALITY)));
+        tr.appendChild(createTextTD(modification.action_datetime));
 
         return tr;
     }

@@ -1,14 +1,15 @@
-import { PaginatedDataPresenter, DataRenderer } from "../../components/paginatedDataPresenter.js";
+import { PaginatedDataPresenter } from "../../components/paginatedDataPresenter.js";
+import { DataRenderer } from "../../utils/bases.js";
 import { SearchBarTool } from "../../components/searchBarTool.js";
 import { showConfirmDialog } from "../../components/confirmDialog.js";
 import { hideLoader } from "../../components/loader.js";
-import { createTextTD, createPublicImageTD, createDataLabel } from '../../utils/elements.js';
+import { createTextTD, createPublicImageTD } from '../../utils/elements.js';
 import { createHiddenCSRFTokenInput } from '../../utils/csrf.js';
 
 class MaterialsManagementTableRenderer extends DataRenderer {
     render(pageData) {
         // Resetea la tabla
-        let tbody = document.querySelector("#materials-management-table tbody");
+        let tbody = document.querySelector("#materials-management-table tbody.dynamic-rows");
         tbody.replaceChildren();
 
         // La reconstruye
@@ -19,8 +20,8 @@ class MaterialsManagementTableRenderer extends DataRenderer {
         let tr = document.createElement("tr");
     
         // Celdas
-        tr.appendChild(createDataLabel(createTextTD(material.name), "Material")); 
-        tr.appendChild(createDataLabel(createTextTD(material.description), "Descripción"));
+        tr.appendChild(createTextTD(material.name)); 
+        tr.appendChild(createTextTD(material.description));
         tr.appendChild(createPublicImageTD(material.image_path));
 
         // Botón Editar

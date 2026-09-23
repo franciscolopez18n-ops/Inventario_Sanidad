@@ -32,3 +32,11 @@ export function showInputErrors(form, errorsMap) {
         wrapper.appendChild(msg);
     });
 }
+
+// Envuelve una acción asíncrona para deshabilitar temporalmente el botón ejecutor.
+// Evita el doble envío (double-submit) mientras dure la petición al servidor
+export async function withSubmitLock(button, fn) {
+    button.disabled = true;
+    await fn();
+    button.disabled = false;
+}

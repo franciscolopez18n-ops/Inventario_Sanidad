@@ -6,7 +6,6 @@
     position: fixed;
     inset: 0;
     background-color: var(--bg-100);
-    opacity: 0.8;
 
     z-index: 9999;
     pointer-events: auto; /* explícito */

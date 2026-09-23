@@ -36,9 +36,7 @@
 
   --font-principal: 'Calibri', sans-serif;
 }
-.table td {
-  word-break: break-all;
-}
+
 .darkmode {
   --primary-100: #b3c7dc;
   --primary-200: #6ca0d1;
@@ -213,10 +211,10 @@ a {
   font-size: 0.875rem;
   cursor: pointer;
 
-  transition: background-color 200ms ease-in, color 80ms ease-in;
-  -webkit-transition: background-color 200ms ease-in, color 80ms ease-in;
-  -moz-transition: background-color 200ms ease-in, color 80ms ease-in;
-  -o-transition: background-color 200ms ease-in, color 80ms ease-in;
+  transition: background-color 200ms ease-in, color 80ms ease-in, border-color 200ms ease-in;
+  -webkit-transition: background-color 200ms ease-in, color 80ms ease-in, border-color 200ms ease-in;
+  -moz-transition: background-color 200ms ease-in, color 80ms ease-in, border-color 200ms ease-in;
+  -o-transition: background-color 200ms ease-in, color 80ms ease-in, border-color 200ms ease-in;
 }
 .btn:hover {
   background-color: var(--primary-500);

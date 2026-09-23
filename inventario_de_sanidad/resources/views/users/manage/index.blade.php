@@ -7,10 +7,12 @@
 @section('title', 'Gestión de usuarios')
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/users/users.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/components/paginated-table.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/loader.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/confirm-dialog.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/search-bar-tool.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/fillable-table.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/pagination.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/users/users.css') }}">
 @endpush
 
 @section('content')
@@ -28,7 +30,7 @@
 
 <h1>Gestión de usuarios</h1>
 
-<x-search-bar
+<x-search-bar-tool
     :options="[
         ['label' => 'Nombre', 'path' => 'first_name'],
         ['label' => 'Apellidos', 'path' => 'last_name'],

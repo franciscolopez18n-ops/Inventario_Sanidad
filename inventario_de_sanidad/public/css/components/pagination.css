@@ -1,0 +1,80 @@
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+
+    padding: 1rem;
+    margin: 1rem;
+
+    font-size: 0.9rem;
+    color: var(--text-100);
+    background-color: var(--bg-100);
+}
+
+.pagination-select select {
+    padding: 0.5rem 1rem;
+}
+
+.pagination-select select:hover,
+.pagination-select select:focus {
+    border-color: var(--primary-400);
+    outline: none;
+}
+
+.pagination-buttons {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pagination-buttons button {
+    width: 32px;
+    height: 32px;
+
+    border-radius: 50%;
+    border: 1.5px solid var(--primary-300);
+
+    background-color: var(--bg-200);
+    color: var(--primary-100);
+    font-weight: 700;
+    cursor: pointer;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    -moz-transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    -webkit-transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    -o-transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+}
+
+.pagination-buttons button:hover:not(:disabled) {
+    background-color: var(--primary-300);
+    color: var(--text-300);
+    border-color: var(--primary-400);
+}
+
+.pagination-buttons button:disabled {
+    border-color: var(--bg-300);
+    color: var(--bg-300);
+    cursor: default;
+}
+
+.pagination-summary {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
+    color: var(--primary-100);
+
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+}

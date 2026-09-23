@@ -18,17 +18,6 @@
     cursor: not-allowed ;
 }
 
-.batch-toggle {
-    position: absolute;
-    top: 1rem;
-    right: 0;
-    z-index: 10;
-
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 25px;
-}
-
 .batch-section {
     flex: 1;
     margin: 2rem 1rem;
@@ -46,12 +35,6 @@
 
 /* Móvil */
 @media (max-width: 768px) {
-    .batch-toggle {
-        position: static;
-        text-align: right;
-        margin-bottom: 1rem;
-    }
-
     .batch-section {
         margin: 1rem 0;
     }

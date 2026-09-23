@@ -44,32 +44,24 @@ p:nth-child(2) {
     margin-bottom: 1rem;
 }
 
-@media (max-width: 1024px) {
-    .table {
-        grid-template-columns: repeat(1, 1fr);
-        background-color: transparent;
-    }
-
-    .table-wrapper tr {
-        padding-bottom: 1rem;
-    }
-
-    .activity-table th:first-child, .activity-table td:first-child {
-        width: 100%;
-    }
-    .activity-table th:last-child, .activity-table td:last-child{
-        width: 100%;
-    }
-}
-
-@media (max-width: 425px) {
-.activity-card {
+@media (max-width: 992px) {
+    .activity-card {
         width: 80%;
     }
 }
 
-@media (max-width: 375px) {
+@media (max-width: 768px) {
     .activity-card {
         width: 90%;
+    }
+
+    .activity-header {
+        font-size: 1.25rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .activity-card {
+        width: 100%;
     }
 }

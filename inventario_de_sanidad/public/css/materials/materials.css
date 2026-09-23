@@ -1,11 +1,3 @@
-.container {
-    padding: 0 2rem;
-}
-
-.material-form-wrapper {
-    position: relative;
-}
-
 .material-form {
     flex: 1;
 }
@@ -58,10 +50,6 @@
 
 /* Móvil */
 @media (max-width: 768px) {
-    .container {
-        padding: 0 1rem;
-    }
-
     .file-upload {
         flex-direction: column;
         align-items: flex-start;

@@ -3,7 +3,7 @@
 @section('title', 'Actualizacion de materiales')
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/components/paginated-table.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/fillable-table.css') }}">
     <link rel="stylesheet" href="{{ asset('css/storages/manage.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/loader.css') }}">
 @endpush

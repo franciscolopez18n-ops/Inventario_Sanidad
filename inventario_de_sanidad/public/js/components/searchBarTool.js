@@ -1,4 +1,4 @@
-import { DataTool } from "../utils/dataTool.js";
+import { DataTool } from "../utils/bases.js";
 
 export class SearchBarTool extends DataTool {
     treatData(data) {

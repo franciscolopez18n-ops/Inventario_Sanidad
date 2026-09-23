@@ -1,7 +1,8 @@
-import { PaginatedDataPresenter, DataRenderer } from "../components/paginatedDataPresenter.js";
+import { PaginatedDataPresenter } from "../components/paginatedDataPresenter.js";
+import { DataRenderer } from "../utils/bases.js";
 import { SearchBarTool } from "../components/searchBarTool.js";
 import { hideLoader } from "../components/loader.js";
-import { createTextTD, createDataLabel, createLabeledTextContainer } from '../utils/elements.js';
+import { createTextTD, createLabeledTextContainer } from '../utils/elements.js';
 
 class ActivitiesCardViewRenderer extends DataRenderer {
     #isTeacher;
@@ -101,8 +102,8 @@ class ActivitiesCardViewRenderer extends DataRenderer {
         materials.forEach(material => {
             let row = document.createElement("tr");
 
-            row.appendChild(createDataLabel(createTextTD(material.name), "Material"));
-            row.appendChild(createDataLabel(createTextTD(material.units), "Cantidad"));
+            row.appendChild(createTextTD(material.name));
+            row.appendChild(createTextTD(material.units));
 
             tbody.appendChild(row);
         });
