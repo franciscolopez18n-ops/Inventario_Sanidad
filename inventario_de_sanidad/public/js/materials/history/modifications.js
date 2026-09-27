@@ -3,6 +3,7 @@ import { DataRenderer } from "../../utils/bases.js";
 import { SearchBarTool } from "../../components/searchBarTool.js";
 import { hideLoader } from "../../components/loader.js";
 import { createTextTD } from '../../utils/elements.js';
+import { displayName, DisplayCategory } from "../../utils/display.js";
 
 class ModificationsHistoryTableRenderer extends DataRenderer {
     render(pageData) {

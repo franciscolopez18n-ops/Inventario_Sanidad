@@ -2,8 +2,10 @@ import { BatchResult, BatchStore } from '../utils/batchStore.js';
 import { DataRenderer } from "../utils/bases.js";
 import { ViewToggle } from "../components/viewToggle.js";
 import { hideLoader } from "../components/loader.js";
+import { showAlert } from '../components/alerts.js';
+import { getImagePreviewElements, clearImageSelection} from "../components/imagePreview.js";
 import { createTextTD, createPublicImageTD } from '../utils/elements.js';
-import { clearInputErrors, showInputErrors, withSubmitLock } from '../utils/forms.js';
+import { clearInputErrors, showInputErrors, withSubmitLock, getClientField, getCheckedClientField } from '../utils/forms.js';
 
 // Captura y valida los datos del formulario y añade el material al lote.
 async function addMaterial() {
@@ -13,67 +15,67 @@ async function addMaterial() {
     clearInputErrors(form); // Limpiar posibles errores anteriores.
 
     // Validaciones del formulario.
-    const name = form.name.value.trim();
+    const name = getClientField(form, "name").value.trim();
     if (!name)
         errorsMap.name = "El nombre es obligatorio.";
     else if (name.length > 60)
         errorsMap.name = "El nombre no puede superar 60 caracteres.";
 
-    const description = form.description.value.trim();
+    const description = getClientField(form, "description").value.trim();
     if (!description)
         errorsMap.description = "La descripción es obligatoria.";
     else if (description.length > 255)
         errorsMap.description = "La descripción no puede superar 255 caracteres.";
     
-    const storage = form.storage.value;
+    const storage = getCheckedClientField(form, "storage")?.value;
     if (!storage) errorsMap.storage = "Debes seleccionar un almacenamiento.";
 
-    const units_use = form.units_use.value;
+    const units_use = getClientField(form, "units_use").value;
     if (units_use === "" || isNaN(units_use) || units_use < 0)
         errorsMap.units_use = "Debe ser ≥ 0";
 
-    const min_units_use = form.min_units_use.value;
+    const min_units_use = getClientField(form, "min_units_use").value;
     if (min_units_use === "" || isNaN(min_units_use) || min_units_use < 0)
         errorsMap.min_units_use = "Debe ser ≥ 0";
 
-    const cabinet_use = form.cabinet_use.value;
+    const cabinet_use = getClientField(form, "cabinet_use").value;
     if (cabinet_use === "" || isNaN(cabinet_use) || cabinet_use <= 0)
         errorsMap.cabinet_use = "Debe ser > 0";
 
-    const shelf_use = form.shelf_use.value;
+    const shelf_use = getClientField(form, "shelf_use").value;
     if (shelf_use === "" || isNaN(shelf_use) || shelf_use <= 0)
         errorsMap.shelf_use = "Debe ser > 0";
 
-    const drawer_use = form.drawer_use.value;
+    const drawer_use = getClientField(form, "drawer_use").value;
     if (drawer_use === "" || isNaN(drawer_use) || drawer_use <= 0)
         errorsMap.drawer_use = "Debe ser > 0";
 
-    const units_reserve = form.units_reserve.value;
+    const units_reserve = getClientField(form, "units_reserve").value;
     if (units_reserve === "" || isNaN(units_reserve) || units_reserve < 0)
         errorsMap.units_reserve = "Debe ser ≥ 0";
 
-    const min_units_reserve = form.min_units_reserve.value;
+    const min_units_reserve = getClientField(form, "min_units_reserve").value;
     if (min_units_reserve === "" || isNaN(min_units_reserve) || min_units_reserve < 0)
         errorsMap.min_units_reserve = "Debe ser ≥ 0";
 
-    const cabinet_reserve = form.cabinet_reserve.value.trim();
+    const cabinet_reserve = getClientField(form, "cabinet_reserve").value.trim();
     if (!cabinet_reserve)
         errorsMap.cabinet_reserve = "El armario de reserva es obligatorio";
     else if (cabinet_reserve.length > 30)
         errorsMap.cabinet_reserve = "El armario de reserva no puede superar 30 caracteres.";
 
-    const shelf_reserve = form.shelf_reserve.value;
+    const shelf_reserve = getClientField(form, "shelf_reserve").value;
     if (shelf_reserve === "" || isNaN(shelf_reserve) || shelf_reserve <= 0)
         errorsMap.shelf_reserve = "Debe ser > 0";
 
     // Procesar imagen si existe.
-    const image = form.image.files[0];
+    const image = getClientField(form, "image").files[0];
     if (image && !['image/jpeg', 'image/png'].includes(image.type)) {
         errorsMap.image = "Solo JPG o PNG";
     }
 
     if (Object.keys(errorsMap).length > 0) {
-        showInputErrors(form, errorsMap);
+        showInputErrors(form, errorsMap, true);
         return;
     }
 

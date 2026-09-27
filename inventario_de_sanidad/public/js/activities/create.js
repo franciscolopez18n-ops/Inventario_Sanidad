@@ -1,18 +1,21 @@
 import { BatchResult, BatchStore } from '../utils/batchStore.js';
-import { DataRenderer } from "../utils/bases.js";
+import { showAlert } from '../components/alerts.js';
+import { DataRenderer } from '../utils/bases.js';
 import { createTextTD } from '../utils/elements.js';
+import { getClientField } from '../utils/forms.js';
 
 function addMaterial() {
     const form = document.forms[0];
 
-    const materialName = form.material.options[form.material.selectedIndex].text;
-    const materialId = form.material.value;
-    const materialUnits = form.units.value;
+    const materialSelect = getClientField(form, "material");
+    const materialName = materialSelect.options[materialSelect.selectedIndex].text;
+    const materialId = materialSelect.value;
+    const materialUnits = getClientField(form, "units");
 
-    if (materialId && materialUnits > 0) {       
+    if (materialId && materialUnits.value > 0) {
         let materialData = {
             name: materialName,
-            units: materialUnits
+            units: materialUnits.value
         };
 
         let result = store.add(materialId, materialData);
@@ -22,8 +25,8 @@ function addMaterial() {
             showAlert("alert-error", "El lote ha excedido su tamaño máximo.");
         else {
             // Limpiar entrada
-            document.getElementById("material").selectedIndex = 0;
-            document.getElementById("units").value = "";
+            materialSelect.selectedIndex = 0;
+            materialUnits.value = "";
         }
     }
 }

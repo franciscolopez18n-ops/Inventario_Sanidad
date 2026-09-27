@@ -56,7 +56,7 @@
                 <x-slot name="pinnedRows">
                     <tr>
                         <td class="cell-description">
-                            <select name="material" id="material">
+                            <select data-client-name="material">
                                 <option value="" selected disabled>--Selecciona un material--</option>
                                 @foreach ($materials->sortBy('name') as $material)
                                     <option value="{{ $material->material_id }}">{{ $material->name }}</option>
@@ -64,7 +64,7 @@
                             </select>
                         </td>
                         <td>
-                            <input type="number" name="units" id="units" min="1">
+                            <input type="number" data-client-name="units" min="1">
                         </td>
                         <td>
                             <button type="button" id="add-material-btn" class="btn btn-primary">Añadir</button>

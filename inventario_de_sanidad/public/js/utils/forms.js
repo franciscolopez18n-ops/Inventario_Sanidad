@@ -8,9 +8,9 @@ export function clearInputErrors(form) {
     );
 }
 
-export function showInputErrors(form, errorsMap) {
+export function showInputErrors(form, errorsMap, isClientForm = false) {
     Object.keys(errorsMap).forEach(fieldName => {
-        const input = form.querySelector(`[name="${fieldName}"]`);
+        const input = form.querySelector(`[${isClientForm ? 'data-client-name' : 'name'}="${fieldName}"]`);
         if (!input) return;
 
         // Lo ponemos en rojo
@@ -39,4 +39,15 @@ export async function withSubmitLock(button, fn) {
     button.disabled = true;
     await fn();
     button.disabled = false;
+}
+
+
+// Funciones para obtener campos que no se envían al servidor
+
+export function getClientField(form, field) {
+    return form.querySelector(`[data-client-name="${field}"]`);
+}
+
+export function getCheckedClientField(form, field) {
+    return form.querySelector(`[data-client-name="${field}"]:checked`);
 }

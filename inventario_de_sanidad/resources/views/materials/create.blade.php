@@ -33,23 +33,23 @@
     @csrf
 
     <div class="form-group">
-        <input type="text" name="name" placeholder="Nombre del material">
+        <input type="text" data-client-name="name" placeholder="Nombre del material">
     </div>
 
     <div class="form-group">
-        <textarea name="description" rows="3" placeholder="Descripción del material"></textarea>
+        <textarea data-client-name="description" rows="3" placeholder="Descripción del material"></textarea>
     </div>
 
     <div class="form-group">
         <p>Localización</p>
 
-        <input type="radio" id="cae" name="storage" value="CAE">
+        <input type="radio" id="cae" data-client-name="storage" value="CAE">
         <label for="cae">CAE</label><br>
 
-        <input type="radio" id="odontology" name="storage" value="odontology">
+        <input type="radio" id="odontology" data-client-name="storage" value="odontology">
         <label for="odontology">Odontología</label><br>
 
-        <input type="radio" id="ambos" name="storage" value="ambos">
+        <input type="radio" id="ambos" data-client-name="storage" value="ambos">
         <label for="ambos">Ambos</label><br>
     </div>
 
@@ -60,23 +60,23 @@
         <div class="form-grid-5">
 
             <div class="field">
-                <input type="number" name="units_use" placeholder="Cantidad">
+                <input type="number" data-client-name="units_use" placeholder="Cantidad">
             </div>
 
             <div class="field">
-                <input type="number" name="min_units_use" placeholder="Cantidad mínima">
+                <input type="number" data-client-name="min_units_use" placeholder="Cantidad mínima">
             </div>
 
             <div class="field">
-                <input type="number" name="cabinet_use" placeholder="Armario">
+                <input type="number" data-client-name="cabinet_use" placeholder="Armario">
             </div>
 
             <div class="field">
-                <input type="number" name="shelf_use" placeholder="Balda">
+                <input type="number" data-client-name="shelf_use" placeholder="Balda">
             </div>
 
             <div class="field">
-                <input type="number" name="drawer_use" placeholder="Cajón">
+                <input type="number" data-client-name="drawer_use" placeholder="Cajón">
             </div>
 
         </div>
@@ -89,39 +89,29 @@
         <div class="form-grid-4">
 
             <div class="field">
-                <input type="number" name="units_reserve" placeholder="Cantidad">
+                <input type="number" data-client-name="units_reserve" placeholder="Cantidad">
             </div>
 
             <div class="field">
-                <input type="number" name="min_units_reserve" placeholder="Cantidad mínima">
+                <input type="number" data-client-name="min_units_reserve" placeholder="Cantidad mínima">
             </div>
 
             <div class="field">
-                <input type="text" name="cabinet_reserve" placeholder="Armario">
+                <input type="text" data-client-name="cabinet_reserve" placeholder="Armario">
             </div>
 
             <div class="field">
-                <input type="number" name="shelf_reserve" placeholder="Balda">
+                <input type="number" data-client-name="shelf_reserve" placeholder="Balda">
             </div>
 
         </div>
     </fieldset>
 
-    <div class="form-group file-upload">
-        <label for="image" class="btn btn-primary">Subir Imagen <i class="fa-solid fa-image"></i></label>
-        <input type="file" name="image" id="image" accept="image/jpeg,image/png" class="file-upload-input">
-
-        <div class="image-preview-group">
-            <div class="image-preview-wrapper hidden">
-                <img class="image-preview" src="" alt="">
-                <button type="button" class="image-preview-remove">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-
-            <span class="file-name-display">Ningún archivo seleccionado</span>
-        </div>
-    </div>
+    <x-image-preview
+        :form-group="'form-group'"
+        :label-text="'Subir imagen'"
+        :is-client-field="true"
+    />
 
     <div class="form-actions">
         {{-- Botón de añadir --}}
@@ -130,7 +120,7 @@
         </button>
         
         {{-- Botón de alta (submit real) --}}
-        <button type="submit" id="btn-submit-create" value="Alta" class="btn btn-success">
+        <button type="submit" id="btn-submit-create" class="btn btn-success">
             Alta
         </button>
     </div>
@@ -162,6 +152,5 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/components/imagePreview.js') }}"></script>
     <script type="module" src="{{ asset('js/materials/create.js') }}"></script>
 @endpush

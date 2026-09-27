@@ -20,10 +20,9 @@
     <!-- Sección para archivos CSS adicionales por página -->
     @stack('styles')
 
-    <script src="{{ asset('js/globals.js') }}" defer></script>
-    <script src="{{ asset('js/components/darkmode.js') }}" defer></script>
+    <script type="module" src="{{ asset('js/components/darkMode.js') }}"></script>
     <script src="{{ asset('js/app.js') }}" defer></script>
-    <script src="{{ asset('js/components/alerts.js') }}" defer></script>
+    <script type="module" src="{{ asset('js/components/alerts.js') }}"></script>
 </head>
 <body>
 <div class="layout">

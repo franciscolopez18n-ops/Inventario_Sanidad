@@ -4,6 +4,7 @@ import { SearchBarTool } from "../../components/searchBarTool.js";
 import { ViewToggle } from "../../components/viewToggle.js";
 import { hideLoader } from "../../components/loader.js";
 import { createPublicImageTD, createTextTD, createLabeledTextContainer } from '../../utils/elements.js';
+import { displayName, DisplayCategory } from "../../utils/display.js";
 
 class SummaryCardViewRenderer extends DataRenderer {
     render(pageData) {

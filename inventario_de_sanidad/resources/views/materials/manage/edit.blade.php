@@ -35,32 +35,12 @@
         @enderror
     </div>
 
-    <div class="form-group file-upload">
-        <label for="image" class="btn btn-primary">Cambiar Imagen <i class="fa-solid fa-image"></i></label>
-        <input type="file" name="image" id="image" accept="image/jpeg,image/png" class="file-upload-input">
-
-        @php
-            $hasImage = !empty($material->image_path);
-        @endphp
-        
-        <div class="image-preview-group">
-            <input type="hidden" name="remove_image" class="remove-image-flag" value="0">
-            <div class="image-preview-wrapper {{ $hasImage ? '' : 'hidden' }}">
-                <img class="image-preview"
-                    src="{{ $hasImage ? asset('storage/' . $material->image_path) : '' }}"
-                    alt="{{ $hasImage ? 'Vista previa de la imagen del material' : '' }}">
-                <button type="button" class="image-preview-remove">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-
-            <span class="file-name-display">{{ $hasImage ? '' : 'Ningún archivo seleccionado' }}</span>
-        </div>
-        
-        @error('image')
-            <small class="input-error-msg">{{ $message }}</small>
-        @enderror
-    </div>
+    <x-image-preview
+        :form-group="'form-group'"
+        :label-text="'Cambiar imagen'"
+        :initial-storage-relative-path="$material->image_path"
+        :initial-alt="'Vista previa de la imagen del material'"
+    />
 
     <div class="storage-grid">
         @foreach ($storages as $storage)
@@ -180,6 +160,5 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/components/imagePreview.js') }}"></script>
-    <script src="{{ asset('js/materials/manage/edit.js') }}"></script>
+    <script type="module" src="{{ asset('js/materials/manage/edit.js') }}"></script>
 @endpush

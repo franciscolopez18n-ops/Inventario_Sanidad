@@ -61,4 +61,4 @@
 
 </html>
 
-<script src="{{ asset('js/components/darkmode.js') }}"></script>
+<script type="module" src="{{ asset('js/components/darkMode.js') }}"></script>

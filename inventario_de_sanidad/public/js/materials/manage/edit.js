@@ -1,3 +1,5 @@
+import '../../components/imagePreview.js';
+
 document.addEventListener("DOMContentLoaded", () => {
 
     document.querySelectorAll(".transfer-btn").forEach(button => {

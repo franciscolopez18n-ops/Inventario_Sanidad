@@ -27,34 +27,3 @@
     height: 36px;
     font-size: 0.9rem;
 }
-
-.file-upload {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 1rem;
-}
-
-.file-upload label i {
-    color: #fff;
-    margin-left: 6px;
-}
-
-.file-upload-input {
-    display: none;
-}
-
-/* Tablet */
-@media (max-width: 992px) { }
-
-/* Móvil */
-@media (max-width: 768px) {
-    .file-upload {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-}
-
-/* Móvil pequeño */
-@media (max-width: 480px) { }

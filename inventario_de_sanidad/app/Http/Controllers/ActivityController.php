@@ -102,11 +102,6 @@ class ActivityController extends Controller {
         // Los métodos de Laravel esperan cookies encriptadas por ellos mismos, por lo que hay que leerla en crudo
         $batch = json_decode(urldecode($_COOKIE['activityFormBatch'] ?? '[]'), true);
 
-        // Si no hay datos válidos en el lote, redirige con mensaje de error.
-        if (empty($batch)) {
-            return back()->withInput()->withPush(AlertType::ERROR, 'Debe introducir datos al lote.');
-        }
-
         // Comprobaciones de seguridad por si el frontend fue manipulado.
         foreach ($batch as $material) {
             $validator = validator($material, [
@@ -133,7 +128,6 @@ class ActivityController extends Controller {
                 $activity->created_at = $validated['activity_datetime'];
                 $activity->save();
 
-                // Llama a función auxiliar para asociar los materiales a la actividad
                 $this->storeMaterialsActivity($activity, $batch);
             });
 

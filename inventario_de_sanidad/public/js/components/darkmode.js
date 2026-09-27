@@ -1,8 +1,8 @@
 // Ejecutar al cargar el DOM
 document.addEventListener("DOMContentLoaded", function () {
     // Obtener estado guardado del modo oscuro desde el localStorage
-    let darkmode = localStorage.getItem('darkmode');
-    let themeSwitch = document.getElementById('theme-switch');
+    const darkmode = localStorage.getItem('darkmode');
+    const themeSwitch = document.getElementById('theme-switch');
 
     // Si el modo oscuro está activo, habilitarlo
     if (darkmode === "active") {
@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // Alternar entre modo oscuro y claro
 function toggleTheme() {
-    darkmode = localStorage.getItem('darkmode');
+    const darkmode = localStorage.getItem('darkmode');
     if (darkmode !== "active")
         enableDarkMode();
     else
