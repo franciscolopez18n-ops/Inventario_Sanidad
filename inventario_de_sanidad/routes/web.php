@@ -30,7 +30,6 @@ Route::middleware('auth')->group(function () {
     Route::prefix('welcome')->group(function () {
         Route::get('/', [WelcomeController::class, 'index'])->name('welcome');
         Route::post('/', [WelcomeController::class, 'changePasswordFirstLog'])->name('welcome.change-password');
-        Route::get('/data-user', [WelcomeController::class, 'dataUser']);
     });
 
     /*

@@ -1,64 +1,15 @@
-window.addEventListener("load", inicio);
+window.addEventListener("load", () => {
+    const userData = JSON.parse(document.getElementById('user-data').textContent);
 
-// Obtener datos del usuario (para saber si es primer login)
-function userDataRetrieve() {
-    let result = fetch('/welcome/data-user')
-        .then(function (response) {
-            if (!response.ok) {
-                throw new Error("No se pudo obtener datos");
+    if (!userData["first_log"]) {
+        const dialog = document.getElementById("first-log-dialog");
+
+        dialog.addEventListener('keydown', event => {
+            if (event.key === 'Escape') {
+                event.preventDefault();
             }
-            let jsonData = response.json();
-            return jsonData;
-        })
-        .then(function (data) {
-            //console.log("Datos del usuario:", data);
-            return data;
-        })
-        .catch(function (error) {
-            console.error("Error al obtener datos de usuario:", error);
-            return null;
         });
 
-    return result;
-}
-
-// Función para iniciar la página
-function inicio() {
-    userDataRetrieve().then(
-        function (userdata) {
-            let isFirstLogin = userdata && !userdata["first_log"];
-            if (isFirstLogin) mostrarDialogInicio();
-        });
-}
-
-// Función para mostrar el dialogo de cambio de contraseña
-function mostrarDialogInicio(e) {
-    let dialog = document.getElementById("firstLogDialog");
-    
-    dialog.style.display = "flex";
-    // dialog.setAttribute("open", "true");
-    // console.log("Diálogo abierto.");
-
-    let form = dialog.querySelector("form");
-    form.addEventListener("submit", newPass);
-}
-
-// Función para validar la contraseña
-function newPass(e) {
-    let form = e.target;
-    let inputs = form.getElementsByTagName("input");
-    
-    let error = document.getElementById("error");
-
-    error.textContent = "";
-
-    // Validar contraseñas
-    if (inputs[2].value !== inputs[1].value) {
-        error.textContent = "Las contraseñas no coinciden.";
-        e.preventDefault();
-        return;
+        dialog.showModal();
     }
-
-    let dialog = document.getElementById("firstLogDialog");
-    dialog.style.display = "none";
-}
+});
