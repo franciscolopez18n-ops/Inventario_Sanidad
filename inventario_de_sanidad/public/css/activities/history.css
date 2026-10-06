@@ -1,3 +1,7 @@
+.search-form {
+    --search-align: center;
+}
+
 .activities-title {
     text-align: center;
 }
