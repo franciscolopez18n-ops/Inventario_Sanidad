@@ -1,15 +1,16 @@
 import { PaginatedDataPresenter } from "../../components/paginatedDataPresenter.js";
-import { DataRenderer } from "../../utils/bases.js";
+import { PaginatedDataRenderer } from "../../utils/bases.js";
 import { SearchBarTool } from "../../components/searchBarTool.js";
 import { ViewToggle } from "../../components/viewToggle.js";
 import { hideLoader } from "../../components/loader.js";
 import { createPublicImageTD, createTextTD, createLabeledTextContainer } from '../../utils/elements.js';
 import { displayName, DisplayCategory } from "../../utils/display.js";
 
-class SummaryCardViewRenderer extends DataRenderer {
-    render(pageData) {
+class SummaryCardViewRenderer extends PaginatedDataRenderer {
+    render(pageData, limit) {
         // Resetea la vista de tarjetas
-        let view = document.querySelector("#summary-card-view");
+        const view = document.querySelector("#summary-card-view");
+        view.style.setProperty("--cards-per-page", limit);
         view.replaceChildren();
 
         // La reconstruye
@@ -17,7 +18,7 @@ class SummaryCardViewRenderer extends DataRenderer {
     }
 
     #buildCard(material) {
-        let card = document.createElement("div");
+        const card = document.createElement("div");
         card.className = "material-card";
 
         card.appendChild(this.#buildCardImage(material));
@@ -27,7 +28,7 @@ class SummaryCardViewRenderer extends DataRenderer {
     }
 
     #buildCardImage(material) {
-        let img = document.createElement("img");
+        const img = document.createElement("img");
 
         img.src = material.image_path
             ? `/storage/${material.image_path}`
@@ -38,7 +39,7 @@ class SummaryCardViewRenderer extends DataRenderer {
     }
 
     #buildCardBody(material) {
-        let body = document.createElement("div");
+        const body = document.createElement("div");
         body.className = "material-card-body";
 
         body.appendChild(this.#buildCardTitle(material));
@@ -49,19 +50,19 @@ class SummaryCardViewRenderer extends DataRenderer {
     }
 
     #buildCardTitle(material) {
-        let title = document.createElement("h5");
+        const title = document.createElement("h5");
         title.textContent = material.name;
         return title;
     }
 
     #buildCardDescription(material) {
-        let description = document.createElement("p");
+        const description = document.createElement("p");
         description.textContent = material.description;
         return description;
     }
 
     #buildCardDetailsList(material) {
-        let list = document.createElement("ul");
+        const list = document.createElement("ul");
 
         list.appendChild(createLabeledTextContainer("li", "Localización", displayName(material.storage, DisplayCategory.STORAGE)));
         list.appendChild(createLabeledTextContainer("li", "Armario", material.cabinet));
@@ -74,10 +75,13 @@ class SummaryCardViewRenderer extends DataRenderer {
     }
 }
 
-class SummaryTableRenderer extends DataRenderer {
-    render(pageData) {
+class SummaryTableRenderer extends PaginatedDataRenderer {
+    render(pageData, limit) {
+        const wrapper = document.getElementById("summary-table-view");
+        wrapper.style.setProperty("--rows-per-page", limit);
+
         // Resetea la tabla
-        let tbody = document.querySelector("#summary-table tbody.dynamic-rows");
+        const tbody = document.querySelector("#summary-table tbody.dynamic-rows");
         tbody.replaceChildren();
 
         // La reconstruye
@@ -85,7 +89,7 @@ class SummaryTableRenderer extends DataRenderer {
     }
 
     #buildRow(material) {
-        let tr = document.createElement("tr");
+        const tr = document.createElement("tr");
 
         // Celdas
         tr.appendChild(createPublicImageTD(material.image_path));

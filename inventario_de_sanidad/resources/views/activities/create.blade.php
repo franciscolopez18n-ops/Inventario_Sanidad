@@ -4,19 +4,20 @@
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/components/fillable-table.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/panel.css') }}">
     <link rel="stylesheet" href="{{ asset('css/activities/create.css') }}">
 @endpush
 
 @section('content')
-    <div class="activity-container">
+    <div class="narrow-column">
         <h1>Registrar actividad</h1>
 
-        <form action="{{ route('activities.store') }}" method="POST">
+        <form class="panel" action="{{ route('activities.store') }}" method="POST">
             @csrf
             
             <div class="">
                 <label for="title"></label>
-                <textarea name="title" placeholder="Título descriptivo de la actividad..." id="title" rows="4" cols="50" maxlength="100" class="@error('title') input-error @enderror">{{ old('title') }}</textarea>
+                <textarea name="title" placeholder="Título descriptivo de la actividad..." id="title" rows="4" maxlength="100" class="@error('title') input-error @enderror">{{ old('title') }}</textarea>
                 @error('title')
                     <small class="input-error-msg">{{ $message }}</small>
                 @enderror
@@ -32,16 +33,14 @@
 
             <div class="">
                 <label for="teacher_id">Profesor:</label>
-                <td>
-                    <select name="teacher_id" id="teacher_id" class="@error('teacher_id') input-error @enderror">
-                        <option value="" disabled {{ old('teacher_id') ? '' : 'selected' }}>Selecciona un profesor...</option>
-                        @foreach ($teachers as $teacher)
-                            <option value="{{ $teacher->user_id }}" {{ old('teacher_id') == $teacher->user_id ? 'selected' : '' }}>
-                                {{ $teacher->first_name }} {{ $teacher->last_name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </td>
+                <select name="teacher_id" id="teacher_id" class="@error('teacher_id') input-error @enderror">
+                    <option value="" disabled {{ old('teacher_id') ? '' : 'selected' }}>Selecciona un profesor...</option>
+                    @foreach ($teachers as $teacher)
+                        <option value="{{ $teacher->user_id }}" {{ old('teacher_id') == $teacher->user_id ? 'selected' : '' }}>
+                            {{ $teacher->first_name }} {{ $teacher->last_name }}
+                        </option>
+                    @endforeach
+                </select>
                 @error('teacher_id')
                     <small class="input-error-msg">{{ $message }}</small>
                 @enderror
@@ -49,13 +48,14 @@
 
             <h2>Materiales utilizados</h2>
             <x-fillable-table
+                :wrapper-id="'materials-batch-table-wrapper'"
                 :table-id="'materials-batch-table'"
                 :columns="['Material', 'Cantidad']"
-                :actions-colspan="1"
+                :num-actions="1"
             >
                 <x-slot name="pinnedRows">
                     <tr>
-                        <td class="cell-description">
+                        <td>
                             <select data-client-name="material">
                                 <option value="" selected disabled>--Selecciona un material--</option>
                                 @foreach ($materials->sortBy('name') as $material)

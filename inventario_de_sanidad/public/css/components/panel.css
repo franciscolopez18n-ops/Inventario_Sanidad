@@ -1,0 +1,69 @@
+.narrow-column {
+    width: 60%;
+    max-width: 900px;
+    margin-inline: auto;
+}
+
+/* Lista de paneles con alto total predecible */
+.panel-list {
+    --panel-height: 25em;
+    --panel-gap: 1rem;
+
+    font-size: clamp(0.72rem, 1.5vw, 1rem);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--panel-gap);
+    height: calc(
+        var(--panels-per-page) * var(--panel-height)
+        + (var(--panels-per-page) - 1) * var(--panel-gap)
+    );
+}
+
+.panel {
+    background-color: var(--primary-500);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-md);
+    padding: 1.5rem;
+}
+
+/* Panel de alto fijo: la cabecera se queda y el cuerpo hace scroll */
+.panel-fixed {
+    box-sizing: border-box;
+    height: var(--panel-height);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.panel-fixed > .panel-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+@media (max-width: 992px) {
+    .narrow-column {
+        width: 80%;
+    }
+}
+
+@media (max-width: 768px) {
+    .narrow-column {
+        width: 90%;
+    }
+
+    .panel {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .narrow-column {
+        width: 100%;
+    }
+
+    .panel {
+        padding: 0.75rem;
+    }
+}

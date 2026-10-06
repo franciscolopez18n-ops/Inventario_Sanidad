@@ -1,15 +1,18 @@
 import { PaginatedDataPresenter } from "../../components/paginatedDataPresenter.js";
-import { DataRenderer } from "../../utils/bases.js";
+import { PaginatedDataRenderer } from "../../utils/bases.js";
 import { SearchBarTool } from "../../components/searchBarTool.js";
 import { showConfirmDialog } from "../../components/confirmDialog.js";
 import { hideLoader } from "../../components/loader.js";
 import { createTextTD, createPublicImageTD } from '../../utils/elements.js';
 import { createHiddenCSRFTokenInput } from '../../utils/csrf.js';
 
-class MaterialsManagementTableRenderer extends DataRenderer {
-    render(pageData) {
+class MaterialsManagementTableRenderer extends PaginatedDataRenderer {
+    render(pageData, limit) {
+        const wrapper = document.getElementById("materials-management-table-wrapper");
+        wrapper.style.setProperty("--rows-per-page", limit);
+
         // Resetea la tabla
-        let tbody = document.querySelector("#materials-management-table tbody.dynamic-rows");
+        const tbody = document.querySelector("#materials-management-table tbody.dynamic-rows");
         tbody.replaceChildren();
 
         // La reconstruye
@@ -17,7 +20,7 @@ class MaterialsManagementTableRenderer extends DataRenderer {
     }
 
     #buildRow(material) {
-        let tr = document.createElement("tr");
+        const tr = document.createElement("tr");
     
         // Celdas
         tr.appendChild(createTextTD(material.name)); 
@@ -25,30 +28,30 @@ class MaterialsManagementTableRenderer extends DataRenderer {
         tr.appendChild(createPublicImageTD(material.image_path));
 
         // Botón Editar
-        let editTd = document.createElement("td");
+        const editTd = document.createElement("td");
 
-        let editLink = document.createElement("a");
+        const editLink = document.createElement("a");
         editLink.href = `/materials/manage/edit/${material.material_id}`;
         editLink.style.cssText = "color: inherit; text-decoration: none; cursor: pointer;";
 
-        let editIcon = document.createElement("i");
-        editIcon.classList.add("fa", "fa-pencil", "table-icon-interactive");
+        const editIcon = document.createElement("i");
+        editIcon.classList.add("fa", "fa-pencil", "interactive-table-icon");
 
         editLink.appendChild(editIcon);
         editTd.appendChild(editLink);
         tr.appendChild(editTd);
 
         // Botón Eliminar
-        let deleteTd = document.createElement("td");
+        const deleteTd = document.createElement("td");
 
-        let deleteBtn = document.createElement("button");
+        const deleteBtn = document.createElement("button");
         deleteBtn.type = "submit";
         deleteBtn.style.cssText = "background: none; border: none; cursor: pointer;";
-        let trashIcon = document.createElement("i");
-        trashIcon.classList.add("fa", "fa-trash", "table-icon-interactive");
+        const trashIcon = document.createElement("i");
+        trashIcon.classList.add("fa", "fa-trash", "interactive-table-icon");
         deleteBtn.appendChild(trashIcon);
 
-        let deleteForm = document.createElement("form");
+        const deleteForm = document.createElement("form");
         deleteForm.method = "POST";
         deleteForm.action = `/materials/manage/destroy/${material.material_id}`;
 

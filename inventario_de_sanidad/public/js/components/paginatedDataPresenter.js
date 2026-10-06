@@ -32,7 +32,7 @@ export class PaginatedDataPresenter {
         
         let pageData = treatedData.slice(start, end);
 
-        this.#renderers.forEach(r => r.render(pageData));
+        this.#renderers.forEach(r => r.render(pageData, this.#limit));
         this.#renderPaginationButtons(start, end, treatedData.length);
     }
 
@@ -53,16 +53,14 @@ export class PaginatedDataPresenter {
     };
 
     #renderPaginationButtons(start, end, total) {
-        let container = document.querySelector(".pagination-buttons");
-        container.replaceChildren();
-
-        let summary = document.createElement("span");
-        summary.classList.add("pagination-summary");
+        const summary = document.querySelector(".pagination-summary");
         summary.textContent = `${start + 1} – ${Math.min(end, total)} de ${total}`;
-        container.appendChild(summary);
 
-        let makeBtn = (text, targetPage, isDisabled) => {
-            let btn = document.createElement("button");
+        const buttons = document.querySelector(".pagination-buttons");
+        buttons.replaceChildren();
+
+        const makeBtn = (text, targetPage, isDisabled) => {
+            const btn = document.createElement("button");
 
             btn.textContent = text;
             btn.disabled = isDisabled;
@@ -72,9 +70,9 @@ export class PaginatedDataPresenter {
             return btn;
         };
 
-        let totalPages = Math.ceil(total / this.#limit);
+        const totalPages = Math.ceil(total / this.#limit);
 
-        container.append(
+        buttons.append(
             makeBtn("«", 0, this.#page === 0),
             makeBtn("‹", this.#page - 1, this.#page === 0),
             makeBtn("›", this.#page + 1, this.#page >= totalPages - 1),

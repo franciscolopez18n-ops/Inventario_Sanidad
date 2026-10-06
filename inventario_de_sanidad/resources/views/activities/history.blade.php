@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="{{ asset('css/components/search-bar-tool.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/fillable-table.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/pagination.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/panel.css') }}">
     <link rel="stylesheet" href="{{ asset('css/activities/history.css') }}">
 @endpush
 
@@ -25,7 +26,7 @@
     ]"
 />
 
-<div id="activities-card-view" class="activity-cards-grid"></div>
+<div id="activities-panel-view" class="panel-list"></div>
 <x-pagination />
 
 @endsection

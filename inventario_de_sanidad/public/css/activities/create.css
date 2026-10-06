@@ -1,13 +1,19 @@
-.activity-container {
-    max-width: 900px;
-    margin: 0 auto;
+#materials-batch-table-wrapper {
+    --row-content-height: calc(var(--row-content-height-base) * 0.5);
 }
 
+#materials-batch-table {
+    --col-qty: calc(5.6em + 2 * var(--cell-px));
+    --col-act: calc(5.25em + 2 * var(--cell-px));
+
+    min-width: calc(10em + 2 * var(--cell-px) + var(--col-qty) + var(--col-act));
+}
+
+/* col-1 (Material): sin width, absorbe el sobrante */
+#materials-batch-table .col-2 { width: var(--col-qty); } /* Cantidad */
+#materials-batch-table .col-3 { width: var(--col-act); } /* Añadir / Eliminar */
+
 form {
-    background-color: var(--primary-500);
-    padding: 1.5rem;
-    border-radius: var(--border-radius-md);
-    box-shadow: var(--shadow-md);
     display: flex;
     flex-direction: column;
     gap: 1.2rem;
@@ -20,12 +26,16 @@ form label {
 }
 
 textarea {
+    width: 100%;
+    box-sizing: border-box;
     background-color: var(--bg-100);
     resize: vertical;
 }
 
 input[type="datetime-local"] {
+    box-sizing: border-box;
     padding: 0.6rem;
+    width: 100%;
     border-radius: var(--border-radius-md);
     background-color: var(--bg-100);
     color: var(--text-200);
@@ -33,73 +43,24 @@ input[type="datetime-local"] {
     font-size: 1rem;
 }
 
-table input[type="number"] {
-    padding: 0.5rem;
-    width: 60px;
-    border-radius: var(--border-radius-md);
-    background-color: var(--bg-100);
-    border: 1px solid var(--bg-300);
-    font-size: 0.95rem;
-    text-align: center;
-}
-
-table input[list] {
+select {
+    box-sizing: border-box;
     padding: 0.5rem;
     width: 100%;
     border-radius: var(--border-radius-md);
     background-color: var(--bg-100);
     border: 1px solid var(--bg-300);
     font-size: 0.95rem;
-    color: var(--text-200);
-}
-
-select {
-    padding: 0.5rem;
-    width: min-content;
-    border-radius: var(--border-radius-md);
-    background-color: var(--bg-100);
-    border: 1px solid var(--bg-300);
-    font-size: 0.95rem;
-}
-
-table input[type="number"]:focus,
-table input[list]:focus,
-input[list]:focus {
-    outline: none;
-    border-color: var(--primary-400);
-}
-
-#add-material-btn {
-    padding: 0.4rem 1rem;
-    font-size: 0.9rem;
-    cursor: pointer;
-}
-
-@media (max-width: 992px) {
-    select {
-        width: 100%;
-    }
-
-    table input[type="number"] {
-        width: 100%;
-    }
-
-    #add-material-btn {
-        margin-top: 1.5rem;
-        padding: 0.4rem 1rem;
-        font-size: 1rem;
-    }
 }
 
 @media (max-width: 768px) {
     form {
-        padding: 1rem;
         gap: 1rem;
     }
 }
 
 @media (max-width: 400px) {
-    #add-material-btn {
-        font-size: 0.9rem;
+    form {
+        gap: 0.8rem;
     }
 }

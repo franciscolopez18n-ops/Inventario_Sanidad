@@ -1,13 +1,16 @@
 import { PaginatedDataPresenter } from "../../components/paginatedDataPresenter.js";
-import { DataRenderer } from "../../utils/bases.js";
+import { PaginatedDataRenderer } from "../../utils/bases.js";
 import { SearchBarTool } from "../../components/searchBarTool.js";
 import { showConfirmDialog } from "../../components/confirmDialog.js";
 import { hideLoader } from "../../components/loader.js";
 import { createTextTD } from '../../utils/elements.js';
 import { createHiddenCSRFTokenInput } from '../../utils/csrf.js';
 
-class UsersManagementTableRenderer extends DataRenderer {
-    render(pageData) {
+class UsersManagementTableRenderer extends PaginatedDataRenderer {
+    render(pageData, limit) {
+        let wrapper = document.getElementById("users-management-table-wrapper");
+        wrapper.style.setProperty("--rows-per-page", limit);
+
         // Resetea la tabla
         let tbody = document.querySelector("#users-management-table tbody.dynamic-rows");
         tbody.replaceChildren();
@@ -53,7 +56,7 @@ class UsersManagementTableRenderer extends DataRenderer {
             deleteBtn.type = "submit";
             deleteBtn.style.cssText = "background: none; border: none; cursor: pointer;";
             let trashIcon = document.createElement("i");
-            trashIcon.classList.add("fa", "fa-trash", "table-icon-interactive");
+            trashIcon.classList.add("fa", "fa-trash", "interactive-table-icon");
             deleteBtn.appendChild(trashIcon);
 
             let deleteForm = document.createElement("form");

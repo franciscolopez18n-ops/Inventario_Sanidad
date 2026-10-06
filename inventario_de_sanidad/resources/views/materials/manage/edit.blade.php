@@ -4,8 +4,8 @@
 
 @push('styles') 
     <link rel="stylesheet" href="{{ asset('css/components/image-preview.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/materials/materials.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/materials/edit.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/materials/forms.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/materials/manage/edit.css') }}">
 @endpush
 
 @section('content')

@@ -1,3 +1,25 @@
+#materials-batch-table-wrapper {
+    --row-content-height: calc(var(--row-content-height-base) * 0.8);
+    --header-rows: 2;
+}
+
+#materials-batch-table .col-1  { width: 11.25em; }  /* Nombre */
+#materials-batch-table .col-2  { width: 22em; }     /* Descripción */
+#materials-batch-table .col-3  { width: 9.7em; }    /* Localización */
+#materials-batch-table .col-4  { width: 6em; }      /* Uso: Cant. */
+#materials-batch-table .col-5  { width: 6em; }      /* Uso: Mín */
+#materials-batch-table .col-6  { width: 7.2em; }    /* Uso: Armario */
+#materials-batch-table .col-7  { width: 7.2em; }    /* Uso: Balda */
+#materials-batch-table .col-8  { width: 7.2em; }    /* Uso: Cajón */
+#materials-batch-table .col-9  { width: 6em; }      /* Reserva: Cant. */
+#materials-batch-table .col-10 { width: 6em; }      /* Reserva: Mín */
+#materials-batch-table .col-11 { width: 7.2em; }    /* Reserva: Armario */
+#materials-batch-table .col-12 { width: 7.2em; }    /* Reserva: Balda */
+#materials-batch-table .col-13 {                    /* Imagen */
+    width: max(5.5em, calc(var(--row-content-height) + 2 * var(--cell-px)));
+}
+#materials-batch-table .col-14 { width: calc(var(--icon-hit) + 2 * var(--cell-px)); }
+
 .form-grid-4, .form-grid-5 {
     display: grid;
     gap: 1rem;
@@ -15,7 +37,7 @@
     background-color: #d3d3d3;
     border-color: #bcbcbc;
     color: #888888;
-    cursor: not-allowed ;
+    cursor: not-allowed;
 }
 
 .batch-section {

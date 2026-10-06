@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="{{ asset('css/components/search-bar-tool.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/fillable-table.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/pagination.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/materials/history/modifications.css') }}">
 @endpush
 
 @section('content')
@@ -29,16 +30,17 @@
     ]"
 />
 <x-fillable-table
+    :wrapper-id="'modifications-history-table-wrapper'"
     :table-id="'modifications-history-table'"
     :columns="[
         'Nombre',
         'Apellidos',
         'Email',
-        'Tipo de usuario',
+        'T. usuario',
         'Material',
-        'Unidades modificadas',
+        'Uds. modificadas',
         'Localización',
-        'Tipo de almacenamiento',
+        'T. almacenamiento',
         'Fecha de modificación',
     ]"
 />

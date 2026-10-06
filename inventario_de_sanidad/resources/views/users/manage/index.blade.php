@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="{{ asset('css/components/search-bar-tool.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/fillable-table.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/pagination.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/users/users.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/users/manage.css') }}">
 @endpush
 
 @section('content')
@@ -40,9 +40,10 @@
     ]"
 />
 <x-fillable-table
+    :wrapper-id="'users-management-table-wrapper'"
     :table-id="'users-management-table'"
-    :columns="['Nombre', 'Apellidos', 'Email', 'Tipo de usuario', 'Fecha de alta']"
-    :actions-colspan="2"
+    :columns="['Nombre', 'Apellidos', 'Email', 'T. usuario', 'Fecha de alta']"
+    :num-actions="2"
 />
 <x-pagination />
 

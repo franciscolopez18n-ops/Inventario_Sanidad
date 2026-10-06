@@ -1,0 +1,11 @@
+#summary-table .col-1 {                     /* Imagen */
+    width: max(5.5em, calc(var(--row-content-height) + 2 * var(--cell-px)));
+}
+#summary-table .col-2 { width: 11.25em; }   /* Nombre */
+#summary-table .col-3 { width: 22em; }      /* Descripción */
+#summary-table .col-4 { width: 9.7em; }     /* Localización */
+#summary-table .col-5 { width: 7.2em; }     /* Armario (número) */
+#summary-table .col-6 { width: 6em; }       /* Balda */
+#summary-table .col-7 { width: 6em; }       /* Cajón */
+#summary-table .col-8 { width: 7.5em; }     /* Unidades */
+#summary-table .col-9 { width: 10.5em; }    /* Uds. mínimas */

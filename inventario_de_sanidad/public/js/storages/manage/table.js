@@ -117,7 +117,7 @@ function crearAccionesTd(id, storage) {
     btnEditar.style.cssText = "background: none; border: none; cursor: pointer;";
 
     let iconEdit = document.createElement("i");
-    iconEdit.classList.add("fa", "fa-pencil", "table-icon-interactive");
+    iconEdit.classList.add("fa", "fa-pencil", "interactive-table-icon");
     btnEditar.appendChild(iconEdit);
 
     btnEditar.onclick = () => {

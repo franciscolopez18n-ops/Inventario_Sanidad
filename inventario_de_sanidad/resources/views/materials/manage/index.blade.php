@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="{{ asset('css/components/search-bar-tool.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/fillable-table.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/pagination.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/materials/manage/table.css') }}">
 @endpush
 
 @section('content')
@@ -32,9 +33,10 @@
     ]"
 />
 <x-fillable-table
+    :wrapper-id="'materials-management-table-wrapper'"
     :table-id="'materials-management-table'"
     :columns="['Nombre', 'Descripción', 'Imagen']"
-    :actions-colspan="2"
+    :num-actions="2"
 />
 <x-pagination />
 

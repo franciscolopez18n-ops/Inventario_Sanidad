@@ -188,7 +188,7 @@ class CreateMaterialsBatchTableRenderer extends DataRenderer {
         let deleteBtn = document.createElement("button");
         deleteBtn.style.cssText = "background: none; border: none; cursor: pointer;";
         let trashIcon = document.createElement("i");
-        trashIcon.classList.add("fa", "fa-trash", "table-icon-interactive");
+        trashIcon.classList.add("fa", "fa-trash", "interactive-table-icon");
         deleteBtn.addEventListener("click", () => this.#store.remove(material.id));
         deleteBtn.appendChild(trashIcon);
 

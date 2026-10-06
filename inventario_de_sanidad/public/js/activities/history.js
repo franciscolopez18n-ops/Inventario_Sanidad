@@ -1,10 +1,10 @@
 import { PaginatedDataPresenter } from "../components/paginatedDataPresenter.js";
-import { DataRenderer } from "../utils/bases.js";
+import { PaginatedDataRenderer } from "../utils/bases.js";
 import { SearchBarTool } from "../components/searchBarTool.js";
 import { hideLoader } from "../components/loader.js";
 import { createTextTD, createLabeledTextContainer } from '../utils/elements.js';
 
-class ActivitiesCardViewRenderer extends DataRenderer {
+class ActivitiesPanelViewRenderer extends PaginatedDataRenderer {
     #isTeacher;
 
     constructor(isTeacher) {
@@ -12,30 +12,31 @@ class ActivitiesCardViewRenderer extends DataRenderer {
         this.#isTeacher = isTeacher;
     }
 
-    render(pageData) {
+    render(pageData, limit) {
         // Resetea la vista de tarjetas
-        let view = document.querySelector("#activities-card-view");
+        const view = document.querySelector("#activities-panel-view");
+        view.style.setProperty("--panels-per-page", limit);
         view.replaceChildren();
 
         // La reconstruye
-        pageData.forEach(activity => view.appendChild(this.#buildCard(activity)));
+        pageData.forEach(activity => view.appendChild(this.#buildPanel(activity)));
     }
 
-    #buildCard(activity) {
-        let card = document.createElement("div");
-        card.className = "activity-card";
+    #buildPanel(activity) {
+        const panel = document.createElement("div");
+        panel.className = "narrow-column panel panel-fixed";
 
-        card.appendChild(this.#buildCardHeader(activity));
-        card.appendChild(this.#buildCardContent(activity));
+        panel.appendChild(this.#buildPanelHeader(activity));
+        panel.appendChild(this.#buildPanelContent(activity));
 
-        return card;
+        return panel;
     }
 
-    #buildCardHeader(activity) {
-        let header = document.createElement("div");
+    #buildPanelHeader(activity) {
+        const header = document.createElement("div");
         header.className = "activity-header";
 
-        let date = new Date(activity.created_at);
+        const date = new Date(activity.created_at);
         header.textContent = date.toLocaleDateString('es-ES') + ' ' + date.toLocaleTimeString('es-ES', {
             hour: '2-digit',
             minute: '2-digit'
@@ -44,8 +45,9 @@ class ActivitiesCardViewRenderer extends DataRenderer {
         return header;
     }
 
-    #buildCardContent(activity) {
-        let content = document.createElement("div");
+    #buildPanelContent(activity) {
+        const content = document.createElement("div");
+        content.className = "panel-body"
 
         content.appendChild(createLabeledTextContainer("p", "Título", activity.title));
         content.appendChild(createLabeledTextContainer("p", (this.#isTeacher) ? "Alumno/a" : "Profesor/a", activity.partner.full_name));
@@ -56,8 +58,8 @@ class ActivitiesCardViewRenderer extends DataRenderer {
 
     #buildMaterialsSection(activity) {
         if (!activity.materials || activity.materials.length === 0) {
-            let emptyParagraph = document.createElement("p");
-            let em = document.createElement("em");
+            const emptyParagraph = document.createElement("p");
+            const em = document.createElement("em");
 
             em.textContent = "No se usaron materiales.";
             emptyParagraph.appendChild(em);
@@ -65,17 +67,17 @@ class ActivitiesCardViewRenderer extends DataRenderer {
             return emptyParagraph;
         }
 
-        let wrapper = document.createElement("div");
-        wrapper.className = "table-wrapper";
+        const wrapper = document.createElement("div");
+        wrapper.className = "table-wrapper activity-materials-table-wrapper";
         wrapper.appendChild(this.#buildMaterialsTable(activity.materials));
 
         return wrapper;
     }
 
     #buildMaterialsTable(materials) {
-        let table = document.createElement("table");
+        const table = document.createElement("table");
 
-        table.className = "table activity-table";
+        table.className = "table activity-materials-table";
         table.appendChild(this.#buildMaterialsTableHead());
         table.appendChild(this.#buildMaterialsTableBody(materials));
 
@@ -83,11 +85,11 @@ class ActivitiesCardViewRenderer extends DataRenderer {
     }
 
     #buildMaterialsTableHead() {
-        let thead = document.createElement("thead");
-        let headerRow = document.createElement("tr");
+        const thead = document.createElement("thead");
+        const headerRow = document.createElement("tr");
 
         ["Material", "Cantidad"].forEach(text => {
-            let th = document.createElement("th");
+            const th = document.createElement("th");
             th.textContent = text;
             headerRow.appendChild(th);
         });
@@ -97,10 +99,10 @@ class ActivitiesCardViewRenderer extends DataRenderer {
     }
 
     #buildMaterialsTableBody(materials) {
-        let tbody = document.createElement("tbody");
+        const tbody = document.createElement("tbody");
 
         materials.forEach(material => {
-            let row = document.createElement("tr");
+            const row = document.createElement("tr");
 
             row.appendChild(createTextTD(material.name));
             row.appendChild(createTextTD(material.units));
@@ -112,10 +114,10 @@ class ActivitiesCardViewRenderer extends DataRenderer {
     }
 }
 
-const cards = new PaginatedDataPresenter({
-    renderers: [new ActivitiesCardViewRenderer(document.querySelector(".user-role").textContent.includes("teacher"))],
+const panels = new PaginatedDataPresenter({
+    renderers: [new ActivitiesPanelViewRenderer(document.querySelector(".user-role").textContent.includes("teacher"))],
     dataTool: new SearchBarTool()
 });
-cards.loadFrom("activities-data");
+panels.loadFrom("activities-data");
 
 hideLoader();

@@ -13,12 +13,12 @@ function addMaterial() {
     const materialUnits = getClientField(form, "units");
 
     if (materialId && materialUnits.value > 0) {
-        let materialData = {
+        const materialData = {
             name: materialName,
             units: materialUnits.value
         };
 
-        let result = store.add(materialId, materialData);
+        const result = store.add(materialId, materialData);
         if (result === BatchResult.DUPLICATE)
             showAlert("alert-warning", "El material ya está añadido.");
         else if (result === BatchResult.COOKIE_LIMIT)
@@ -40,24 +40,24 @@ class CreateActivitiesBatchTableRenderer extends DataRenderer {
     }
 
     render(batch) {
-        let tbody = document.querySelector("#materials-batch-table tbody.dynamic-rows");
+        const tbody = document.querySelector("#materials-batch-table tbody.dynamic-rows");
         tbody.replaceChildren();
 
         batch.forEach(material => tbody.appendChild(this.#buildRow(material)));
     }
 
     #buildRow(material) {
-        let tr = document.createElement("tr");
+        const tr = document.createElement("tr");
 
         // Celdas
         tr.appendChild(createTextTD(material.name));
         tr.appendChild(createTextTD(material.units));
 
         // Botón Eliminar
-        let deleteTd = document.createElement("td");
-        let deleteBtn = document.createElement("button");
+        const deleteTd = document.createElement("td");
+        const deleteBtn = document.createElement("button");
 
-        deleteBtn.setAttribute("class", "btn btn-danger delete");
+        deleteBtn.setAttribute("class", "btn btn-danger");
         deleteBtn.setAttribute("type", "button");
         deleteBtn.textContent = "Eliminar";
         deleteBtn.addEventListener("click", () => this.#store.remove(material.id));

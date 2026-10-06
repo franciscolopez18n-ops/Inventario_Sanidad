@@ -1,12 +1,15 @@
 import { PaginatedDataPresenter } from "../../components/paginatedDataPresenter.js";
-import { DataRenderer } from "../../utils/bases.js";
+import { PaginatedDataRenderer } from "../../utils/bases.js";
 import { SearchBarTool } from "../../components/searchBarTool.js";
 import { hideLoader } from "../../components/loader.js";
 import { createTextTD } from '../../utils/elements.js';
 import { displayName, DisplayCategory } from "../../utils/display.js";
 
-class ModificationsHistoryTableRenderer extends DataRenderer {
-    render(pageData) {
+class ModificationsHistoryTableRenderer extends PaginatedDataRenderer {
+    render(pageData, limit) {
+        let wrapper = document.getElementById("modifications-history-table-wrapper");
+        wrapper.style.setProperty("--rows-per-page", limit);
+
         // Resetea la tabla
         let tbody = document.querySelector("#modifications-history-table tbody.dynamic-rows");
         tbody.replaceChildren();

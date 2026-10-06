@@ -14,12 +14,27 @@
 
 .pagination-select select {
     padding: 0.5rem 1rem;
+    min-width: 5rem;
 }
 
 .pagination-select select:hover,
 .pagination-select select:focus {
     border-color: var(--primary-400);
     outline: none;
+}
+
+.pagination-summary {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--primary-100);
+
+    min-width: 20ch;
+    text-align: right;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 .pagination-buttons {
@@ -67,14 +82,58 @@
     cursor: default;
 }
 
-.pagination-summary {
-    font-size: 0.85rem;
-    font-weight: 600;
-    margin-left: 0.5rem;
-    color: var(--primary-100);
+/* Tablet */
+@media (max-width: 992px) {
+    .pagination-controls {
+        gap: 0.75rem;
+        padding: 0.75rem;
+        margin: 0.75rem;
+    }
+}
 
-    user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -o-user-select: none;
+/* Móvil */
+@media (max-width: 768px) {
+    .pagination-controls {
+        gap: 0.5rem;
+        padding: 0.5rem;
+        margin: 0.5rem;
+    }
+
+    .pagination-buttons {
+        gap: 0.35rem;
+    }
+
+    .pagination-buttons button {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+/* Móvil pequeño */
+@media (max-width: 400px) {
+    .pagination-controls {
+        gap: 0.4rem;
+        padding: 0.4rem;
+        margin: 0.4rem;
+        font-size: 0.85rem;
+    }
+
+    .pagination-select select {
+        padding: 0.35rem 0.4rem;
+        min-width: 3.5rem;
+    }
+
+    .pagination-summary {
+        font-size: 0.75rem;
+    }
+
+    .pagination-buttons {
+        gap: 0.25rem;
+    }
+
+    .pagination-buttons button {
+        width: 26px;
+        height: 26px;
+        font-size: 0.8rem;
+    }
 }

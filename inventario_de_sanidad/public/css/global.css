@@ -201,14 +201,15 @@ a {
 
 /* === BOTÓN PRINCIPAL === */
 .btn {
-  padding: 10px 25px;
+  padding: 0.7em 1.8em;
   background-color: var(--primary-600);
   color: var(--text-300);
   border: none;
   border-radius: 0.5rem;
   font-weight: 600;
   letter-spacing: 0.025em;
-  font-size: 0.875rem;
+  font-size: clamp(0.75rem, 1.5vw, 0.875rem);
+  white-space: nowrap;
   cursor: pointer;
 
   transition: background-color 200ms ease-in, color 80ms ease-in, border-color 200ms ease-in;
@@ -216,6 +217,7 @@ a {
   -moz-transition: background-color 200ms ease-in, color 80ms ease-in, border-color 200ms ease-in;
   -o-transition: background-color 200ms ease-in, color 80ms ease-in, border-color 200ms ease-in;
 }
+
 .btn:hover {
   background-color: var(--primary-500);
 }

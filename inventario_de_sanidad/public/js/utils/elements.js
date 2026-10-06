@@ -1,7 +1,12 @@
 // Crea un <td> con el texto proporcionado
 export function createTextTD(text) {
-    let td = document.createElement("td");
-    td.textContent = text;
+    const td = document.createElement("td");
+    const div = document.createElement("div");
+
+    div.className = "cell-text";
+    div.textContent = text;
+    td.appendChild(div);
+
     return td;
 }
 

@@ -1,0 +1,9 @@
+#users-management-table .col-1 { width: 14em; }    /* Nombre */
+#users-management-table .col-2 { width: 16em; }    /* Apellidos */
+#users-management-table .col-3 { width: 24em; }    /* Email */
+#users-management-table .col-4 { width: 9em; }     /* T. usuario */
+#users-management-table .col-5 { width: 16.5em; }  /* Fecha de alta */
+#users-management-table .col-6 { width: calc(10.5em + 2 * var(--cell-px)); }
+#users-management-table .col-7 {
+    width: calc(var(--icon-hit) + 2 * var(--cell-px));
+}

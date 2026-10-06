@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="{{ asset('css/components/search-bar-tool.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/fillable-table.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/pagination.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/materials/history/summary.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/materials/history/summary/cards.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/materials/history/summary/reserve.css') }}">
 @endpush
 
 @section('content')
@@ -38,7 +39,9 @@
     ]"
 />
 
-<div id="summary-card-view" class="card-grid"></div>
+<div class="card-grid-frame">
+    <div id="summary-card-view" class="card-grid"></div>
+</div>
 
 <x-fillable-table
     :wrapper-id="'summary-table-view'"
@@ -52,7 +55,7 @@
         'Armario',
         'Balda',
         'Unidades',
-        'Unidades mínimas'
+        'Uds. mínimas'
     ]"
 />
 <x-pagination

@@ -3,12 +3,13 @@
 @section('title', 'Alta de usuarios')
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/users/users.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/panel.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/users/create.css') }}">
 @endpush
 
 @section('content')
 
-<div class="alta-usuarios-container">
+<div id="create-user-container" class="narrow-column panel">
     <form action="{{ route('users.store') }}" method="POST">
         @csrf
 
@@ -45,4 +46,3 @@
 </div>
 
 @endsection
-

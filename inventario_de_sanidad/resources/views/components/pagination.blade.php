@@ -11,6 +11,10 @@
         </select>
     </div>
 
+    <span class="pagination-summary">
+        <!-- Resumen se insertará aquí -->
+    </span>
+
     <div class="pagination-buttons">
         <!-- Botones de paginación se insertarán aquí -->
     </div>

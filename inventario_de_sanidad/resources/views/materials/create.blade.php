@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="{{ asset('css/components/fillable-table.css') }}">
 <link rel="stylesheet" href="{{ asset('css/components/view-toggle.css') }}">
 <link rel="stylesheet" href="{{ asset('css/components/image-preview.css') }}">
-<link rel="stylesheet" href="{{ asset('css/materials/materials.css') }}">
+<link rel="stylesheet" href="{{ asset('css/materials/forms.css') }}">
 <link rel="stylesheet" href="{{ asset('css/materials/create.css') }}">
 
 @endpush
@@ -131,8 +131,9 @@
     <h4 class="batch-title">Lote de materiales</h4>
     
     <x-fillable-table
+        :wrapper-id="'materials-batch-table-wrapper'"
         :table-id="'materials-batch-table'"
-        :header-rows="[
+        :columns="[
             [
                 ['column' => 'Nombre', 'rowspan' => 2],
                 ['column' => 'Descripción', 'rowspan' => 2],
@@ -140,13 +141,13 @@
                 ['column' => 'Uso', 'colspan' => 5],
                 ['column' => 'Reserva', 'colspan' => 4],
                 ['column' => 'Imagen', 'rowspan' => 2],
-                ['column' => '', 'rowspan' => 2], // acciones
             ],
             [
                 'Cant.', 'Mín', 'Armario', 'Balda', 'Cajón',
                 'Cant.', 'Mín', 'Armario', 'Balda',
             ],
         ]"
+        :num-actions="1"
     />
 </div>
 @endsection

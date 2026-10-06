@@ -1,13 +1,39 @@
 .table-wrapper {
+    --row-content-height-base: clamp(48px, 8vw, 100px);
+    --header-row-height-base: clamp(38px, 6vw, 64px);
+
+    --row-content-height: var(--row-content-height-base);
+    --cell-py: clamp(0.4rem, 1.2vw, 0.8125rem);
+    --cell-px: clamp(0.35rem, 1.5vw, 1rem);
+    --header-rows: 1;
+    --header-row-height: var(--header-row-height-base);
+    --row-height: calc(var(--row-content-height) + 2 * var(--cell-py));
+    --icon-size: calc(var(--row-content-height) * 0.18);
+    --icon-hit: calc(var(--icon-size) * 2);
+
     overflow-x: auto;
     border-radius: var(--border-radius-md);
     box-shadow: var(--shadow-md);
+    background-color: var(--bg-200);
+}
+
+.table-sizer {
+    height: calc(var(--header-rows) * var(--header-row-height) + var(--rows-per-page) * var(--row-height) + 1px); /* Solo aplica con
+        paginación. Todo esto es necesario para que el alto de la tabla sea fijo y predecible; de otra forma, el tamaño variable
+        de la tabla (definido por su contenido) empujaría o tiraría de los controles de paginación hacia abajo o arriba,
+        impidiendo hacer clic en los botones de forma seguida sin que se descoloquen. Ese problema se llama layout shift */
 }
 
 .table {
     width: 100%;
+    table-layout: fixed;
     border-collapse: collapse;
     background-color: var(--bg-200);
+    font-size: clamp(0.72rem, 1.5vw, 1rem);
+}
+
+.table thead tr {
+    height: var(--header-row-height);
 }
 
 .table thead th {
@@ -15,39 +41,49 @@
     color: var(--text-300);
     font-weight: bold;
     text-transform: uppercase;
-    padding: 1.25rem 1rem;
+    white-space: nowrap;
+    padding: 0 var(--cell-px);
     border-bottom: 2px solid var(--primary-200);
     text-align: center;
+    vertical-align: middle;
+}
+
+.table tbody tr {
+    height: var(--row-height);
 }
 
 .table td {
     vertical-align: middle;
-    padding: 0.8125rem 1rem;
+    padding: var(--cell-py) var(--cell-px);
     text-align: center;
     color: var(--text-200);
-    word-break: break-all;
 }
 
 .table td:last-of-type {
     border-bottom: none;
 }
 
-/* Descripción o celdas amplias */
-.table .cell-description {
-    white-space: normal;
-    word-break: break-word;
-    overflow-wrap: break-word;
-    max-width: 800px;
-    max-height: 200px;
-    overflow: auto;
+/* Contenedor interno para texto largo: hace scroll en vez de estirar la fila
+    (max-height en <td> no es fiable, por eso va en un div dentro de la celda)
+    padding-block + content-box: dan 2px de tolerancia sobre max-height. Sin ellos,
+    el redondeo subpixel (clamp/vw) hace que el contenido supere el límite por
+    fracciones de px y aparezca un scroll minúsculo innecesario */
+.table .cell-text {
+    overflow-wrap: anywhere;
+    max-height: calc(var(--row-height) - 2 * var(--cell-py));
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-block: 1px;
+    box-sizing: content-box;
 }
 
 .table .cell-img-wrap {
-    display: inline-block;
-    width: 100px;
-    height: 100px;
+    display: block;
+    width: var(--row-content-height);
+    height: var(--row-content-height);
     border-radius: 4px;
     overflow: hidden;
+    margin: 0 auto;
 
     background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
     background-size: 200% 100%;
@@ -68,68 +104,57 @@
     100% { background-position: -200% 0; }
 }
 
-.table-icon-interactive {
-    color: var(--primary-200);
+.table .btn {
+    font-size: 0.875em;
+    width: 100%;
+    box-sizing: border-box;
+    padding-inline: 0.6em;
 }
 
-.table-icon-interactive:hover {
+.table select,
+.table input:not([type="checkbox"], [type="radio"]) {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.5em;
+    font-size: 0.95em;
+    border-radius: var(--border-radius-md);
+    background-color: var(--bg-100);
+    border: 1px solid var(--bg-300);
+    color: var(--text-200);
+}
+
+.table input[type="number"] {
+    text-align: center;
+}
+
+.table select:focus,
+.table input:not([type="checkbox"], [type="radio"]):focus {
+    outline: none;
+    border-color: var(--primary-400);
+}
+
+.interactive-table-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--icon-hit);
+    height: var(--icon-hit);
+
+    font-size: var(--icon-size);
+    color: var(--primary-200);
+    cursor: pointer;
+    transition: transform 0.15s ease;
+}
+
+.interactive-table-icon:hover {
     transform: scale(1.1);
 }
 
 /* Tablet */
-@media (max-width: 992px) {
-    .table thead th {
-        padding: 1rem 0.75rem;
-        font-size: 0.9rem;
-    }
-
-    .table td {
-        padding: 0.7rem 0.75rem;
-        font-size: 0.9rem;
-    }
-
-    .table .cell-img-wrap {
-        width: 80px;
-        height: 80px;
-    }
-}
+@media (max-width: 992px) { }
 
 /* Móvil */
-@media (max-width: 768px) {
-    .table thead th {
-        padding: 0.75rem 0.5rem;
-        font-size: 0.8rem;
-    }
-
-    .table td {
-        padding: 0.55rem 0.5rem;
-        font-size: 0.8rem;
-    }
-
-    .table .cell-img-wrap {
-        width: 60px;
-        height: 60px;
-    }
-
-    .table-icon-interactive {
-        font-size: 0.95rem;
-    }
-}
+@media (max-width: 768px) { }
 
 /* Móvil pequeño */
-@media (max-width: 400px) {
-    .table thead th {
-        padding: 0.5rem 0.35rem;
-        font-size: 0.72rem;
-    }
-
-    .table td {
-        padding: 0.4rem 0.35rem;
-        font-size: 0.72rem;
-    }
-
-    .table .cell-img-wrap {
-        width: 48px;
-        height: 48px;
-    }
-}
+@media (max-width: 400px) { }
