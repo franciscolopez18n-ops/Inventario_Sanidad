@@ -18,14 +18,14 @@
 <x-loader />
 
 <div class="title-with-toggle">
-    <h1>Alta de materiales</h1>
-    
     <x-view-toggle
         :view-btns="[
             ['id' => 'form-view-btn', 'extra_class' => 'btn-toggle-text', 'text' => 'Alta de materiales'],
             ['id' => 'batch-view-btn', 'extra_class' => 'btn-toggle-text', 'text' => 'Lote pendiente'],
         ]"
     />
+
+    <h1>Alta de materiales</h1>
 </div>
 
 {{-- Formulario para agregar al lote --}}

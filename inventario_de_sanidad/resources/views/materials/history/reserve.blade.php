@@ -17,14 +17,14 @@
 <x-loader />
 
 <div class="title-with-toggle">
-    <h1>Materiales en reserva</h1>
-
     <x-view-toggle 
         :view-btns="[
-            ['id' => 'card-view-btn', 'extra_class' => 'btn-notifications', 'icon' => 'fa-solid fa-list-ul'],
-            ['id' => 'table-view-btn', 'extra_class' => 'btn-notifications', 'icon' => 'fa-solid fa-table'],
+            ['id' => 'card-view-btn', 'extra_class' => 'btn-icon', 'icon' => 'fa-solid fa-list-ul'],
+            ['id' => 'table-view-btn', 'extra_class' => 'btn-icon', 'icon' => 'fa-solid fa-table'],
         ]"
     />
+
+    <h1>Materiales en reserva</h1>
 </div>
 
 <x-search-bar-tool

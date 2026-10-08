@@ -55,6 +55,18 @@
   --bg-400: #2d3744;
 }
 
+#theme-switch i:last-child {
+  display: none;
+}
+
+.darkmode #theme-switch i:first-child {
+  display: none;
+}
+
+.darkmode #theme-switch i:last-child {
+  display: block;
+}
+
 * {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -241,6 +253,36 @@ a {
   color: var(--text-300);
 }
 
+/* === BOTÓN DE ICONO === */
+.btn-icon {
+  --icon-btn-size: 40px;
+
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  flex: none;
+  width: var(--icon-btn-size);
+  height: var(--icon-btn-size);
+  padding: 0;
+  background-color: var(--primary-600);
+  touch-action: manipulation;
+}
+
+.btn-icon i {
+  font-size: calc(var(--icon-btn-size) * 0.4);
+  color: var(--primary-300);
+}
+
+.btn-icon:hover {
+  color: var(--primary-500);
+  background-color: var(--primary-300);
+}
+
+.btn-icon:hover i {
+  color: var(--primary-600);
+}
+
 /* === BOTÓN DE CONFIRMACIÓN === */
 .btn-success {
   background-color: var(--success);
@@ -329,7 +371,12 @@ a {
   html {
     font-size: 80%;
   }
+
+  .btn-icon {
+    --icon-btn-size: 44px;
+  }
 }
+
 @media (min-width: 769px) and (max-width: 1024px) {
   html {
     font-size: 90%;

@@ -186,7 +186,7 @@
         <header class="header">
             <div class="header-right">
                 <!-- DarkMode Toggle -->
-                <button class="btn btn-primary btn-notifications" id="theme-switch" type="button" aria-label="Alterna el tema entre claro y oscuro">
+                <button class="btn btn-primary btn-icon" id="theme-switch" type="button" aria-label="Alterna el tema entre claro y oscuro">
                     <i class="fa-solid fa-moon"></i>
                     <i class="fa-solid fa-sun"></i>
                 </button>
@@ -243,7 +243,7 @@
                 @if(Auth::user()->user_type === 'admin')
                 <div>
                     <div class="notifications-alert">
-                        <button id="btn-notifications" class="btn btn-primary btn-notifications">
+                        <button id="btn-icon" class="btn btn-primary btn-icon">
                             <i class="fa-solid fa-bell"></i>
                             @if($notifications->isNotEmpty())
                                 <span id="notification-count" class="notification-count">{{ $notifications->count() }}</span>
@@ -275,7 +275,7 @@
                 <!-- Contenedor del usuario -->
                 <div class="user-dropdown">
                     <!-- Info del usuario -->
-                    <div class="user-info btn btn-notifications" id="user-info-toggle">
+                    <div class="btn btn-icon" id="user-info-toggle">
                         <i class="fa-solid fa-user"></i>
                         {{-- Auth::user()->full_name --}}
                     </div>

@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     let sidebar = document.querySelector('.sidebar');
     let linkTexts = document.querySelectorAll('.link-text');
-    let btnNotifications = document.getElementById("btn-notifications");
+    let btnNotifications = document.getElementById("btn-icon");
     let notificationsList = document.getElementById("notifications-list");
     let userInfoToggle = document.getElementById("user-info-toggle");
     let logoutSection = document.getElementById("logout-section");
@@ -93,7 +93,7 @@ function initNotifications(btnNotifications, notificationsList) {
 
     // Función que oculta el listado si el click fue fuera del botón o la lista
     function closeNotifications(e) {
-        let isInsideBtn = e.target.closest("#btn-notifications");
+        let isInsideBtn = e.target.closest("#btn-icon");
         let isInsideList = e.target.closest("#notifications-list");
         if (!isInsideBtn && !isInsideList) {
             notificationsList.classList.remove("show");

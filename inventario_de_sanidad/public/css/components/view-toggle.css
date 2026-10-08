@@ -1,20 +1,33 @@
 .title-with-toggle {
-    position: relative;
+    display: flex;
+    flex-flow: row-reverse wrap;
+    align-items: center;
+    gap: 0.5rem 1rem;
+    margin-bottom: 1rem;
+}
+
+.title-with-toggle h1 {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
+    overflow-wrap: anywhere;
 }
 
 .view-toggle {
-    margin-bottom: 1rem;
-    position: absolute;
-    top: 0;
-    right: 0;
-    z-index: 10;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.25rem;
+    flex: none;
 }
 
 /* BOTONES DE TEXTO: pequeños, compactos, con outline cuando no están activos */
 .view-toggle .btn-toggle-text {
-    padding: 0.3rem 1rem;
-    font-size: 0.75rem;
+    font-size: clamp(0.75rem, 0.96rem - 0.34vw, 0.875rem);
+    min-height: clamp(1.75rem, 3rem - 2vw, 2.5rem);
+    padding: 0.4em 1.2em;
     line-height: 1.2;
+    white-space: nowrap;
+    touch-action: manipulation;
 }
 
 /* Hover del botón no activo */
@@ -28,7 +41,7 @@
 .view-toggle .btn-toggle-text.active {
     background-color: var(--primary-300);
     color: var(--text-300);
-    background-color: var(--primary-300);
+    border-color: var(--primary-300);
 }
 
 /* Hover del activo */
@@ -38,6 +51,17 @@
 }
 
 /* BOTONES DE ICONOS */
-.view-toggle .btn-notifications.active {
+.view-toggle .btn-icon.active {
     background-color: var(--primary-500);
+}
+
+@media (max-width: 400px) {
+    .view-toggle {
+        width: 100%;
+    }
+
+    .view-toggle .btn-toggle-text {
+        flex: 1 1 0;
+        padding-inline: 0.5em;
+    }
 }

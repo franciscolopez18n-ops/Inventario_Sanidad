@@ -16,7 +16,7 @@
 <body>
     <div class="bg-login">
         <!-- DarkMode Toggle -->
-        <button class="btn btn-primary btn-notifications" id="theme-switch" type="button" aria-label="Alterna el tema entre claro y oscuro">
+        <button class="btn btn-primary btn-icon" id="theme-switch" type="button" aria-label="Alterna el tema entre claro y oscuro">
             <i class="fa-solid fa-moon"></i>
             <i class="fa-solid fa-sun"></i>
         </button>
@@ -51,7 +51,7 @@
     </div>
 </body>
 <footer></footer>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" id="login-wave">
     <path
         fill="var(--bg-100)"
         fill-opacity="1"
