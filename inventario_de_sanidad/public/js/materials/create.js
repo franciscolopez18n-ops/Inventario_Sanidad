@@ -1,15 +1,15 @@
-import { BatchResult, BatchStore } from '../utils/batchStore.js';
+import { BatchResult, BatchStore } from "../utils/batchStore.js";
 import { DataRenderer } from "../utils/bases.js";
 import { ViewToggle } from "../components/viewToggle.js";
 import { hideLoader } from "../components/loader.js";
-import { showAlert } from '../components/alerts.js';
+import { showAlert } from "../components/alerts.js";
 import { getImagePreviewElements, clearImageSelection} from "../components/imagePreview.js";
-import { createTextTD, createPublicImageTD } from '../utils/elements.js';
-import { clearInputErrors, showInputErrors, withSubmitLock, getClientField, getCheckedClientField } from '../utils/forms.js';
+import { createTextTd, createPublicImageTd, createActionButtonTd } from "../utils/fillable-tables.js";
+import { clearInputErrors, showInputErrors, withSubmitLock, getClientField, getCheckedClientField } from "../utils/forms.js";
 
 // Captura y valida los datos del formulario y añade el material al lote.
 async function addMaterial() {
-    let errorsMap = {};
+    const errorsMap = {};
     const form = document.form;
 
     clearInputErrors(form); // Limpiar posibles errores anteriores.
@@ -109,7 +109,7 @@ async function addMaterial() {
         shelf_reserve: shelf_reserve
     };
 
-    let result = store.add(Date.now(), newMaterial);
+    const result = store.add(Date.now(), newMaterial);
     if (result === BatchResult.DUPLICATE) {
         showAlert("alert-warning", "El material ya está añadido.");
         return;
@@ -129,7 +129,7 @@ async function addMaterial() {
 
 // Sube la imagen al servidor y devuelve la ruta temporal.
 async function uploadTempImage(image) {
-    let formData = new FormData();
+    const formData = new FormData();
     formData.append('image', image);
 
     try {
@@ -158,42 +158,34 @@ class CreateMaterialsBatchTableRenderer extends DataRenderer {
     }
 
     render(batch) {
-        let tbody = document.querySelector("#materials-batch-table tbody.dynamic-rows");
+        const tbody = document.querySelector("#materials-batch-table tbody.dynamic-rows");
         tbody.replaceChildren();
 
         batch.forEach(material => tbody.appendChild(this.#buildRow(material)));
     }
 
     #buildRow(material) {
-        let tr = document.createElement("tr");
+        const tr = document.createElement("tr");
 
-        // Celdas
-        tr.appendChild(createTextTD(material.name));
-        tr.appendChild(createTextTD(material.description));
-        tr.appendChild(createTextTD(material.storage));
-        tr.appendChild(createTextTD(material.units_use));
-        tr.appendChild(createTextTD(material.min_units_use));
-        tr.appendChild(createTextTD(material.cabinet_use));
-        tr.appendChild(createTextTD(material.shelf_use));
-        tr.appendChild(createTextTD(material.drawer_use));
-        tr.appendChild(createTextTD(material.units_reserve));
-        tr.appendChild(createTextTD(material.min_units_reserve));
-        tr.appendChild(createTextTD(material.cabinet_reserve));
-        tr.appendChild(createTextTD(material.shelf_reserve));
-        tr.appendChild(createPublicImageTD(material.temp_image_path));
-
-        // Botón Eliminar
-        let deleteTd = document.createElement("td");
-
-        let deleteBtn = document.createElement("button");
-        deleteBtn.style.cssText = "background: none; border: none; cursor: pointer;";
-        let trashIcon = document.createElement("i");
-        trashIcon.classList.add("fa", "fa-trash", "interactive-table-icon");
-        deleteBtn.addEventListener("click", () => this.#store.remove(material.id));
-        deleteBtn.appendChild(trashIcon);
-
-        deleteTd.appendChild(deleteBtn);
-        tr.appendChild(deleteTd);
+        tr.appendChild(createTextTd(material.name));
+        tr.appendChild(createTextTd(material.description));
+        tr.appendChild(createTextTd(material.storage));
+        tr.appendChild(createTextTd(material.units_use));
+        tr.appendChild(createTextTd(material.min_units_use));
+        tr.appendChild(createTextTd(material.cabinet_use));
+        tr.appendChild(createTextTd(material.shelf_use));
+        tr.appendChild(createTextTd(material.drawer_use));
+        tr.appendChild(createTextTd(material.units_reserve));
+        tr.appendChild(createTextTd(material.min_units_reserve));
+        tr.appendChild(createTextTd(material.cabinet_reserve));
+        tr.appendChild(createTextTd(material.shelf_reserve));
+        tr.appendChild(createPublicImageTd(material.temp_image_path));
+        tr.appendChild(createActionButtonTd({
+            action: () => this.#store.remove(material.id),
+            type: "icon",
+            content: "fa-trash",
+            dialogId: "delete-cd"
+        }));
 
         return tr;
     }

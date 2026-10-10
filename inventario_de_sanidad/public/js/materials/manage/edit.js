@@ -1,4 +1,4 @@
-import '../../components/imagePreview.js';
+import "../../components/imagePreview.js";
 
 document.addEventListener("DOMContentLoaded", () => {
 

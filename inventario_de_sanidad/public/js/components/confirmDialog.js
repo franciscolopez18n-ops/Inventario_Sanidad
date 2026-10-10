@@ -1,14 +1,14 @@
-export function showConfirmDialog(event, dialogId) {
+export function showConfirmDialog(event, dialogId, action) {
     event.preventDefault();
 
     const dialog = document.getElementById(dialogId);
-    const btnConfirm = document.querySelector(`#${dialogId} [data-action="confirm"]`);
-    const btnCancel = document.querySelector(`#${dialogId} [data-action="cancel"]`);
+    const btnConfirm = dialog.querySelector('[data-action="confirm"]');
+    const btnCancel = dialog.querySelector('[data-action="cancel"]');
 
     dialog.showModal();
 
     btnConfirm.onclick = () => {
-        event.target.submit();
+        action();
         dialog.close();
     };
 

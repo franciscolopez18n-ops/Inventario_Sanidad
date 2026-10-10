@@ -3,7 +3,8 @@ import { PaginatedDataRenderer } from "../../utils/bases.js";
 import { SearchBarTool } from "../../components/searchBarTool.js";
 import { ViewToggle } from "../../components/viewToggle.js";
 import { hideLoader } from "../../components/loader.js";
-import { createPublicImageTD, createTextTD, createLabeledTextContainer } from '../../utils/elements.js';
+import { createLabeledTextContainer } from "../../utils/elements.js";
+import { createPublicImageTd, createTextTd } from "../../utils/fillable-tables.js";
 import { displayName, DisplayCategory } from "../../utils/display.js";
 
 class SummaryCardViewRenderer extends PaginatedDataRenderer {
@@ -92,15 +93,15 @@ class SummaryTableRenderer extends PaginatedDataRenderer {
         const tr = document.createElement("tr");
 
         // Celdas
-        tr.appendChild(createPublicImageTD(material.image_path));
-        tr.appendChild(createTextTD(material.name));
-        tr.appendChild(createTextTD(material.description));
-        tr.appendChild(createTextTD(displayName(material.storage, DisplayCategory.STORAGE)));
-        tr.appendChild(createTextTD(material.cabinet));
-        tr.appendChild(createTextTD(material.shelf));
-        if ('drawer' in material) tr.appendChild(createTextTD(material.drawer));
-        if ('units' in material) tr.appendChild(createTextTD(material.units));
-        if ('min_units' in material) tr.appendChild(createTextTD(material.min_units));
+        tr.appendChild(createPublicImageTd(material.image_path));
+        tr.appendChild(createTextTd(material.name));
+        tr.appendChild(createTextTd(material.description));
+        tr.appendChild(createTextTd(displayName(material.storage, DisplayCategory.STORAGE)));
+        tr.appendChild(createTextTd(material.cabinet));
+        tr.appendChild(createTextTd(material.shelf));
+        if ('drawer' in material) tr.appendChild(createTextTd(material.drawer));
+        if ('units' in material) tr.appendChild(createTextTd(material.units));
+        if ('min_units' in material) tr.appendChild(createTextTd(material.min_units));
 
         return tr;
     }

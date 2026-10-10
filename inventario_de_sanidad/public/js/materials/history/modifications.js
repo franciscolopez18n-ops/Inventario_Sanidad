@@ -2,7 +2,7 @@ import { PaginatedDataPresenter } from "../../components/paginatedDataPresenter.
 import { PaginatedDataRenderer } from "../../utils/bases.js";
 import { SearchBarTool } from "../../components/searchBarTool.js";
 import { hideLoader } from "../../components/loader.js";
-import { createTextTD } from '../../utils/elements.js';
+import { createTextTd } from "../../utils/fillable-tables.js";
 import { displayName, DisplayCategory } from "../../utils/display.js";
 
 class ModificationsHistoryTableRenderer extends PaginatedDataRenderer {
@@ -22,15 +22,15 @@ class ModificationsHistoryTableRenderer extends PaginatedDataRenderer {
         let tr = document.createElement("tr");
 
         // Celdas
-        tr.appendChild(createTextTD(modification.first_name));
-        tr.appendChild(createTextTD(modification.last_name));
-        tr.appendChild(createTextTD(modification.email));
-        tr.appendChild(createTextTD(modification.user_type));
-        tr.appendChild(createTextTD(modification.material_name));
-        tr.appendChild(createTextTD(modification.units));
-        tr.appendChild(createTextTD(displayName(modification.storage, DisplayCategory.STORAGE)));
-        tr.appendChild(createTextTD(displayName(modification.storage_type, DisplayCategory.MODALITY)));
-        tr.appendChild(createTextTD(modification.action_datetime));
+        tr.appendChild(createTextTd(modification.first_name));
+        tr.appendChild(createTextTd(modification.last_name));
+        tr.appendChild(createTextTd(modification.email));
+        tr.appendChild(createTextTd(modification.user_type));
+        tr.appendChild(createTextTd(modification.material_name));
+        tr.appendChild(createTextTd(modification.units));
+        tr.appendChild(createTextTd(displayName(modification.storage, DisplayCategory.STORAGE)));
+        tr.appendChild(createTextTd(displayName(modification.storage_type, DisplayCategory.MODALITY)));
+        tr.appendChild(createTextTd(modification.action_datetime));
 
         return tr;
     }

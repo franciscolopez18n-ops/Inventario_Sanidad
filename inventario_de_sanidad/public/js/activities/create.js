@@ -1,8 +1,8 @@
-import { BatchResult, BatchStore } from '../utils/batchStore.js';
-import { showAlert } from '../components/alerts.js';
-import { DataRenderer } from '../utils/bases.js';
-import { createTextTD } from '../utils/elements.js';
-import { getClientField } from '../utils/forms.js';
+import { BatchResult, BatchStore } from "../utils/batchStore.js";
+import { showAlert } from "../components/alerts.js";
+import { DataRenderer } from "../utils/bases.js";
+import { createTextTd, createActionButtonTd } from "../utils/fillable-tables.js";
+import { getClientField } from "../utils/forms.js";
 
 function addMaterial() {
     const form = document.forms[0];
@@ -49,21 +49,14 @@ class CreateActivitiesBatchTableRenderer extends DataRenderer {
     #buildRow(material) {
         const tr = document.createElement("tr");
 
-        // Celdas
-        tr.appendChild(createTextTD(material.name));
-        tr.appendChild(createTextTD(material.units));
-
-        // Botón Eliminar
-        const deleteTd = document.createElement("td");
-        const deleteBtn = document.createElement("button");
-
-        deleteBtn.setAttribute("class", "btn btn-danger");
-        deleteBtn.setAttribute("type", "button");
-        deleteBtn.textContent = "Eliminar";
-        deleteBtn.addEventListener("click", () => this.#store.remove(material.id));
-
-        deleteTd.appendChild(deleteBtn);
-        tr.appendChild(deleteTd);
+        tr.appendChild(createTextTd(material.name));
+        tr.appendChild(createTextTd(material.units));
+        tr.appendChild(createActionButtonTd({
+            action: () => this.#store.remove(material.id),
+            type: "text",
+            content: "Eliminar",
+            className: "btn-danger"
+        }));
         
         return tr;
     }

@@ -1,4 +1,4 @@
-import { createTextTD } from '../../utils/elements.js';
+import { createTextTd } from "../../utils/fillable-tables.js";
 
 /**
  * Detecta cuando el DOM está listo y ejecuta la función `inicio`.
@@ -72,7 +72,7 @@ function renderTable(limit, paginaActual) {
         // Fila título material
         let trMaterial = document.createElement("tr");
 
-        let tdMaterial = createTextTD(material.name ?? "-");
+        let tdMaterial = createTextTd(material.name ?? "-");
         tdMaterial.colSpan = 8;
         tdMaterial.classList.add("material-title");
 
@@ -84,13 +84,13 @@ function renderTable(limit, paginaActual) {
 
             let trUse = document.createElement("tr");
 
-            trUse.appendChild(createTextTD(item.storage ?? "-"));
-            trUse.appendChild(createTextTD("uso"));
-            trUse.appendChild(createTextTD(item.units ?? "0"));
-            trUse.appendChild(createTextTD(item.min_units ?? "0"));
-            trUse.appendChild(createTextTD(item.cabinet ?? "-"));
-            trUse.appendChild(createTextTD(item.shelf ?? "-"));
-            trUse.appendChild(createTextTD(item.drawer ?? "-"));
+            trUse.appendChild(createTextTd(item.storage ?? "-"));
+            trUse.appendChild(createTextTd("uso"));
+            trUse.appendChild(createTextTd(item.units ?? "0"));
+            trUse.appendChild(createTextTd(item.min_units ?? "0"));
+            trUse.appendChild(createTextTd(item.cabinet ?? "-"));
+            trUse.appendChild(createTextTd(item.shelf ?? "-"));
+            trUse.appendChild(createTextTd(item.drawer ?? "-"));
 
             let tdAcciones = crearAccionesTd(item.material_id, item.storage);
             trUse.appendChild(tdAcciones);

@@ -1,4 +1,4 @@
-import { setCookieValue, getCookieValue, deleteCookie } from './cookies.js';
+import { setCookieValue, getCookieValue, deleteCookie } from "./cookies.js";
 
 export const BatchResult = Object.freeze({
     OK: 0,

@@ -133,6 +133,15 @@
     border-color: var(--primary-400);
 }
 
+.interactive-table-icon-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: inherit;
+    text-decoration: none;
+}
+
 .interactive-table-icon {
     display: inline-flex;
     align-items: center;

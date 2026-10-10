@@ -1,4 +1,4 @@
-import { createHiddenInput } from './elements.js';
+import { createHiddenInput } from "./elements.js";
 
 // Devuelve el token CSRF desde el <meta>
 export function getCSRFToken() {

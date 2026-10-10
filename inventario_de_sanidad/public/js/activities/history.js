@@ -2,7 +2,8 @@ import { PaginatedDataPresenter } from "../components/paginatedDataPresenter.js"
 import { PaginatedDataRenderer } from "../utils/bases.js";
 import { SearchBarTool } from "../components/searchBarTool.js";
 import { hideLoader } from "../components/loader.js";
-import { createTextTD, createLabeledTextContainer } from '../utils/elements.js';
+import { createLabeledTextContainer } from "../utils/elements.js";
+import { createTextTd} from "../utils/fillable-tables.js";
 
 class ActivitiesPanelViewRenderer extends PaginatedDataRenderer {
     #isTeacher;
@@ -104,8 +105,8 @@ class ActivitiesPanelViewRenderer extends PaginatedDataRenderer {
         materials.forEach(material => {
             const row = document.createElement("tr");
 
-            row.appendChild(createTextTD(material.name));
-            row.appendChild(createTextTD(material.units));
+            row.appendChild(createTextTd(material.name));
+            row.appendChild(createTextTd(material.units));
 
             tbody.appendChild(row);
         });

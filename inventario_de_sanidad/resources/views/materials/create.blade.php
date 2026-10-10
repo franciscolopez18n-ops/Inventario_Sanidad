@@ -5,6 +5,7 @@
 @push('styles')
     
 <link rel="stylesheet" href="{{ asset('css/components/loader.css') }}">
+<link rel="stylesheet" href="{{ asset('css/components/confirm-dialog.css') }}">
 <link rel="stylesheet" href="{{ asset('css/components/fillable-table.css') }}">
 <link rel="stylesheet" href="{{ asset('css/components/view-toggle.css') }}">
 <link rel="stylesheet" href="{{ asset('css/components/image-preview.css') }}">
@@ -128,6 +129,11 @@
 
 {{-- Lote --}}
 <div class="batch-section hidden">
+    <x-confirm-dialog
+        :id="'delete-cd'"
+        :message="'¿Estás seguro de que deseas eliminar el material seleccionado?'"
+    />
+
     <h4 class="batch-title">Lote de materiales</h4>
     
     <x-fillable-table

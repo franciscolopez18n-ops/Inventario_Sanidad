@@ -3,16 +3,16 @@ import { PaginatedDataRenderer } from "../../utils/bases.js";
 import { SearchBarTool } from "../../components/searchBarTool.js";
 import { showConfirmDialog } from "../../components/confirmDialog.js";
 import { hideLoader } from "../../components/loader.js";
-import { createTextTD } from '../../utils/elements.js';
-import { createHiddenCSRFTokenInput } from '../../utils/csrf.js';
+import { createTextTd, createActionButtonTd } from "../../utils/fillable-tables.js";
+import { createHiddenCSRFTokenInput } from "../../utils/csrf.js";
 
 class UsersManagementTableRenderer extends PaginatedDataRenderer {
     render(pageData, limit) {
-        let wrapper = document.getElementById("users-management-table-wrapper");
+        const wrapper = document.getElementById("users-management-table-wrapper");
         wrapper.style.setProperty("--rows-per-page", limit);
 
         // Resetea la tabla
-        let tbody = document.querySelector("#users-management-table tbody.dynamic-rows");
+        const tbody = document.querySelector("#users-management-table tbody.dynamic-rows");
         tbody.replaceChildren();
 
         // La reconstruye
@@ -20,56 +20,30 @@ class UsersManagementTableRenderer extends PaginatedDataRenderer {
     }
 
     #buildRow(user) {
-        let tr = document.createElement("tr");
+        const tr = document.createElement("tr");
 
-        // Celdas
-        tr.appendChild(createTextTD(user.first_name));
-        tr.appendChild(createTextTD(user.last_name));
-        tr.appendChild(createTextTD(user.email));
-        tr.appendChild(createTextTD(user.user_type));
-        tr.appendChild(createTextTD(user.created_at));
-
-        // Botón Generar contraseña
-        let changePasswordTd = document.createElement("td");
-
-        let changePasswordBtn = document.createElement("button");
-        changePasswordBtn.type = "submit";
-        changePasswordBtn.classList = "btn btn-primary";
-        changePasswordBtn.textContent = "Generar contraseña";
-
-        let changePasswordForm = document.createElement("form");
-        changePasswordForm.method = "POST";
-        changePasswordForm.action = `/users/manage/change-password/${user.user_id}`;
-
-        changePasswordForm.appendChild(createHiddenCSRFTokenInput());
-        changePasswordForm.appendChild(changePasswordBtn);
-        changePasswordForm.addEventListener("submit", event => showConfirmDialog(event, "change-password-cd"));
-        changePasswordTd.appendChild(changePasswordForm);
-        tr.appendChild(changePasswordTd);
-
-        // Botón Eliminar
-        let deleteTd = document.createElement("td");
-
-        // No muestra el botón para el usuario logueado
-        if ((user.first_name + " " + user.last_name) !== document.getElementsByClassName("user-name")[0].textContent) {
-            let deleteBtn = document.createElement("button");
-            deleteBtn.type = "submit";
-            deleteBtn.style.cssText = "background: none; border: none; cursor: pointer;";
-            let trashIcon = document.createElement("i");
-            trashIcon.classList.add("fa", "fa-trash", "interactive-table-icon");
-            deleteBtn.appendChild(trashIcon);
-
-            let deleteForm = document.createElement("form");
-            deleteForm.method = "POST";
-            deleteForm.action = `/users/manage/destroy/${user.user_id}`;
-
-            deleteForm.appendChild(createHiddenCSRFTokenInput());
-            deleteForm.appendChild(deleteBtn);
-            deleteForm.addEventListener("submit", event => showConfirmDialog(event, "delete-cd"));
-            deleteTd.appendChild(deleteForm);
-        }
-
-        tr.appendChild(deleteTd);
+        tr.appendChild(createTextTd(user.first_name));
+        tr.appendChild(createTextTd(user.last_name));
+        tr.appendChild(createTextTd(user.email));
+        tr.appendChild(createTextTd(user.user_type));
+        tr.appendChild(createTextTd(user.created_at));
+        tr.appendChild(createActionButtonTd({
+            action: `/users/manage/change-password/${user.user_id}`,
+            type: "text",
+            content: "Generar contraseña",
+            dialogId: "change-password-cd",
+            className: "btn-primary"
+        }));
+        tr.appendChild(
+            ((user.first_name + " " + user.last_name) !== document.getElementsByClassName("user-name")[0].textContent)
+                ? createActionButtonTd({
+                    action: `/users/manage/destroy/${user.user_id}`,
+                    type: "icon",
+                    content: "fa-trash",
+                    dialogId: "delete-cd"
+                })
+                : document.createElement("td")
+        );
 
         return tr;
     }
