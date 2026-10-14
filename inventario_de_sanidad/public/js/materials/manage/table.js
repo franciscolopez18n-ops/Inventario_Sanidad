@@ -6,6 +6,13 @@ import { createTextTd, createPublicImageTd, createLinkButtonTd, createActionButt
 import { createHiddenCSRFTokenInput } from "../../utils/csrf.js";
 
 class MaterialsManagementTableRenderer extends PaginatedDataRenderer {
+    #isAdmin;
+
+    constructor(isAdmin) {
+        super();
+        this.#isAdmin = isAdmin;
+    }
+
     render(pageData, limit) {
         const wrapper = document.getElementById("materials-management-table-wrapper");
         wrapper.style.setProperty("--rows-per-page", limit);
@@ -29,19 +36,21 @@ class MaterialsManagementTableRenderer extends PaginatedDataRenderer {
             type: "icon",
             content: "fa-pencil" 
         }));
-        tr.appendChild(createActionButtonTd({
-            action: `/materials/manage/destroy/${material.material_id}`,
-            type: "icon",
-            content: "fa-trash",
-            dialogId: "delete-cd"
-        }));
+        if (this.#isAdmin) {
+            tr.appendChild(createActionButtonTd({
+                action: `/materials/manage/destroy/${material.material_id}`,
+                type: "icon",
+                content: "fa-trash",
+                dialogId: "delete-cd"
+            }));
+        }
 
         return tr;
     }
 }
 
 const table = new PaginatedDataPresenter({
-    renderers: [new MaterialsManagementTableRenderer()],
+    renderers: [new MaterialsManagementTableRenderer(document.querySelector(".user-role").textContent.includes("admin"))],
     dataTool: new SearchBarTool()
 });
 table.loadFrom("materials-data");

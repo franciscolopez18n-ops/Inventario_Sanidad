@@ -155,10 +155,10 @@
                 <!-- Menú para Docentes -->
                 @if(Auth::user()->user_type === 'teacher')
                     <li>
-                        <a href="{{ route('storages.manage.index') }}"
-                        class="{{ request()->routeIs('storages.manage.index') ? 'active' : '' }}">
+                        <a href="{{ route('materials.manage.index') }}"
+                        class="{{ request()->routeIs('materials.manage.index') ? 'active' : '' }}">
                             <i class="fa-solid fa-box-archive"></i>
-                            <span class="link-text">Gestionar almacenamiento</span>
+                            <span class="link-text">Gestionar material</span>
                         </a>
                     </li>
                     <li>

@@ -1,15 +1,15 @@
 @extends('layout.app')
 
-@section('title', 'Editar Material')
+@section('title', 'Editar material')
 
 @push('styles') 
     <link rel="stylesheet" href="{{ asset('css/components/image-preview.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/materials/forms.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/materials/materials.css') }}">
     <link rel="stylesheet" href="{{ asset('css/materials/manage/edit.css') }}">
 @endpush
 
 @section('content')
-<h1>Editar Material</h1>
+<h1>Editar material</h1>
 
 <form
     action="{{ route('materials.manage.update', $material->material_id) }}" 
@@ -45,13 +45,13 @@
     <div class="storage-grid">
         @foreach ($storages as $storage)
             <fieldset>
-                <legend>{{ display_name($storage->storage, DisplayCategory::STORAGE) }}</legend>
-
                 @php
                     $useRecord = $storage->storageUse;
                     $reserveRecord = $storage->storageReserve;
                     $s = $storage->storage;
                 @endphp
+                
+                <legend>{{ display_name($s, DisplayCategory::STORAGE) }}</legend>
 
                 <div class="storage-block">
                     <!-- USO -->

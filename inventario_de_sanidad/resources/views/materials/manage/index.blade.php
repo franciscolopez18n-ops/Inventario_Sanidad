@@ -36,7 +36,7 @@
     :wrapper-id="'materials-management-table-wrapper'"
     :table-id="'materials-management-table'"
     :columns="['Nombre', 'Descripción', 'Imagen']"
-    :num-actions="2"
+    :num-actions="auth()->user()->user_type === 'admin' ? 2 : 1"
 />
 <x-pagination />
 

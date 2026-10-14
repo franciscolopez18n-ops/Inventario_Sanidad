@@ -47,8 +47,7 @@ class UsersManagementController extends Controller {
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request) {
-        // Generar contraseña aleatoria de 8 caracteres
-        $password = self::generateRandomPassword(8);
+        $password = $this->generateRandomPassword(8);
 
 
         // Validar los datos del formulario
@@ -82,7 +81,7 @@ class UsersManagementController extends Controller {
         return back()->withPush(AlertType::SUCCESS, 'Usuario ' . $credentials["nombre"] . ' ' . $credentials["apellidos"] . ' creado con éxito.');
     }
 
-    private static function generateRandomPassword($length) {
+    private function generateRandomPassword($length) {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+[]{}|;:,.<>?';
         $password = '';
         for ($i = 0, $max = strlen($characters) - 1; $i < $length; $i++) {
@@ -107,7 +106,7 @@ class UsersManagementController extends Controller {
     }
 
     public function changePassword(User $user) {
-        $password = self::generateRandomPassword(8);
+        $password = $this->generateRandomPassword(8);
 
         $user->hashed_password = Hash::make($password);
         $user->first_log = 0;
