@@ -1,92 +1,55 @@
 @extends('layout.app')
 
-@section('title', 'Control de usuarios')
+@section('head-extra')
+    <x-csrf-meta />
+@endsection
+
+@section('title', 'Gestión de usuarios')
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/users/users.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/components/paginated-table.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/loader.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/confirm-dialog.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/search-bar-tool.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/fillable-table.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/pagination.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/users/manage.css') }}">
 @endpush
 
 @section('content')
-<meta name="csrf-token" content="{{ csrf_token() }}">
 
-<div id="loader-overlay">
-    <div class="spinner"></div>
-</div>
-<div class="">
-    <dialog id="confirmacion">
-        <p>¿Está seguro de que desea eliminar el usuario seleccionado?</p>
-        <input type="button" class="btn btn-success" value="Aceptar" id="aceptar">
-        <input type="button" class="btn btn-danger" value="Cancelar" id="cancelar">
-    </dialog>
-    <dialog id="confirmacionContra">
-        <p>¿Está seguro de que desea generar una nueva contraseña?</p>
-        <input type="button" class="btn btn-success" value="Aceptar" id="aceptarContra">
-        <input type="button" class="btn btn-danger" value="Cancelar" id="cancelarContra">
-    </dialog>
+<x-loader />
 
-    <h1>Gestion de usuarios</h1>
+<x-confirm-dialog
+    :id="'delete-cd'"
+    :message="'¿Estás seguro de que deseas eliminar el usuario seleccionado?'"
+/>
+<x-confirm-dialog
+    :id="'change-password-cd'"
+    :message="'¿Estás seguro de que deseas generar una nueva contraseña?'"
+/>
 
-    <form class="search-form">
+<h1>Gestión de usuarios</h1>
 
-        <!-- Buscador -->
-        <div class="search-container">
-            <input type="text" id="buscarId" placeholder="Buscar..." autocomplete="off">
-            <div class="dropdown-container">
-                <button type="button" id="filterToggle"><i class="fa-solid fa-filter table-icon-interactive"></i></button>
-                <div id="filterOptions" class="filter-options fade-in">
-                    <label><input type="radio" name="filtro" value="1" checked>Nombre</label>
-                    <label><input type="radio" name="filtro" value="2">Apellidos</label>
-                    <label><input type="radio" name="filtro" value="3">Email</label>
-                    <label><input type="radio" name="filtro" value="4">Tipo de usuario</label>
-                    <label><input type="radio" name="filtro" value="5">Fecha de alta</label>
-                </div>
-            </div>
-        </div>
-    </form>
+<x-search-bar-tool
+    :options="[
+        ['label' => 'Nombre', 'path' => 'first_name'],
+        ['label' => 'Apellidos', 'path' => 'last_name'],
+        ['label' => 'Email', 'path' => 'email'],
+        ['label' => 'Tipo de usuario', 'path' => 'user_type'],
+        ['label' => 'Fecha de alta', 'path' => 'created_at'],
+    ]"
+/>
+<x-fillable-table
+    :wrapper-id="'users-management-table-wrapper'"
+    :table-id="'users-management-table'"
+    :columns="['Nombre', 'Apellidos', 'Email', 'T. usuario', 'Fecha de alta']"
+    :num-actions="2"
+/>
+<x-pagination />
 
-    <div class="table-wrapper">
-        <table id="tabla-usuarios" class="table">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Apellidos</th>
-                    <th>Email</th>
-                    <th>Tipo de usuario</th>
-                    <th>Fecha de alta</th>
-                    <th colspan="2"></th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-        </div>
-        <!-- Paginación -->
-        <div id="paginacion" class="pagination-controls">
-            <div class="pagination-select">
-                <label for="regsPorPagina"></label>
-                <select id="regsPorPagina">
-                    <option value="5" selected>5</option>
-                    <option value="10">10</option>
-                    <option value="25">25</option>
-                    <option value="50">50</option>
-                </select>
-            </div>
-
-            <div class="pagination-buttons">
-                <!-- Botones de paginación se insertarán aquí -->
-            </div>
-        
-    </div>
-</div>
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/components/loader.js') }}"></script>
-    <script src="{{ asset('js/components/confirmDialog.js') }}"></script>
-    <script src="{{ asset('js/users/manage/dataLoad.js') }}"></script>
-    <script src="{{ asset('js/components/paginatedTable.js') }}"></script>
-    <script src="{{ asset('js/users/manage/table.js') }}"></script>
-    <script src="{{ asset('js/components/filterToggle.js') }}"></script> 
+    <script type="application/json" id="users-data">@json($users)</script>
+    <script type="module" src="{{ asset('js/users/manage/table.js') }}"></script>
 @endpush

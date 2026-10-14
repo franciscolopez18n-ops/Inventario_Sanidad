@@ -1,0 +1,9 @@
+#modifications-history-table .col-1 { width: 14em; }    /* Nombre */
+#modifications-history-table .col-2 { width: 16em; }    /* Apellidos */
+#modifications-history-table .col-3 { width: 24em; }    /* Email */
+#modifications-history-table .col-4 { width: 9em; }     /* T. usuario */
+#modifications-history-table .col-5 { width: 18em; }    /* Material */
+#modifications-history-table .col-6 { width: 13.5em; }  /* Uds. modificadas */
+#modifications-history-table .col-7 { width: 10.5em; }  /* Localización */
+#modifications-history-table .col-8 { width: 14em; }    /* T. almacenamiento */
+#modifications-history-table .col-9 { width: 16.5em; }  /* Fecha de modificación */

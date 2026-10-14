@@ -5,7 +5,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\UsersManagementController;
 use App\Http\Controllers\MaterialManagementController;
-use App\Http\Controllers\TeacherStorageController;
 use App\Http\Controllers\MaterialHistoryController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\MaterialQrController;
@@ -30,7 +29,6 @@ Route::middleware('auth')->group(function () {
     Route::prefix('welcome')->group(function () {
         Route::get('/', [WelcomeController::class, 'index'])->name('welcome');
         Route::post('/', [WelcomeController::class, 'changePasswordFirstLog'])->name('welcome.change-password');
-        Route::get('/data-user', [WelcomeController::class, 'dataUser']);
     });
 
     /*
@@ -49,9 +47,8 @@ Route::middleware('auth')->group(function () {
             // Gestión de usuarios
             Route::prefix('manage')->group(function () {
                 Route::get('/', [UsersManagementController::class, 'manageIndex'])->name('users.manage.index');
-                Route::get('/data-users', [UsersManagementController::class, 'dataUsers']);
-                Route::post('/destroy', [UsersManagementController::class, 'destroy'])->name('users.manage.destroy');
-                Route::post('/change-password', [UsersManagementController::class, 'changePassword'])->name('users.manage.change-password');
+                Route::post('/destroy/{user}', [UsersManagementController::class, 'destroy'])->name('users.manage.destroy');
+                Route::post('/change-password/{user}', [UsersManagementController::class, 'changePassword'])->name('users.manage.change-password');
             });
         });
 
@@ -64,10 +61,6 @@ Route::middleware('auth')->group(function () {
 
             // Gestión de materiales
             Route::prefix('manage')->group(function () {
-                Route::get('/', [MaterialManagementController::class, 'manageIndex'])->name('materials.manage.index');
-                Route::get('/data-materials', [MaterialManagementController::class, 'dataMaterials']);
-                Route::get('/edit/{material}', [MaterialManagementController::class, 'edit'])->name('materials.manage.edit');
-                Route::get('/edit/{material}/storage/{storage}', [MaterialManagementController::class, 'editQr'])->name('materials.manage.edit-qr');
                 Route::post('/update/{material}', [MaterialManagementController::class, 'update'])->name('materials.manage.update');
                 Route::post('/destroy/{material}', [MaterialManagementController::class, 'destroy'])->name('materials.manage.destroy');
             });
@@ -76,7 +69,6 @@ Route::middleware('auth')->group(function () {
             Route::prefix('history')->group(function () {
                 Route::get('/reserve', [MaterialHistoryController::class, 'reserveSummary'])->name('materials.history.reserve');
                 Route::get('/modifications', [MaterialHistoryController::class, 'modifications'])->name('materials.history.modifications');
-                Route::get('/data-modifications', [MaterialHistoryController::class, 'dataModifications']);
             });
 
             // Códigos QR
@@ -95,20 +87,10 @@ Route::middleware('auth')->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::middleware('check.role:teacher')->group(function () {
-
-        // Almacenamiento docente
-        Route::prefix('storages')->group(function () {
+        Route::prefix('materials')->group(function () {
             Route::prefix('manage')->group(function () {
-                Route::get('/', [TeacherStorageController::class, 'manageIndex'])->name('storages.manage.index');
-                Route::get('/data-use-storage', [TeacherStorageController::class, 'dataUseStorage']);
-                Route::get('/{material}/{currentLocation}/subtract', [TeacherStorageController::class, 'subtractForm'])->name('storages.manage.subtract.form');
-                Route::post('/{material}/{currentLocation}/subtract', [TeacherStorageController::class, 'subtract'])->name('storages.manage.subtract');
+                Route::post('/subtract/{material}', [MaterialManagementController::class, 'subtract'])->name('materials.manage.subtract');
             });
-        });
-
-        // Actividades
-        Route::prefix('activities')->group(function () {
-            Route::get('/data-teacher-activities', [ActivityController::class, 'dataTeacherActivities']);
         });
     });
 
@@ -123,7 +105,6 @@ Route::middleware('auth')->group(function () {
         Route::prefix('activities')->group(function () {
             Route::get('/create', [ActivityController::class, 'create'])->name('activities.create');
             Route::post('/store', [ActivityController::class, 'store'])->name('activities.store');
-            Route::get('/data-student-activities', [ActivityController::class, 'dataStudentActivities']);
         });
     });
 
@@ -136,7 +117,19 @@ Route::middleware('auth')->group(function () {
     // Actividades compartidas
     Route::middleware('check.role:student,teacher')->group(function () {
         Route::prefix('activities')->group(function() {
-            Route::get('/history', [ActivityController::class, 'activitiesHistory'])->name('activities.history');
+            Route::get('/history', [ActivityController::class, 'history'])->name('activities.history');
+        });
+    });
+
+    // Gestión de materiales compartido
+    Route::middleware('check.role:admin,teacher')->group(function () {
+        Route::prefix('materials')->group(function () {
+            Route::prefix('manage')->group(function () {
+                Route::get('/', [MaterialManagementController::class, 'manageIndex'])->name('materials.manage.index');
+                Route::get('/edit/{material}', [MaterialManagementController::class, 'edit'])->name('materials.manage.edit');
+                Route::get('/edit/{material}/storage/{storage}', [MaterialManagementController::class, 'editQr'])->name('materials.manage.edit-qr');
+                Route::post('/subtract/{material}', [MaterialManagementController::class, 'subtract'])->name('materials.manage.subtract');
+            });
         });
     });
 
@@ -144,7 +137,6 @@ Route::middleware('auth')->group(function () {
         // Sumario de uso compartido
         Route::prefix('history')->group(function () {
             Route::get('/use', [MaterialHistoryController::class, 'useSummary'])->name('materials.history.use');
-            Route::get('/data-summary', [MaterialHistoryController::class, 'dataSummary']);
         });
     });
 });

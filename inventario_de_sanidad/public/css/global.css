@@ -36,9 +36,7 @@
 
   --font-principal: 'Calibri', sans-serif;
 }
-.table td {
-  word-break: break-all;
-}
+
 .darkmode {
   --primary-100: #b3c7dc;
   --primary-200: #6ca0d1;
@@ -55,6 +53,18 @@
   --bg-200: #1a1f27;
   --bg-300: #222a35;
   --bg-400: #2d3744;
+}
+
+#theme-switch i:last-child {
+  display: none;
+}
+
+.darkmode #theme-switch i:first-child {
+  display: none;
+}
+
+.darkmode #theme-switch i:last-child {
+  display: block;
 }
 
 * {
@@ -109,7 +119,7 @@ legend {
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 /* === INPUTS Y CAMPOS DE TEXTO === */
@@ -203,21 +213,23 @@ a {
 
 /* === BOTÓN PRINCIPAL === */
 .btn {
-  padding: 10px 25px;
+  padding: 0.7em 1.8em;
   background-color: var(--primary-600);
   color: var(--text-300);
   border: none;
   border-radius: 0.5rem;
   font-weight: 600;
   letter-spacing: 0.025em;
-  font-size: 0.875rem;
+  font-size: clamp(0.75rem, 1.5vw, 0.875rem);
+  white-space: nowrap;
   cursor: pointer;
 
-  transition: background-color 200ms ease-in, color 80ms ease-in;
-  -webkit-transition: background-color 200ms ease-in, color 80ms ease-in;
-  -moz-transition: background-color 200ms ease-in, color 80ms ease-in;
-  -o-transition: background-color 200ms ease-in, color 80ms ease-in;
+  transition: background-color 200ms ease-in, color 80ms ease-in, border-color 200ms ease-in;
+  -webkit-transition: background-color 200ms ease-in, color 80ms ease-in, border-color 200ms ease-in;
+  -moz-transition: background-color 200ms ease-in, color 80ms ease-in, border-color 200ms ease-in;
+  -o-transition: background-color 200ms ease-in, color 80ms ease-in, border-color 200ms ease-in;
 }
+
 .btn:hover {
   background-color: var(--primary-500);
 }
@@ -239,6 +251,36 @@ a {
 .btn-outline:hover {
   background-color: var(--primary-300);
   color: var(--text-300);
+}
+
+/* === BOTÓN DE ICONO === */
+.btn-icon {
+  --icon-btn-size: 40px;
+
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  flex: none;
+  width: var(--icon-btn-size);
+  height: var(--icon-btn-size);
+  padding: 0;
+  background-color: var(--primary-600);
+  touch-action: manipulation;
+}
+
+.btn-icon i {
+  font-size: calc(var(--icon-btn-size) * 0.4);
+  color: var(--primary-300);
+}
+
+.btn-icon:hover {
+  color: var(--primary-500);
+  background-color: var(--primary-300);
+}
+
+.btn-icon:hover i {
+  color: var(--primary-600);
 }
 
 /* === BOTÓN DE CONFIRMACIÓN === */
@@ -329,7 +371,12 @@ a {
   html {
     font-size: 80%;
   }
+
+  .btn-icon {
+    --icon-btn-size: 44px;
+  }
 }
+
 @media (min-width: 769px) and (max-width: 1024px) {
   html {
     font-size: 90%;

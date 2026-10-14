@@ -1,0 +1,9 @@
+#materials-management-table .col-1 { width: 10em; }  /* Nombre */
+#materials-management-table .col-2 { width: 20em; }  /* Descripción */
+#materials-management-table .col-3 {                 /* Imagen */
+    width: max(5.5em, calc(var(--row-content-height) + 2 * var(--cell-px)));
+}
+#materials-management-table .col-4,
+#materials-management-table .col-5 {
+    width: calc(var(--icon-hit) + 2 * var(--cell-px));
+}

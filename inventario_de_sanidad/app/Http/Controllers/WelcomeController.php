@@ -19,15 +19,6 @@ class WelcomeController extends Controller {
     }
 
     /**
-     * Devuelve los datos del usuario.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function dataUser() {
-        return response()->json(Auth::user());
-    }
-
-    /**
      * Cambia la contraseña del usuario en su primer inicio de sesión.
      *
      * @param \Illuminate\Http\Request $request
@@ -35,24 +26,24 @@ class WelcomeController extends Controller {
      */
     public function changePasswordFirstLog(Request $request) {
         $request->validate([
-            'newPassword' => [
+            'new_password' => [
                 'required',
                 'min:6',
                 'regex:/[!@#$%^&*(),.?":{}|<>]/'
             ],
-            'confirmPassword' => 'required|same:newPassword',
+            'confirm_password' => 'required|same:new_password',
         ], [
-            'newPassword.required' => 'La nueva contraseña es obligatoria.',
-            'newPassword.min' => 'La contraseña debe tener al menos 6 caracteres.',
-            'newPassword.regex' => 'La contraseña debe contener al menos un carácter especial.',
-            'confirmPassword.required' => 'La confirmación es obligatoria.',
-            'confirmPassword.same' => 'Las contraseñas no coinciden.',
+            'new_password.required' => 'La nueva contraseña es obligatoria.',
+            'new_password.min' => 'La contraseña debe tener al menos 6 caracteres.',
+            'new_password.regex' => 'La contraseña debe contener al menos un carácter especial.',
+            'confirm_password.required' => 'La confirmación es obligatoria.',
+            'confirm_password.same' => 'Las contraseñas no coinciden.',
         ]);
 
         $user = User::find(Auth::id());
 
         // Actualizar contraseña y marcar primer inicio de sesión como completado
-        $user->hashed_password = Hash::make($request->newPassword);
+        $user->hashed_password = Hash::make($request->new_password);
         $user->first_log = 1;
         $user->save();
 

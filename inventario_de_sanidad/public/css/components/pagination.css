@@ -1,0 +1,136 @@
+.pagination-controls {
+    --pg-gap: 1rem;
+    --pg-space: 1rem;
+    --pg-btn: 32px;
+
+    display: flex;
+    flex-wrap: wrap; /* red de seguridad: si no cabe, bajan los botones, no el resumen */
+    justify-content: center;
+    align-items: center;
+    gap: var(--pg-gap);
+
+    padding: var(--pg-space);
+    margin: var(--pg-space);
+
+    font-size: 0.9rem;
+    color: var(--text-100);
+    background-color: var(--bg-100);
+}
+
+.pagination-select select {
+    padding: 0.5rem 1rem;
+    min-width: 5rem;
+}
+
+.pagination-select select:hover,
+.pagination-select select:focus {
+    border-color: var(--primary-400);
+    outline: none;
+}
+
+.pagination-summary {
+    min-width: 20ch;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--primary-100);
+    text-align: right;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.pagination-buttons {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pagination-buttons button {
+    flex: none; /* evita que se aplasten y dejen de ser círculos */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: var(--pg-btn);
+    height: var(--pg-btn);
+
+    border-radius: 50%;
+    border: 1.5px solid var(--primary-300);
+    background-color: var(--bg-200);
+    color: var(--primary-100);
+    font-weight: 700;
+    cursor: pointer;
+    touch-action: manipulation; /* quita el retardo de toque y el zoom por doble toque */
+
+    -webkit-transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    -moz-transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    -o-transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+.pagination-buttons button:hover:not(:disabled) {
+    background-color: var(--primary-300);
+    color: var(--text-300);
+    border-color: var(--primary-400);
+}
+
+.pagination-buttons button:disabled {
+    border-color: var(--bg-300);
+    color: var(--bg-300);
+    cursor: default;
+}
+
+/* Tablet */
+@media (max-width: 992px) {
+    .pagination-controls {
+        --pg-gap: 0.75rem;
+        --pg-space: 0.75rem;
+        --pg-btn: 36px;
+    }
+}
+
+/* Móvil */
+@media (max-width: 768px) {
+    .pagination-controls {
+        --pg-gap: 0.5rem;
+        --pg-space: 0.5rem;
+        --pg-btn: 40px;
+    }
+
+    .pagination-buttons {
+        gap: 0.35rem;
+    }
+}
+
+/* Móvil pequeño */
+@media (max-width: 400px) {
+    .pagination-controls {
+        --pg-gap: 0.4rem;
+        --pg-space: 0.4rem;
+        font-size: 0.85rem;
+    }
+
+    .pagination-select select {
+        padding: 0.35rem 0.4rem;
+        min-width: 3.5rem;
+    }
+
+    .pagination-summary {
+        min-width: 18ch;
+        font-size: 0.75rem;
+    }
+
+    .pagination-buttons {
+        gap: 0.25rem;
+    }
+
+    .pagination-buttons button {
+        font-size: 0.9rem;
+    }
+}

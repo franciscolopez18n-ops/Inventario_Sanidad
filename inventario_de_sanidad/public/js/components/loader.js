@@ -1,4 +1,4 @@
-function hideLoader() {
+export function hideLoader() {
     setTimeout(() => {
         const loader = document.getElementById("loader-overlay");
         if (!loader) return;

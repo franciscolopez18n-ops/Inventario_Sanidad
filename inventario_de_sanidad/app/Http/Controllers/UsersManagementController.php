@@ -28,17 +28,17 @@ class UsersManagementController extends Controller {
      * @return \Illuminate\View\View
      */
     public function manageIndex() {
-        return view('users.manage.index',);
+        return view('users.manage.index', [
+            'users' => User::select(
+                'user_id',
+                'first_name',
+                'last_name',
+                'email',
+                'user_type',
+                'created_at'
+            )->latest()->get()
+        ]);
     }
-
-    /**
-     * Devuelve todos los usuarios en formato JSON ordenados por fecha de creación descendente.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function dataUsers() {
-        return response()->json(User::orderBy('created_at','desc')->get());
-    } 
 
     /**
      * Crea un nuevo usuario validando los datos y generando una contraseña aleatoria.
@@ -47,8 +47,7 @@ class UsersManagementController extends Controller {
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request) {
-        // Generar contraseña aleatoria de 8 caracteres
-        $password = self::generateRandomPassword(8);
+        $password = $this->generateRandomPassword(8);
 
 
         // Validar los datos del formulario
@@ -82,7 +81,7 @@ class UsersManagementController extends Controller {
         return back()->withPush(AlertType::SUCCESS, 'Usuario ' . $credentials["nombre"] . ' ' . $credentials["apellidos"] . ' creado con éxito.');
     }
 
-    private static function generateRandomPassword($length) {
+    private function generateRandomPassword($length) {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+[]{}|;:,.<>?';
         $password = '';
         for ($i = 0, $max = strlen($characters) - 1; $i < $length; $i++) {
@@ -92,30 +91,28 @@ class UsersManagementController extends Controller {
         return $password;
     }
     
-    /**
-     * Elimina un usuario basado en su ID.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function destroy(Request $request) {
-        $user = $request["user_id"];
+    public function destroy(User $user) {
+        if ($user->user_id === auth()->id()) { // Comprobación de seguridad por si el frontend fue manipulado
+            return back()->withPush(AlertType::ERROR, 'No puedes dar de baja a tu propio usuario.');
+        }
 
-        User::where('user_id', $user)->delete();
+        try {
+            $user->delete();
+            return back()->withPush(AlertType::SUCCESS, 'Usuario dado de baja con éxito.');
 
-        return back()->withPush(AlertType::SUCCESS, 'Usuario dado de baja con éxito.');
+        } catch (\Exception $e) {
+            return back()->withPush(AlertType::ERROR, 'Error al borrar: ' . $e->getMessage());
+        }
     }
 
-    public function changePassword(Request $request) {
-        $user = $request["user_id"];
-        $password = self::generateRandomPassword(8);
-        $userInfo = User::where('user_id', $user)->first();
+    public function changePassword(User $user) {
+        $password = $this->generateRandomPassword(8);
 
-        $userInfo->hashed_password = Hash::make($password);
-        $userInfo->first_log = 0;
-        $userInfo->save();
+        $user->hashed_password = Hash::make($password);
+        $user->first_log = 0;
+        $user->save();
 
-        Mail::to($userInfo->email)->send(new PasswordChanged($password,$userInfo->first_name,$userInfo->last_name));
+        Mail::to($user->email)->send(new PasswordChanged($password, $user->first_name, $user->last_name));
 
         return back()->withPush(AlertType::SUCCESS, 'Contraseña cambiada con éxito y enviada por correo al usuario.');
     }

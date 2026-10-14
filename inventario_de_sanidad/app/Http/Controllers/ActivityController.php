@@ -26,40 +26,57 @@ class ActivityController extends Controller {
     }
 
     /**
-     * Devuelve todas las actividades de un alumno en formato JSON ordenados por fecha de creación descendente.
-     * @return mixed|\Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
-     */
-    public function dataStudentActivities() {
-        $activities = User::find(Auth::id())->activities()
-            ->with('materials', 'teacher')
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        return response()->json($activities);
-    }
-
-    /**
-     * Devuelve todas las actividades asignadas a un profesor en formato JSON ordenados por fecha de creación descendente.
-     * @return mixed|\Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
-     */
-    public function dataTeacherActivities() {
-        $activities = Activity::with('materials', 'teacher', 'user')
-            ->where('teacher_id', Auth::id())
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        return response()->json($activities);
-    }
-
-    /**
      * Muestra el historial de actividades del usuario autenticado.
      * @return mixed|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function activitiesHistory() {
-        $activities = User::find(Auth::id())->activities()
-            ->with('materials')
-            ->orderBy('created_at', 'desc')
+    public function history() {
+        $user = Auth::user();
+        $isTeacher = $user->user_type === 'teacher';
+        $partnerRelation = $isTeacher ? 'user' : 'teacher';
+
+        $activities = $user->{$isTeacher ? 'teacherActivities' : 'studentActivities'}()
+            ->select('activity_id', 'user_id', 'teacher_id', 'created_at', 'title')
+            ->with([
+                'materials' => function ($query) {
+                    $query->select([
+                        'materials.material_id',
+                        'materials.name'
+                    ]);
+                },
+                $partnerRelation => function ($query) {
+                    $query->select([
+                        'user_id',
+                        'first_name',
+                        'last_name',
+                    ]);
+                },
+            ])
+            ->latest()
             ->get();
+        
+        $activities->each(function ($activity) use ($partnerRelation) {
+            $partner = $activity->getRelation($partnerRelation);
+
+            $partner->append('full_name');
+            $partner->makeHidden(['user_id', 'first_name', 'last_name']);
+
+            $activity->setRelation('partner', $partner);
+            $activity->unsetRelation($partnerRelation);
+
+            $activity->setRelation(
+                'materials',
+                $activity->materials->map(function ($material) {
+                    return [
+                        'name' => $material->name,
+                        'units' => $material->pivot->units,
+                    ];
+                })
+            );
+
+            $activity->makeHidden(['user_id', 'teacher_id']);
+        });
+
+        // dd($activities->toJson(JSON_PRETTY_PRINT));
 
         return view('activities.history')->with('activities', $activities);
     }
@@ -84,11 +101,6 @@ class ActivityController extends Controller {
         // Convierte la cadena JSON del lote a array asociativo.
         // Los métodos de Laravel esperan cookies encriptadas por ellos mismos, por lo que hay que leerla en crudo
         $batch = json_decode(urldecode($_COOKIE['activityFormBatch'] ?? '[]'), true);
-
-        // Si no hay datos válidos en el lote, redirige con mensaje de error.
-        if (empty($batch)) {
-            return back()->withInput()->withPush(AlertType::ERROR, 'Debe introducir datos al lote.');
-        }
 
         // Comprobaciones de seguridad por si el frontend fue manipulado.
         foreach ($batch as $material) {
@@ -116,7 +128,6 @@ class ActivityController extends Controller {
                 $activity->created_at = $validated['activity_datetime'];
                 $activity->save();
 
-                // Llama a función auxiliar para asociar los materiales a la actividad
                 $this->storeMaterialsActivity($activity, $batch);
             });
 

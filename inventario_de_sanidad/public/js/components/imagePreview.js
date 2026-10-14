@@ -1,4 +1,4 @@
-document.querySelectorAll('input[type="file"].file-upload-input').forEach(input => {
+document.querySelectorAll('input[type="file"].image-upload-input').forEach(input => {
     const elements = getImagePreviewElements(input);
 
     elements.input.addEventListener('change', () => previewImageSelection(
@@ -16,7 +16,7 @@ document.querySelectorAll('input[type="file"].file-upload-input').forEach(input 
     ));
 });
 
-function getImagePreviewElements(input) {
+export function getImagePreviewElements(input) {
     const group = input.parentElement.querySelector('.image-preview-group');
 
     return {
@@ -26,6 +26,30 @@ function getImagePreviewElements(input) {
         removeFlag: group.querySelector('.remove-image-flag'),
         fileNameDisplay: group.querySelector('.file-name-display')
     };
+}
+
+export function previewImageSelection(input, imgPreview, removeFlag, fileNameDisplay) {
+    discardCurrentImage(imgPreview, removeFlag); // borrado de la imagen anterior si el usuario la sustituye directamente
+    
+    const file = input.files[0];
+    const objectURL = URL.createObjectURL(file);
+
+    imgPreview.src = objectURL;
+    imgPreview.alt = `Vista previa de ${file.name}`;
+    fileNameDisplay.textContent = file.name;
+
+    imgPreview.closest('.image-preview-wrapper').classList.remove('hidden');
+}
+
+export function clearImageSelection(input, imgPreview, removeFlag, fileNameDisplay) {
+    discardCurrentImage(imgPreview, removeFlag);
+
+    input.value = "";
+    imgPreview.src = "";
+    imgPreview.alt = "";
+    fileNameDisplay.textContent = "Ningún archivo seleccionado";
+
+    imgPreview.closest('.image-preview-wrapper').classList.add('hidden');
 }
 
 function discardCurrentImage(imgPreview, removeFlag) {
@@ -40,28 +64,4 @@ function discardCurrentImage(imgPreview, removeFlag) {
         //      se trata de una imagen ya almacenada en el servidor
         removeFlag.value = "1";
     }
-}
-
-function previewImageSelection(input, imgPreview, removeFlag, fileNameDisplay) {
-    discardCurrentImage(imgPreview, removeFlag); // borrado de la imagen anterior si el usuario la sustituye directamente
-    
-    const file = input.files[0];
-    const objectURL = URL.createObjectURL(file);
-
-    imgPreview.src = objectURL;
-    imgPreview.alt = `Vista previa de ${file.name}`;
-    fileNameDisplay.textContent = file.name;
-
-    imgPreview.closest('.image-preview-wrapper').classList.remove('hidden');
-}
-
-function clearImageSelection(input, imgPreview, removeFlag, fileNameDisplay) {
-    discardCurrentImage(imgPreview, removeFlag);
-
-    input.value = "";
-    imgPreview.src = "";
-    imgPreview.alt = "";
-    fileNameDisplay.textContent = "Ningún archivo seleccionado";
-
-    imgPreview.closest('.image-preview-wrapper').classList.add('hidden');
 }

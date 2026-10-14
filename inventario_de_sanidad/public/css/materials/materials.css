@@ -1,9 +1,21 @@
-.container {
-    padding: 0 2rem;
+.storage-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr)); /* responsive */
+    gap: 1rem;
 }
 
-.material-form-wrapper {
-    position: relative;
+/* Variante centrada: cada panel ocupa ~1/3 del ancho y el conjunto se centra */
+.storage-grid--centered {
+    --grid-gap: 1rem;
+    --col-min: 420px;
+
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(min(var(--col-min), 100%), calc((100% - 2 * var(--grid-gap)) / 3))
+    );
+    gap: var(--grid-gap);
+    justify-content: center;
+    margin-inline: clamp(0.75rem, 4vw, 3rem);
 }
 
 .material-form {
@@ -16,6 +28,28 @@
 
 .form-group {
     margin-bottom: 1rem;
+}
+
+/* Variante alineada: label a la izquierda, input con ancho definido a la derecha */
+.form-group--inline,
+.form-inline .form-group {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.5rem 1rem;
+    --input-width: 12rem;
+}
+
+.form-group--inline label,
+.form-inline .form-group label {
+    font-weight: 600;
+}
+
+.form-group--inline input,
+.form-inline .form-group input {
+    width: var(--input-width);
+    min-width: 0;
+    box-sizing: border-box;
 }
 
 .form-actions {
@@ -35,38 +69,3 @@
     height: 36px;
     font-size: 0.9rem;
 }
-
-.file-upload {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 1rem;
-}
-
-.file-upload label i {
-    color: #fff;
-    margin-left: 6px;
-}
-
-.file-upload-input {
-    display: none;
-}
-
-/* Tablet */
-@media (max-width: 992px) { }
-
-/* Móvil */
-@media (max-width: 768px) {
-    .container {
-        padding: 0 1rem;
-    }
-
-    .file-upload {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-}
-
-/* Móvil pequeño */
-@media (max-width: 480px) { }

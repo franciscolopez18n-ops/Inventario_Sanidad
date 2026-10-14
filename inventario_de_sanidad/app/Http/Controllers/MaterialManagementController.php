@@ -3,48 +3,68 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 use App\Constants\AlertType;
-use App\Traits\HasStorageOperations;
+use App\Contracts\StockStorage;
+use App\Mail\LowStockAlert;
 use App\Models\Material;
 use App\Models\Storage;
 use App\Models\StorageAssignment;
 use App\Models\StorageUse;
 use App\Models\StorageReserve;
+use App\Models\Modification;
+use App\Models\User;
 use DisplayCategory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage as StorageFacades;
 use Illuminate\Validation\Rule;
 
 class MaterialManagementController extends Controller {
-    use HasStorageOperations;
-    
+    private const EDIT_CONFIG = [
+        'admin' => [
+            'view' => 'materials.manage.edit',
+            'relation' => 'storages'
+        ],
+        'teacher' => [
+            'view' => 'materials.manage.subtract',
+            'relation' => 'storageUse'
+        ]
+    ];
+
     public function manageIndex() {
-        return view('materials.manage.index');
+        return view('materials.manage.index', ['materials' => Material::orderBy('material_id')->get()]);
     }
 
+    // 404 automático por el route model binding
     public function edit(Material $material) {
-        $storages = Storage::where('material_id', $material->material_id)->get();
+        $role = auth()->user()->user_type;
+        $config = self::EDIT_CONFIG[$role];
 
-        return view('materials.manage.edit')
+        return view($config['view'])
             ->with('material', $material)
-            ->with('storages', $storages);
+            ->with('storages', $material->{$config['relation']});
     }
 
+    // 404 por firstOrFail() sobre la relación (también valida que el storage es de este material)
     public function editQr(Material $material, string $storage) {
-        $storageRecord = Storage::where('material_id', $material->material_id)
-            ->where('storage', $storage)
-            ->firstOrFail();
+        $role = auth()->user()->user_type;
+        $config = self::EDIT_CONFIG[$role];
 
-        return view('materials.manage.edit')
+        return view($config['view'])
             ->with('material', $material)
-            ->with('storages', collect([$storageRecord]));
+            ->with('storages', collect([$material
+                ->{$config['relation']}()
+                ->where('storage', $storage)
+                ->firstOrFail()
+            ]));
     }
 
     // Actualiza los datos de un material y/o su almacenamiento
     public function update(Material $material, Request $request) {
-        $storageKeys = array_keys($request->except(['name', 'description', 'image', 'remove_image', '_token']));
+        $storageKeys = array_keys($request->except(['name', 'description', 'image', 'remove_image', '_token', '_method']));
     
         // Reglas y mensajes de validación de la información del material
         $rules = [
@@ -259,6 +279,79 @@ class MaterialManagementController extends Controller {
         return back()->withPush(AlertType::SUCCESS, 'Material actualizado correctamente.');
     }
 
+    // Resta unidades del almacenamiento de uso de un material.
+    public function subtract(Request $request, Material $material) {
+        $storageKeys = array_keys(array_filter(
+            $request->except(['_token', '_method']),
+            fn ($data) => !empty($data['subtract_units'])
+        ));
+
+        if (empty($storageKeys)) {
+            return back()->withPush(AlertType::INFO, 'No hay nada que actualizar.');
+        }
+
+        $useRecords = $material->storageUse()
+            ->whereIn('storage', $storageKeys)
+            ->get()
+            ->keyBy('storage');
+
+        $rules = [];
+        $messages = [];
+        foreach ($storageKeys as $storage) {
+            $useRecord = $useRecords->get($storage);
+
+            if (empty($useRecord)) {
+                return back()->withPush(AlertType::ERROR, 'El material no está almacenado en ' . display_name($storage, DisplayCategory::STORAGE) . '.');
+            }
+
+            $currentUnits = $useRecord->units;
+
+            $rules["$storage.subtract_units"] = "integer|min:1|max:{$currentUnits}";
+
+            $messages["$storage.subtract_units.min"] = 'Debes sustraer al menos 1 unidad.';
+            $messages["$storage.subtract_units.integer"] = 'La cantidad debe ser un número entero.';
+            $messages["$storage.subtract_units.max"] = "Solo hay {$currentUnits} unidades disponibles en uso.";
+        }
+    
+        $validated = $request->validate($rules, $messages);
+
+        try {
+            DB::transaction(function () use ($material, $validated, $useRecords) {
+                foreach ($useRecords as $storage => $useRecord) {
+                    $subtractedUnits = $validated[$storage]['subtract_units'];
+
+                    StorageUse::where('material_id', $material->material_id)
+                        ->where('storage', $storage)
+                        ->decrement('units', $subtractedUnits);
+                    
+                    $this->logStockModification($useRecord->getAssignment(), -$subtractedUnits);
+                }
+            });
+        } catch (\Exception $e) {
+            return back()->withPush(AlertType::ERROR, 'Error al modificar el almacenamiento: ' . $e->getMessage());
+        }
+
+        $useRecords = $material->storageUse()
+            ->whereIn('storage', $storageKeys)
+            ->get()
+            ->keyBy('storage');
+
+        foreach ($useRecords as $storage => $useRecord) {
+            try {
+                $this->checkUnits($useRecord);
+            } catch (\Swift_SwiftException $e) {
+                $storageName = display_name($storage, DisplayCategory::STORAGE);
+
+                flash_push(
+                    AlertType::WARNING,
+                    "Stock bajo en {$storageName} USO, no se pudo enviar el correo de advertencia correspondiente a los administradores: {$e->getMessage()}."
+                );
+            }
+        }
+
+        return back()->withPush(AlertType::SUCCESS, "Almacenamiento actualizado correctamente.");
+    }
+
     // Elimina un material y su almacenamiento
     public function destroy(Material $material) {
         try {
@@ -300,15 +393,6 @@ class MaterialManagementController extends Controller {
     }
 
     /**
-     * Devuelve en JSON la lista de todos los materiales ordenados por ID
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function dataMaterials() {
-        return response()->json(Material::orderBy('material_id')->get());
-    }
-
-    /**
      * Da de alta (guarda) en batch los materiales almacenados temporalmente en la cookie 'materialFormBatch'.
      * Realiza toda la operación en una transacción, si hay error no se inserta nada.
      *
@@ -345,7 +429,7 @@ class MaterialManagementController extends Controller {
                 ],
                 'description' => 'required|string',
                 'storage' => 'required|in:CAE,odontology,ambos',
-                'image_temp' => 'nullable|string',
+                'temp_image_path' => 'nullable|string',
 
                 'units_use' => 'required|numeric|min:0',
                 'min_units_use' => 'required|numeric|min:0',
@@ -408,11 +492,11 @@ class MaterialManagementController extends Controller {
                     $material->save(); // Guarda el material en la base de datos.
 
                     // Si hay imagen temporal, guarda info para moverla después de la transacción.
-                    if (!empty($materialData["image_temp"])) {
-                        $imageName = pathinfo($materialData["image_temp"], PATHINFO_BASENAME);
+                    if (!empty($materialData["temp_image_path"])) {
+                        $imageName = pathinfo($materialData["temp_image_path"], PATHINFO_BASENAME);
                         $imagesMaterials[] = [
                             'material_id'   =>  $material->material_id,
-                            'image_temp'    =>  $materialData["image_temp"],
+                            'temp_image_path'    =>  $materialData["temp_image_path"],
                             'image_path'    =>  "materials/{$imageName}",
                         ];
                     }
@@ -435,7 +519,7 @@ class MaterialManagementController extends Controller {
         // Intenta mover cada imagen temporal a su ubicación definitiva.
         foreach ($imagesMaterials as $imageData) {
             try {
-                $moved = StorageFacades::disk('public')->move($imageData["image_temp"], $imageData["image_path"]);
+                $moved = StorageFacades::disk('public')->move($imageData["temp_image_path"], $imageData["image_path"]);
 
                 if (!$moved) {
                     // Si no se pudo mover, se agrega el ID del material a la lista de fallidos.
@@ -547,5 +631,40 @@ class MaterialManagementController extends Controller {
         return response()->json([
             'tempPath' => $tempPath ?? null
         ]);
+    }
+
+    /**
+     * Registra las unidades modificadas de un material y almacenamiento específico.
+     * 
+     * Esta función crea un nuevo registro en la tabla de modificaciones (`modifications`)
+     * para dejar constancia de un cambio en las unidades de un material en un tipo 
+     * específico de almacenamiento (uso o reserva), junto con la ubicación y el usuario
+     */
+    private function logStockModification(StorageAssignment $assignment, int $difference) {
+        if ($difference === 0) return false;
+
+        Modification::create([
+            'user_id'         => Auth::id(),
+            'material_id'     => $assignment->material_id,
+            'storage_type'    => $assignment->storage_type,
+            'storage'         => $assignment->storage,
+            'units'           => $difference,
+            'action_datetime' => Carbon::now('Europe/Madrid'),
+        ]);
+
+        return true;
+    }
+
+    /**
+     * Comprueba las unidades de un material en un tipo de almacenamiento.
+     *
+     * Si las unidades disponibles son menores que el mínimo definido, 
+     * se envía una advertencia por correo electrónico al administrador.
+     */
+    private function checkUnits(StockStorage $record) {
+        if ($record->getUnits() < $record->getMinUnits()) {
+            $adminEmails = User::where('user_type', 'admin')->pluck('email');
+            Mail::to($adminEmails)->send(new LowStockAlert($record->getAssignment()));
+        }
     }
 }
