@@ -117,14 +117,24 @@
                     <!-- RESERVA -->
                     <p><strong>Reserva</strong></p>
                     <div class="form-fields">
-                        <label>Total de unidades en reserva</label>
-                        <div class="supply-container">
-                            <input type="number" id="{{ $s }}_supply" min="0" placeholder="Nuevo total de unidades">
-                            <button
-                                type="button"
-                                class="btn btn-primary supply-btn"
-                                data-storage="{{ $s }}"
-                            >Establecer</button>
+                        <div class="supply-field">
+                            <label class="supply-label" for="{{ $s }}_supply">Sumar unidades de reserva</label>
+                            <div class="supply-container">
+                                <button
+                                    type="button"
+                                    class="supply-mode-btn"
+                                    data-storage="{{ $s }}"
+                                    data-mode="add"
+                                    aria-label="Alternar entre sumar y restar"
+                                    title="Alternar entre sumar y restar"
+                                >+</button>
+                                <input type="number" id="{{ $s }}_supply" min="1" placeholder="Unidades a sumar">
+                                <button
+                                    type="button"
+                                    class="btn btn-primary supply-btn"
+                                    data-storage="{{ $s }}"
+                                >Sumar</button>
+                            </div>
                         </div>
                         <div>
                             <label>Cantidad</label>

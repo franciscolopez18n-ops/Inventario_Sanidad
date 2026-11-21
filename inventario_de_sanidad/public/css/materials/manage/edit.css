@@ -97,13 +97,54 @@ fieldset {
 }
 
 .supply-container {
+    --supply-size: 2.5rem;
+
     display: flex;
+    flex-wrap: wrap;
     gap: .5rem;
+}
+
+.supply-container input,
+.supply-container .supply-btn,
+.supply-container .supply-mode-btn {
+    box-sizing: border-box;
+    height: var(--supply-size);
 }
 
 .supply-container input {
     min-width: 0;
     flex: 1;
+}
+
+.supply-mode-btn {
+    flex: none;
+    width: var(--supply-size);
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.supply-mode-btn[data-mode="add"] {
+    background: var(--primary-600);
+    color: var(--primary-200);
+    border: 1px solid var(--primary-500);
+}
+
+.supply-mode-btn[data-mode="subtract"] {
+    background: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+}
+
+.supply-mode-btn:hover {
+    border-color: currentColor;
 }
 
 /* Tablet */
@@ -118,11 +159,7 @@ fieldset {
         flex-direction: column;
     }
 
-    .supply-container {
-        flex-direction: column;
-    }
-
     .supply-container .supply-btn {
-        width: 100%;
+        flex: 1 1 100%;
     }
 }

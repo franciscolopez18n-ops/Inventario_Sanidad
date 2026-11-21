@@ -8,6 +8,13 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    document.querySelectorAll(".supply-mode-btn").forEach(button => {
+        button.addEventListener("click", () => {
+            const nextMode = button.dataset.mode === "add" ? "subtract" : "add";
+            applySupplyMode(button.dataset.storage, nextMode);
+        });
+    });
+
     document.querySelectorAll(".supply-btn").forEach(button => {
         button.addEventListener("click", () => {
             setReserveUnits(button.dataset.storage);
@@ -96,15 +103,51 @@ function moveStock(storageKey, direction) {
     syncTransferButtons(storageKey);
 }
 
+const SUPPLY_MODES = {
+    add: {
+        sign: "+",
+        label: "Sumar unidades de reserva",
+        placeholder: "Unidades a sumar",
+        button: "Sumar",
+        direction: 1,
+    },
+    subtract: {
+        sign: "−",
+        label: "Restar unidades de reserva",
+        placeholder: "Unidades a restar",
+        button: "Restar",
+        direction: -1,
+    },
+};
+
+function applySupplyMode(storageKey, mode) {
+    const config = SUPPLY_MODES[mode];
+    const input = document.getElementById(`${storageKey}_supply`);
+    const field = input.closest(".supply-field");
+
+    const modeBtn = field.querySelector(".supply-mode-btn");
+    modeBtn.dataset.mode = mode;
+    modeBtn.textContent = config.sign;
+
+    field.querySelector(".supply-label").textContent = config.label;
+    field.querySelector(".supply-btn").textContent = config.button;
+    input.placeholder = config.placeholder;
+}
+
 function setReserveUnits(storageKey) {
     const supplyInput = document.getElementById(`${storageKey}_supply`);
     const reserveInput = document.querySelector(`[name="${storageKey}[reserve_units]"]`);
+    const modeBtn = supplyInput.closest(".supply-field").querySelector(".supply-mode-btn");
 
-    let newTotalUnits = supplyInput.value;
-    if (newTotalUnits === "" || isNaN(newTotalUnits) || newTotalUnits < 0) return;
+    const amount = parseInt(supplyInput.value, 10);
+    if (isNaN(amount) || amount <= 0) return;
 
-    reserveInput.value = newTotalUnits;
-    supplyInput.value = '';
+    const { direction } = SUPPLY_MODES[modeBtn.dataset.mode];
+    const current = parseInt(reserveInput.value, 10) || 0;
+
+    // Al restar, nunca bajamos de 0
+    reserveInput.value = Math.max(0, current + direction * amount);
+    supplyInput.value = "";
 
     syncTransferButtons(storageKey);
 }
